@@ -1,4 +1,5 @@
 import './style.css';
+import { createExamples } from './examples.js';
 import { createBakery, RECIPES } from './pies.js';
 import { fraction } from './fractions.js';
 
@@ -12,7 +13,7 @@ document.querySelector('#app').innerHTML = `
   </header>
   <main>
     <div class="intro"><span class="eyebrow">FRESH FROM THE OVEN</span><h1>Different Slices. Same Delicious Pie.</h1><p>A little bakery for a big idea: different fractions can mean the same amount.</p></div>
-    <div class="toolbar"><div id="modes" class="segmented"><span class="active">Pie Preview</span></div>
+    <div class="toolbar"><div id="modes" class="segmented"><button id="examples-mode" class="active" aria-pressed="true">01 · Examples</button></div>
       <div class="preferences"><label for="recipe">Today’s Pie</label><select id="recipe">${Object.entries(RECIPES).map(([id,r])=>`<option value="${id}">${r.name}</option>`).join('')}</select><button id="view" class="quiet" type="button" aria-pressed="false">Top View</button></div>
     </div>
     <section class="bakery" aria-label="Two equal-sized pies">
@@ -55,3 +56,7 @@ el('fullscreen').addEventListener('click', async () => {
 document.addEventListener('fullscreenchange', () => { el('fullscreen').textContent = document.fullscreenElement ? 'Exit Full Screen ↙' : 'Full Screen ↗'; });
 window.addEventListener('pagehide', () => bakery?.dispose());
 showPies(left, right);
+
+const examples = createExamples({ el, showPies });
+el('examples-mode').addEventListener('click', () => examples.open());
+examples.open();
