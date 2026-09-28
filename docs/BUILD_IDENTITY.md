@@ -2,7 +2,7 @@
 
 ## Identity Contract
 
-`package.json` is the authoritative release record. `version` is **0.1.1** for the deployment/build-identification patch to the accepted 0.1.0 first playable. During 0.x development, minor versions introduce game features and patches fix behavior or delivery. There is no persistent save format yet. `releaseCodename` is null: the owner has not selected a codename. The literal **Unassigned** is an explicit placeholder, not an invented milestone name. Replace that one field when a name is approved; document its version range here.
+`package.json` is the authoritative release record. `version` is **0.2.0** for the Free Play rebuild milestone, currently an explicitly labeled visual preview. The teacher accepted the preceding 0.1.1 foundation by merging PR #15; 0.2.0 does not claim completed serving controls or redesigned lessons. During 0.x development, minor versions introduce game features and patches fix behavior or delivery. There is no persistent save format yet. `releaseCodename` is null: the owner has not selected a codename. The literal **Unassigned** is an explicit placeholder, not an invented milestone name. Replace that one field when a name is approved; document its version range here.
 
 Canonical ID: `VERSION_CODENAME_SCOPE_build-NNN_UTC_gREVISION[_dirty-FINGERPRINT]_TARGET`. Scope is `pr-N`, `main`, or explicitly `local-...`; target is `web` or `web-dev`. The manifest keeps the full SHA, SHA-256 source fingerprint, full UTC precision, PR head when applicable, and dirty flag. The displayed revision has 12 characters. A single timestamp is captured immediately before Vite receives its build metadata; page loads never generate an identity.
 
@@ -34,9 +34,9 @@ Each invocation creates an immutable manifest in `.build/ID.json`, builds into `
 | Local build/dev consoles | `npm run build`, `npm run dev`, Vite config | Full ID at start and result; dev target explicit | Implemented |
 | CI build/deploy consoles | `verify` / `deploy` jobs | Same manifest ID in logs and step summaries | Implemented; first main deployment pending |
 | Delivered folder and download | `artifacts/ID/`; Actions artifact named ID | Manifest-derived path/name | Implemented |
-| Game label | `src/main.js`, `#build-identity` below the header | Vite injects the same manifest; visible/copyable text | Implemented |
+| Game label | `src/main.js`, `#build-identity` in the always-visible footer | Vite injects the same manifest; visible/copyable text | Implemented |
 | Build/test report | `BUILD.md`, Actions job summary; `check:build` output | Same immutable manifest | Implemented |
-| Current README/roadmap | `README.md`, `ROADMAP.md`, `docs/VALIDATION.md` | Link to generated/current records; preserve old evidence | Implemented |
+| Current README/roadmap | `README.md`, `ROADMAP.md`, `docs/IMPLEMENTATION_STATUS.md`, `docs/VALIDATION.md` | Link to generated/current records; preserve old evidence | Implemented |
 | PR description/template | `.github/pull_request_template.md` | Link to exact check run and build ID | Implemented |
 | Agent instructions | `AGENTS.md` | Links to this contract | Implemented |
 | Hosted identity | `/EasyAsPie/build.json`, `/EasyAsPie/BUILD.md`, visible label | Deploy existing artifact without rebuilding | First main deployment pending |
