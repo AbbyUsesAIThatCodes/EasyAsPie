@@ -32,4 +32,10 @@ These IDs belong to the teacher's DM 1.3 audit, not official PLTW standards code
 
 ## Keep The Course Connection Alive
 
-For each new activity or challenge family, record its audit target, student action, feedback, and evidence. Recheck the current DM source before expanding scope, and record any changed audit revision. Keep game solutions here; keep the DM curricular-goals document focused on curricular goals. A later ruler transfer prompt should be a separate, small reviewed increment.
+For each new activity or challenge family, record its audit target, student action, feedback, and evidence. Recheck the current DM source before expanding scope, and record any changed audit revision. Keep game solutions here; keep the DM curricular-goals document focused on curricular goals. Current Direction assigns actual ruler activities to MeasureTwice; EasyAsPie uses unitless fraction bars.
+
+## Free Play Foundation Review
+
+On September 28, 2026, the [current Activity 1.3 index at 279ddf7](https://github.com/AbbyUsesAIThatCodes/DesignAndModeling26-27/blob/279ddf7b047c58087632dbe3ce650f1cc156fc9f/units/01-introduction-to-design/1.3-measuring-matters/README.md) was consulted for #9. It still distinguishes teaching/topic connections from verified standards mappings and leaves preferred source editions and matching teacher coverage pending review. This is a current index check, not a new audit of the restricted source PDFs. The earlier pinned curricular audit above remains historical provenance; no new standards or source-page verification is claimed.
+
+The [action contract](FREE_PLAY_ACTIONS.md) supports the existing G10/G12 connections and prerequisites for G11: students will select a contiguous serving, change equal subdivisions, and observe equivalent counts while the whole and amount remain fixed. Each pair uses one fraction for its future pie and bar; both bars will have equal total length with no units or ruler ticks. Mathematical tests establish correctness of the model only; exploration does not establish ruler mastery. UI interaction and student feedback are deferred to the named implementation steps, not completed by #9. EAP-01/EAP-02/EAP-04 in the original issue are undefined design labels and are not used as established curriculum IDs.
