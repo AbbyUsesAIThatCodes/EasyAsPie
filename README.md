@@ -18,6 +18,8 @@ This is a local instructional supplement. It supports fraction equivalence befor
 
 The [September 28 Design Discussion](docs/DESIGN-DISCUSSION-2026-09-28.md) records the current direction for future work, including paired pie/bar interactions, and preserves the full proposal for issue planning. Its later decisions take precedence over earlier design notes; the first-playable instructions below describe the existing game.
 
+The [Free Play Implementation Plan](docs/FREE_PLAY_IMPLEMENTATION_PLAN.md) preserves the teacher's chosen [paired-bar mockup](docs/mockups/paired-fraction-bars.png) and divides [issue #7](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/7) into five sequential, one-PR handoffs. Start each new issue only after the previous PR is reviewed and merged; the plan does not claim the redesign is already implemented.
+
 - [Design Brief](docs/DESIGN.md)
 - [Curriculum Mapping And Source Review](docs/CURRICULUM.md)
 - [Small-Step Roadmap And Review Order](ROADMAP.md)
