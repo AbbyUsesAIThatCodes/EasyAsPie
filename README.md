@@ -23,6 +23,7 @@ The [Free Play Implementation Plan](docs/FREE_PLAY_IMPLEMENTATION_PLAN.md) prese
 - [Design Brief](docs/DESIGN.md)
 - [Curriculum Mapping And Source Review](docs/CURRICULUM.md)
 - [Small-Step Roadmap And Review Order](ROADMAP.md)
+- [Implementation Status And Next Handoff](docs/IMPLEMENTATION_STATUS.md)
 - [Design And Modeling Course Repository](https://github.com/AbbyUsesAIThatCodes/DesignAndModeling26-27)
 
 Changes arrive in small PRs targeting `main`. Merge only after the teacher's review.
