@@ -16,6 +16,8 @@ This is a local instructional supplement. It supports fraction equivalence befor
 
 ## Design And Curriculum
 
+The [September 28 Design Discussion](docs/DESIGN-DISCUSSION-2026-09-28.md) records the current direction for future work, including paired pie/bar interactions, and preserves the full proposal for issue planning. Its later decisions take precedence over earlier design notes; the first-playable instructions below describe the existing game.
+
 - [Design Brief](docs/DESIGN.md)
 - [Curriculum Mapping And Source Review](docs/CURRICULUM.md)
 - [Small-Step Roadmap And Review Order](ROADMAP.md)
