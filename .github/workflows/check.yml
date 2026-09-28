@@ -1,15 +1,78 @@
-name: Check
-on: [push, pull_request]
+name: Check And Deploy
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
   verify:
+    if: github.event_name != 'workflow_dispatch' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      id: ${{ steps.build.outputs.id }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
       - run: npm ci
       - run: npm test
-      - run: npm run build
+      - id: reserve
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const scope = context.eventName === 'pull_request' ? `pr-${context.issue.number}` : 'main';
+            const reserve = require('./scripts/reserve-build.cjs');
+            const result = await reserve(github.rest.git, context.repo, scope, context.sha);
+            for (const [key, value] of Object.entries(result)) core.setOutput(key, value);
+            core.info(`Reserved ${scope} build ${result.ordinal}: ${result.ref}`);
+      - id: build
+        run: npm run build
+        env:
+          EASYASPIE_BUILD_SCOPE: ${{ steps.reserve.outputs.scope }}
+          EASYASPIE_BUILD_ORDINAL: ${{ steps.reserve.outputs.ordinal }}
+          EASYASPIE_BUILD_REF: ${{ steps.reserve.outputs.ref }}
+          EASYASPIE_PR_HEAD: ${{ github.event.pull_request.head.sha }}
+      - run: npm run check:build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.id }}
+          path: ${{ steps.build.outputs.path }}
+          if-no-files-found: error
+      - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        with:
+          path: ${{ steps.build.outputs.path }}
+  deploy:
+    needs: verify
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Record The Deployed Build
+        env:
+          BUILD_ID: ${{ needs.verify.outputs.id }}
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          echo "DEPLOYED $BUILD_ID"
+          echo "Deployed **$BUILD_ID** to $PAGE_URL" >> "$GITHUB_STEP_SUMMARY"

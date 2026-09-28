@@ -12,6 +12,7 @@ document.querySelector('#app').innerHTML = `
     <span class="course">Design And Modeling <span>·</span> 1.3 Measuring Matters</span>
     <button id="fullscreen" class="quiet" type="button">Full Screen ↗</button>
   </header>
+  <div class="build-identity"><span>Build</span><code id="build-identity"></code></div>
   <div id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
   <main>
     <div class="intro"><span class="eyebrow">FRESH FROM THE OVEN</span><h1>Different Slices. Same Delicious Pie.</h1><p>A little bakery for a big idea: different fractions can mean the same amount.</p></div>
@@ -28,6 +29,7 @@ document.querySelector('#app').innerHTML = `
   </main>`;
 
 export const el = id => document.getElementById(id);
+el('build-identity').textContent = __BUILD_IDENTITY__.id;
 let bakery;
 const showSceneError = () => { el('scene-error').hidden = false; };
 el('scene').addEventListener('scene-error', showSceneError);

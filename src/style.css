@@ -73,3 +73,6 @@ footer { display: flex; justify-content: space-between; padding: 18px 3px 23px; 
 .results { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 13px 35px; font-size: 12px; color: #6b6270; }
 .results strong { color: #655079; font: 26px Georgia, serif; padding-right: 6px; }
 @media (max-height: 820px) and (min-width: 900px) { .header { height: 57px; } .intro { padding: 10px 0; } .intro p { margin-top: 5px; } .toolbar { margin-bottom: 10px; } .pie-labels { padding-top: 9px; } .stage { height: 215px; } .legend { padding-bottom: 12px; } .guided { margin-top: 10px; } footer { padding: 10px 0 12px; } }
+
+.build-identity { padding: 7px 4%; display: flex; justify-content: center; gap: 10px; background: #eee7f0; color: #574463; font-size: 11px; line-height: 1.5; }
+.build-identity code { overflow-wrap: anywhere; user-select: text; }

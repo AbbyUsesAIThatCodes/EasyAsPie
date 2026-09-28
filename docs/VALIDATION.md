@@ -1,5 +1,7 @@
 # First Playable Validation
 
+This section preserves the initial 0.1.0 review evidence. Current build identity and deployment records are described in [Build Identity](BUILD_IDENTITY.md).
+
 ## Automated Checks
 
 `npm test`: six tests pass. Covers all allowed source/target partition combinations, exact reverse conversion, invalid counts and unsupported denominators, every authored exercise answer, retry gating, no duplicate scoring, hint/example assistance, next-task reset, zero/whole challenges, and round termination.
@@ -21,3 +23,7 @@ Screenshots were visually inspected at 1366 × 768 and 1280 × 720. Cherry chall
 ## Reproduce The Main Playthrough
 
 Run `npm ci`, `npm test`, `npm run build`, then `npm run preview`. Open the displayed local URL. Work through Examples; change a serving and use Show The Match. In Challenge, submit a wrong first answer, request a hint, and solve it. Visit Examples during the second task, then return. Solve the remaining tasks with the teacher key and verify the 8/2/1 summary. Restart, switch all three recipes, use Top View, and check keyboard navigation. Reloading should start a fresh session.
+
+## Deployment Integration Checks
+
+The 0.1.1 build pipeline adds focused allocation tests and `npm run check:build`. Current build reports are generated into each artifact from its immutable manifest; they are not manually copied into this historical record. First live Pages verification remains pending the deployment PR merge.
