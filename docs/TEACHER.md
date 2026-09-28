@@ -1,5 +1,15 @@
 # EasyAsPie Teacher Notes
 
+## Current Visual Preview — Step 02
+
+The 0.2.0 preview displays two equal blueberry pies and their matching unitless bars. It starts at 1/2 and 2/4. **Show Fraction Bars / Close Fraction Bars**, **Top View / Angled View**, and supported **Full Screen** work. Tab reaches available controls; Enter or Space activates them. The drawer keeps keyboard focus on its toggle; reduced motion removes its transition. Outlined pie servings and marked bar segments supplement color. The visible fraction labels state selected pieces and total equal pieces.
+
+Serving selection and Clear/Decrease/Increase are deferred to #11; Cut/Regroup controls and transitions to #12. Learn and Challenge are disabled and labeled Coming Later. This is a visual review increment, not a completed student activity or assessment. No scores or student information are collected. Read-only sixteenths and empty/whole fixtures are documented in [README](../README.md#review-and-teach).
+
+## Historical First-Playable Notes
+
+Everything below records the earlier Examples/Challenge game and its keys. Those modes and cosmetic recipes are not available in the current preview. Preserve this history without using it as the control guide for the rebuild. [Implementation Status](IMPLEMENTATION_STATUS.md) is the current handoff.
+
 ## Before Play
 
 Use Examples first. Ask students to name the whole, the number of equal pieces, and the selected serving. Both pies are the same size. A muted piece is still part of the whole; it is simply not selected. Blueberry, Cherry, and Apple use identical geometry and answers.

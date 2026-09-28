@@ -21,6 +21,7 @@ function mesh(group, geometry, mat, x = 0, y = 0, z = 0) {
 }
 
 function instances(group, geometry, mat, transforms) {
+  if (!transforms.length) { geometry.dispose(); return; }
   const batch = new THREE.InstancedMesh(geometry, mat, transforms.length);
   const dummy = new THREE.Object3D();
   transforms.forEach((t, i) => {
@@ -35,9 +36,8 @@ function instances(group, geometry, mat, transforms) {
   group.add(batch);
 }
 
-function makePie(serving, recipeName, side) {
-  const recipe = RECIPES[recipeName];
-  const group = new THREE.Group();
+export function makePie(serving, recipeName, side) {
+    const group = new THREE.Group();
   group.position.x = positions[side];
   const china = material('#f9f7f0', 0.24);
   mesh(group, new THREE.CylinderGeometry(1.95, 1.81, 0.13, 80), china, 0, 0.07);
@@ -48,14 +48,14 @@ function makePie(serving, recipeName, side) {
   const step = TAU / serving.d;
   for (let i = 0; i < serving.d; i++) {
     const selected = i < serving.n;
-    const start = i * step;
+    const start = Math.PI + i * step;
     const wedge = new THREE.Group();
     group.add(wedge);
-    const crust = material(selected ? '#dba15e' : '#dfd6c6');
-    const dough = material(selected ? '#f5c987' : '#ebe4d6');
-    const filling = material(selected ? recipe.filling : '#cec7c3', 0.3);
-    const fruit = material(selected ? recipe.fruit : '#d8d1ca', 0.26);
-    const gleam = material(selected ? recipe.accent : '#ebe4da', 0.4);
+    const crust = material('#c88739');
+    const dough = material('#d49138');
+    const filling = material(selected ? '#3b185f' : '#565166', 0.3);
+    const fruit = material(selected ? '#302164' : '#494254', 0.26);
+    const gleam = material(selected ? '#b6a2de' : '#aca6b5', 0.4);
     const base = mesh(wedge, new THREE.CylinderGeometry(RADIUS, RADIUS - 0.08, 0.29, 64, 1, false, start, step), crust, 0, 0.30);
     base.userData.slice = i + 1;
     base.userData.side = side;
@@ -65,41 +65,50 @@ function makePie(serving, recipeName, side) {
     // The decorative population has fixed positions at every denominator.
     const berries = [], highlights = [], crimps = [], sugar = [], pastry = [];
     for (let k = 0; k < 180; k++) {
-      const angle = (k * 2.399963229728653) % TAU;
+      const angle = Math.PI + (k * 2.399963229728653) % TAU;
       if (angle < start || angle >= start + step) continue;
       const radius = Math.sqrt((k + 0.5) / 180) * 1.37;
       const p = point(radius, angle, 0.509 + 0.018 * Math.sin(k * 4));
-      berries.push({ p, s: 0.075 + (k % 4) * 0.009, sy: recipeName === 'apple' ? 0.035 : 0.066, sx: recipeName === 'apple' ? 0.12 : undefined, ry: angle });
+      berries.push({ p, s: 0.084 + (k % 4) * 0.009, sy: recipeName === 'apple' ? 0.035 : 0.066, sx: recipeName === 'apple' ? 0.12 : undefined, ry: angle });
       if (k % 3 === 0) highlights.push({ p: p.clone().add(new THREE.Vector3(-0.018, 0.057, 0.017)), s: 0.017 });
     }
     for (let k = 0; k < 64; k++) {
-      const angle = (k + 0.5) / 64 * TAU;
+      const angle = Math.PI + (k + 0.5) / 64 * TAU;
       if (angle < start || angle >= start + step) continue;
       crimps.push({ p: point(1.55, angle, 0.49), sx: 0.105, sy: 0.084, sz: 0.165, ry: angle });
     }
     for (let k = 0; k < 72; k++) {
-      const angle = (k * 1.618) % TAU;
+      const angle = Math.PI + (k * 1.618) % TAU;
       if (angle < start || angle >= start + step) continue;
       sugar.push({ p: point(1.49 + (k % 3) * 0.044, angle, 0.56), s: 0.019, ry: k });
     }
     // Small baked leaves make apple visually distinct without hiding cuts.
     if (recipeName === 'apple') for (let k = 0; k < 12; k++) {
-      const angle = (k + 0.5) / 12 * TAU;
+      const angle = Math.PI + (k + 0.5) / 12 * TAU;
       if (angle >= start && angle < start + step) pastry.push({ p: point(0.96, angle, 0.56), sx: 0.12, sy: 0.035, sz: 0.26, ry: angle });
     }
     const sphere = () => new THREE.SphereGeometry(1, 10, 7);
     instances(wedge, sphere(), fruit, berries);
     instances(wedge, sphere(), gleam, highlights);
     instances(wedge, sphere(), dough, crimps);
-    instances(wedge, new THREE.BoxGeometry(1, 1, 1), material(selected ? '#fff2d1' : '#eee8dd'), sugar);
+    instances(wedge, new THREE.BoxGeometry(1, 1, 1), material('#fff2d1'), sugar);
     if (pastry.length) instances(wedge, sphere(), dough, pastry);
-    // Slice guides lie above the fruit and remain visible in every recipe.
-    const line = new THREE.BufferGeometry().setFromPoints([point(0, start, 0.63), point(RADIUS, start, 0.63)]);
-    wedge.add(new THREE.Line(line, new THREE.LineBasicMaterial({ color: '#fff5dc' })));
-    if (selected) {
-      const points = Array.from({ length: 33 }, (_, k) => point(1.7, start + step * k / 32, 0.2));
-      wedge.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), new THREE.LineBasicMaterial({ color: '#675481' })));
+    wedge.userData = { slice: i + 1, selected, start, angle: step, side };
+    // Physical, high-contrast grooves stay above the fruit even at sixteenths.
+    // Use tubes, not platform-dependent WebGL line widths.
+    const guide = new THREE.LineCurve3(point(0, start, 0.64), point(RADIUS, start, 0.64));
+    mesh(wedge, new THREE.TubeGeometry(guide, 1, 0.010, 5, false), material('#fff2d9'));
+  }
+  if (serving.n > 0) {
+    const start = Math.PI, end = start + step * serving.n;
+    const points = Array.from({ length: 97 }, (_, k) => point(1.65, start + (end - start) * k / 96, 0.64));
+    if (serving.n < serving.d) {
+      points.push(point(0, end, 0.64), point(1.65, start, 0.64));
     }
+    // A continuous perimeter distinguishes selection without relying on color.
+    const path = new THREE.CurvePath();
+    for (let k = 1; k < points.length; k++) path.add(new THREE.LineCurve3(points[k - 1], points[k]));
+    mesh(group, new THREE.TubeGeometry(path, 192, 0.022, 6, false), new THREE.MeshBasicMaterial({ color: '#9653f5' }));
   }
   return group;
 }
@@ -114,32 +123,30 @@ function dispose(group) {
   materials.forEach(m => m.dispose());
 }
 
-export function createBakery(canvas, onSlice = () => {}) {
+export function createBakery(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
+  renderer.toneMappingExposure = 0.92;
   const scene = new THREE.Scene();
   const camera = new THREE.OrthographicCamera(-5.3, 5.3, 2, -2, 0.1, 50);
   camera.position.set(0, 10, 10);
   camera.lookAt(0, 0, 0);
-  scene.add(new THREE.HemisphereLight('#fff9e9', '#a59a9c', 1.8));
-  const sun = new THREE.DirectionalLight('#fff4db', 2.5);
+  scene.add(new THREE.HemisphereLight('#fff9e9', '#a59a9c', 2.2));
+  const sun = new THREE.DirectionalLight('#fff4db', 3.2);
   sun.position.set(-3, 8, 5);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
   Object.assign(sun.shadow.camera, { left: -7, right: 7, top: 5, bottom: -5 });
   sun.shadow.bias = -0.001;
   scene.add(sun);
-  const counter = mesh(scene, new THREE.PlaneGeometry(200, 200), material('#eee3cf'), 0, -0.01);
+  // Transparent shadow catcher lets the warm wooden countertop continue into
+  // the DOM labels and drawer without adding a bitmap or changing pie geometry.
+  const counter = mesh(scene, new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ color: '#583b28', opacity: 0.22 }), 0, -0.01);
   counter.rotation.x = -Math.PI / 2;
   counter.castShadow = false;
-  // A quiet linen runner anchors both equal-sized plates.
-  const linen = mesh(scene, new THREE.PlaneGeometry(9.7, 4.5), material('#e5ded0'), 0, 0.001);
-  linen.rotation.x = -Math.PI / 2;
-  linen.castShadow = false;
   let pies = [];
   let disposed = false;
   let topView = false;
@@ -148,8 +155,8 @@ export function createBakery(canvas, onSlice = () => {}) {
     const { width, height } = canvas.getBoundingClientRect();
     if (!width || !height) return;
     renderer.setSize(width, height, false);
-    const span = Math.max(10, (width / height) * (topView ? 4.2 : 3.25));
-    pies.forEach((pie, side) => { pie.position.x = (side ? 1 : -1) * span * 0.26; });
+    const span = Math.max(9, (width / height) * (topView ? 4.3 : 3.6));
+    pies.forEach((pie, side) => { pie.position.x = (side ? 1 : -1) * span * 0.25; });
     const halfHeight = span / (width / height) / 2;
     Object.assign(camera, { left: -span / 2, right: span / 2, top: halfHeight, bottom: -halfHeight });
     camera.updateProjectionMatrix();
@@ -157,18 +164,11 @@ export function createBakery(canvas, onSlice = () => {}) {
   };
   const observer = new ResizeObserver(resize);
   observer.observe(canvas);
-  const raycaster = new THREE.Raycaster();
-  const click = event => {
-    const rect = canvas.getBoundingClientRect();
-    raycaster.setFromCamera(new THREE.Vector2((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1), camera);
-    const hit = raycaster.intersectObjects(pies, true).find(h => h.object.userData.side === 1);
-    if (hit) onSlice(hit.object.userData.slice);
-  };
-  canvas.addEventListener('click', click);
-  canvas.addEventListener('webglcontextlost', event => {
+  const contextLost = event => {
     event.preventDefault();
     canvas.dispatchEvent(new CustomEvent('scene-error'));
-  });
+  };
+  canvas.addEventListener('webglcontextlost', contextLost);
   return {
     update(left, right, recipe = 'blueberry') {
       pies.forEach(p => { scene.remove(p); dispose(p); });
@@ -177,6 +177,6 @@ export function createBakery(canvas, onSlice = () => {}) {
       resize();
     },
     setTopView(top) { topView = top; camera.position.set(0, top ? 14 : 10, top ? 0.001 : 10); camera.lookAt(0, 0, 0); resize(); },
-    dispose() { disposed = true; observer.disconnect(); canvas.removeEventListener('click', click); dispose(scene); renderer.dispose(); },
+    dispose() { disposed = true; observer.disconnect(); canvas.removeEventListener('webglcontextlost', contextLost); dispose(scene); renderer.dispose(); },
   };
 }

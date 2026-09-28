@@ -2,9 +2,9 @@
 
 ## Current Direction And Implementation Boundary
 
-The [preserved Current Direction](DESIGN-DISCUSSION-2026-09-28.md#current-direction) governs the paired pie/bar redesign. Each independent pair will share one exact fraction; its equal-length bar mirrors its pie without units or ruler ticks. The [Free Play Action Contract](FREE_PLAY_ACTIONS.md) now defines the tested state foundation, serving changes, and exact Cut/Regroup behavior. See [Implementation Status](IMPLEMENTATION_STATUS.md) for what is connected to the UI.
+The [preserved Current Direction](DESIGN-DISCUSSION-2026-09-28.md#current-direction) governs the paired pie/bar redesign. Each independent pair shares one exact fraction; its equal-length bar mirrors its pie without units or ruler ticks. The [Free Play Action Contract](FREE_PLAY_ACTIONS.md) now defines the tested state foundation, serving changes, and exact Cut/Regroup behavior. See [Implementation Status](IMPLEMENTATION_STATUS.md) for what is connected to the UI.
 
-The sections below describe the retained first playable, including its Examples/Challenge teaching sequence and cosmetic recipes. The redesign's initial two blueberry pies, Free Play shell, drawer, and linked controls remain future work in #10–#12. Prediction before revealing results belongs to future Learn/Challenge content; Free Play is exploratory.
+The sections below preserve the historical first-playable design, including its Examples/Challenge teaching sequence and cosmetic recipes. The current #10 visual preview replaces the runtime entrypoint with two blueberry pies, the Free Play shell, and a working state-derived drawer. Linked serving controls remain future work in #11–#12. Old mode modules and validation evidence remain preserved; they are not exposed as redesigned modes. Prediction before revealing results belongs to future Learn/Challenge content; Free Play is exploratory.
 
 ## The Idea
 
