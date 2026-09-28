@@ -67,3 +67,9 @@ footer { display: flex; justify-content: space-between; padding: 18px 3px 23px; 
 .feedback { grid-column: 1 / -1; border-left: 3px solid #c8b68e; padding-left: 13px; margin: 0 !important; }
 .interaction-tip { grid-column: 1 / -1; font-size: 10px; color: #82757b; }
 @media (max-height: 820px) and (min-width: 900px) { .guided { padding: 14px 23px; gap: 9px 20px; } .guided h2 { font-size: 20px; } .guided button { padding: 8px 13px; } .guided .lesson-copy p { font-size: 12px; } }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.correct { border-left-color: #6c8d66; color: #46643f !important; }
+.results { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 13px 35px; font-size: 12px; color: #6b6270; }
+.results strong { color: #655079; font: 26px Georgia, serif; padding-right: 6px; }
+@media (max-height: 820px) and (min-width: 900px) { .header { height: 57px; } .intro { padding: 10px 0; } .intro p { margin-top: 5px; } .toolbar { margin-bottom: 10px; } .pie-labels { padding-top: 9px; } .stage { height: 215px; } .legend { padding-bottom: 12px; } .guided { margin-top: 10px; } footer { padding: 10px 0 12px; } }

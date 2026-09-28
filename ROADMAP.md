@@ -6,10 +6,10 @@ Each branch builds on the preceding branch so each PR contains one small increme
 
 | Order | Branch | Bounded Increment |
 | --- | --- | --- |
-| 1 | docs/01-foundations | Design brief, curriculum provenance, and contribution rules |
-| 2 | feat/02-fraction-core | Exact fraction math, exercise data, tests, and package scripts |
-| 3 | feat/03-pie-scene | Two equal 3D pies, bakery shell, and local build |
-| 4 | feat/04-guided-examples | Guided equivalence examples and keyboard serving controls |
+| [1](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/pull/1) | docs/01-foundations | Design brief, curriculum provenance, and contribution rules |
+| [2](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/pull/2) | feat/02-fraction-core | Exact fraction math, exercise data, tests, and package scripts |
+| [3](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/pull/3) | feat/03-pie-scene | Two equal 3D pies, bakery shell, and local build |
+| [4](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/pull/4) | feat/04-guided-examples | Guided equivalence examples and keyboard serving controls |
 | 5 | feat/05-challenge-mode | Untimed challenges, specific feedback, and learning summary |
 
 ## After The First Review

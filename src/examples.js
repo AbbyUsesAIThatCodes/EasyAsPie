@@ -35,6 +35,7 @@ export function createExamples({ el, showPies }) {
       </div>
       <p class="feedback" role="status" aria-live="polite">${feedback}</p>
       ${divided ? '<span class="interaction-tip">Click a slice on the right pie to select that many consecutive slices, or use − and +. The muted part still belongs to the whole.</span>' : ''}`;
+    if (el('announcement')) el('announcement').textContent = feedback;
     if (focusId) (el(focusId) && !el(focusId).disabled ? el(focusId) : el('example-heading')).focus({ preventScroll: true });
   }
 

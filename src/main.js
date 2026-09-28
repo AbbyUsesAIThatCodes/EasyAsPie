@@ -1,5 +1,6 @@
 import './style.css';
 import { createExamples } from './examples.js';
+import { createChallenge } from './challenge.js';
 import { createBakery, RECIPES } from './pies.js';
 import { fraction } from './fractions.js';
 
@@ -11,9 +12,10 @@ document.querySelector('#app').innerHTML = `
     <span class="course">Design And Modeling <span>·</span> 1.3 Measuring Matters</span>
     <button id="fullscreen" class="quiet" type="button">Full Screen ↗</button>
   </header>
+  <div id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
   <main>
     <div class="intro"><span class="eyebrow">FRESH FROM THE OVEN</span><h1>Different Slices. Same Delicious Pie.</h1><p>A little bakery for a big idea: different fractions can mean the same amount.</p></div>
-    <div class="toolbar"><div id="modes" class="segmented"><button id="examples-mode" class="active" aria-pressed="true">01 · Examples</button></div>
+    <div class="toolbar"><div id="modes" class="segmented"><button id="examples-mode" class="active" aria-pressed="true">01 · Examples</button><button id="challenge-mode" aria-pressed="false">02 · Challenge</button></div>
       <div class="preferences"><label for="recipe">Today’s Pie</label><select id="recipe">${Object.entries(RECIPES).map(([id,r])=>`<option value="${id}">${r.name}</option>`).join('')}</select><button id="view" class="quiet" type="button" aria-pressed="false">Top View</button></div>
     </div>
     <section class="bakery" aria-label="Two equal-sized pies">
@@ -54,9 +56,22 @@ el('fullscreen').addEventListener('click', async () => {
   catch { el('fullscreen').textContent = 'Full Screen Unavailable'; }
 });
 document.addEventListener('fullscreenchange', () => { el('fullscreen').textContent = document.fullscreenElement ? 'Exit Full Screen ↙' : 'Full Screen ↗'; });
-window.addEventListener('pagehide', () => bakery?.dispose());
+window.addEventListener('pagehide', event => { if (!event.persisted) bakery?.dispose(); });
 showPies(left, right);
 
 const examples = createExamples({ el, showPies });
-el('examples-mode').addEventListener('click', () => examples.open());
-examples.open();
+const challenge = createChallenge({ el, showPies });
+let currentMode;
+function setMode(mode) {
+  if (mode === currentMode) return;
+  currentMode = mode;
+  examples.close(); challenge.close();
+  for (const name of ['examples', 'challenge']) {
+    el(`${name}-mode`).classList.toggle('active', name === mode);
+    el(`${name}-mode`).setAttribute('aria-pressed', String(name === mode));
+  }
+  (mode === 'examples' ? examples : challenge).open();
+}
+el('examples-mode').addEventListener('click', () => setMode('examples'));
+el('challenge-mode').addEventListener('click', () => setMode('challenge'));
+setMode('examples');
