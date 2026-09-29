@@ -47,3 +47,7 @@ For #10, the current linked Activity 1.3 index was consulted again on September 
 ## Linked Selection Review
 
 For #11, the current linked Activity 1.3 index was consulted on September 28, 2026 (America/New_York). The index still leaves preferred source editions and matching teacher coverage pending review. No restricted source files were copied or re-audited. Students can now choose a contiguous serving in either representation and observe its paired selected-count/whole-count label, using the existing audit-local G10/G12 connections and prerequisites for G11. Hover/focus identifies corresponding pieces without committing an answer. This is exploratory fraction feedback, not correctness grading or evidence of ruler mastery; no new standards mapping is claimed.
+
+## Full 3D Bakery Review
+
+For #18, the current Activity 1.3 README was consulted on September 28, 2026 (America/New_York; README blob `f50edf179855ec412445df342d81cd22338aa253`). It still leaves preferred editions and matching teacher coverage unresolved. This visual pass retains the existing audit-local G10/G12 connection and prerequisite G11 limit: equal pie volumes and equal-length unitless bars support fraction exploration. It introduces no new lesson, assessment, verified standards mapping, or ruler-mastery claim. No restricted PLTW content was copied into this public repository.

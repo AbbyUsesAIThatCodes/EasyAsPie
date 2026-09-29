@@ -36,6 +36,7 @@ Each invocation creates an immutable manifest in `.build/ID.json`, builds into `
 | Delivered folder and download | `artifacts/ID/`; Actions artifact named ID | Manifest-derived path/name | Implemented |
 | Game label | `src/main.js`, `#build-identity` in the always-visible footer | Vite injects the same manifest; visible/copyable text | Implemented |
 | Build/test report | `BUILD.md`, Actions job summary; `check:build` output | Same immutable manifest | Implemented |
+| Screenshot/video review | `docs/review/issue-18/build.json`, `BUILD.md`, media links, visible footer in captures | Same running artifact for screenshots/video; earlier test-build identity identified separately if reused | Implemented for Step 03A |
 | Current README/roadmap | `README.md`, `ROADMAP.md`, `docs/IMPLEMENTATION_STATUS.md`, `docs/VALIDATION.md` | Link to generated/current records; preserve old evidence | Implemented |
 | PR description/template | `.github/pull_request_template.md` | Link to exact check run and build ID | Implemented |
 | Agent instructions | `AGENTS.md` | Links to this contract | Implemented |
