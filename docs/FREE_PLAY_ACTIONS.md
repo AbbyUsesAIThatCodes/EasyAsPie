@@ -1,6 +1,6 @@
 # Free Play Action Contract
 
-Implemented by `src/free-play.js` for [issue #9](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/9). This is the rendering-independent foundation for the [Current Direction](DESIGN-DISCUSSION-2026-09-28.md#current-direction), now used by the interactive #11 Free Play preview.
+Implemented by `src/free-play.js` for [issue #9](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/9). This is the rendering-independent foundation for the [Current Direction](DESIGN-DISCUSSION-2026-09-28.md#current-direction), used by the linked #11 controls and the #18 shared 3D scene.
 
 ## State And Ownership
 
@@ -33,6 +33,6 @@ Cut and valid Regroup preserve the exact amount, including zero and whole. They 
 
 ## Integration Boundary
 
-Step #9 deliberately retained the old Examples/Challenge session model. Step #10 introduced the state-derived scene. Step #11 dispatches pointer/keyboard serving actions against the latest immutable snapshot and immediately updates both representations, labels, and announcements. Hover/focus and drawer/camera/full-screen changes never write that snapshot. #12 adds Cut/Regroup controls, refusal feedback, and transitions. Keyboard operation, visible focus, non-color feedback, and reduced motion accompany each relevant UI increment.
+Step #9 deliberately retained the old Examples/Challenge session model. Step #10 introduced the state-derived scene. Step #11 dispatches pointer/keyboard serving actions against the latest immutable snapshot and immediately updates both representations, labels, and announcements. Hover/focus and drawer/camera/full-screen changes never write that snapshot. #18 replaces the scene while preserving that action path. Its drawer depth, camera interpolation and labeled static model-review separation never write mathematical state. Native bar controls track the projected 3D tiles. #12 adds Cut/Regroup controls, refusal feedback, and transitions, with screenshots and video before teacher approval. Keyboard operation, visible focus, non-color feedback, and reduced motion accompany each relevant UI increment.
 
 `tests/free-play.test.js` checks all 34 valid fractions against all 34 partner states in both directions, every selectable count, bounded serving actions, exact transformations and round trips, rejection/recovery, and immutable ownership. These are mathematical behavior checks, not evidence of student assessment or ruler-reading mastery.

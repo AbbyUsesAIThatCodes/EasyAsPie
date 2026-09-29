@@ -4,7 +4,9 @@ import { createFreePlay, applyFreePlayAction } from './free-play.js';
 import { previewState, fixtureNames } from './preview-fixtures.js';
 
 // Only accepted actions replace this snapshot. Emphasis and view state are separate.
-const fixture = new URLSearchParams(location.search).get('preview');
+const params = new URLSearchParams(location.search);
+const fixture = params.get('preview');
+const modelReview = params.get('review') === 'solids';
 let state = fixture ? previewState(fixture) : createFreePlay();
 const fixtureName = Object.hasOwn(fixtureNames, fixture) ? fixtureNames[fixture] : null;
 const pairs = ['A', 'B'];
@@ -30,10 +32,10 @@ document.querySelector('#app').innerHTML = `
     <div class="view-controls"><button id="view" type="button" aria-pressed="false">Top View</button><button id="fullscreen" type="button">Full Screen ↗</button></div>
   </header>
   <main>
-    <div class="preview-note"><h1>${fixtureName ? `${fixtureName} Test Fixture` : 'Free Play Preview'}</h1><p>Select a piece to serve it and all pieces before it. <span>Cut And Regroup — Coming Later</span></p></div>
+    <div class="preview-note"><h1>${modelReview ? 'Model Review · Separated Solids' : fixtureName ? `${fixtureName} Test Fixture` : 'Free Play Preview'}</h1><p>${modelReview ? 'Static geometry inspection. Serving amounts are unchanged.' : 'Select a piece to serve it and all pieces before it.'} <span>Cut And Regroup — Coming Later</span></p></div>
     <section class="bakery" aria-label="Two equal blueberry pies and their fraction bars">
       <div class="stage">
-        <div class="kitchen" aria-hidden="true"><div class="window"><i></i><i></i><i></i><i></i></div><div class="shelf"><i class="jar"></i><i class="jar berry-jar"></i><i class="bowl"></i><i class="jar tall"></i></div><div class="cabinet cabinet-left"></div><div class="cabinet cabinet-right"></div></div>
+
         <canvas id="scene" role="img"></canvas>
         ${pairs.map(pair => `<div class="pie-choices" id="pie-${pair}" role="toolbar" aria-label="Pie ${pair} Pieces" aria-describedby="keyboard-help">${pieceButtons(pair, 'pie')}</div>`).join('')}
         <p id="piece-hint" aria-hidden="true" hidden></p>
@@ -92,9 +94,31 @@ function act(action) {
   render();
   el('announcement').textContent = `Pie ${action.pair}: ${countText(state[action.pair])}, ${fractionText(state[action.pair])} of the whole. Pie and bar match.`;
 }
-const showSceneError = () => { el('scene-error').hidden = false; el('view').disabled = true; };
+const showSceneError = () => { el('scene-error').hidden = false; el('view').disabled = true; document.querySelector('.bakery').classList.add('scene-unavailable'); };
 el('scene').addEventListener('scene-error', showSceneError);
-try { bakery = createBakery(el('scene')); }
+function placeControls({ labels, bars, drawer, moving, drawerValue, viewValue }) {
+  el('scene').dataset.moving = String(moving);
+  el('scene').dataset.drawerProgress = String(drawerValue);
+  el('scene').dataset.viewProgress = String(viewValue);
+  // Labels/native targets are usable once the tiles have cleared the counter.
+  // During travel, only the actual 3D drawer moves through the scene.
+  const barsReady = el('drawer-toggle').getAttribute('aria-expanded') === 'true' && drawerValue >= 0.999;
+  el('fraction-bars').style.visibility = barsReady ? 'visible' : 'hidden';
+  el('fraction-bars').inert = !barsReady;
+  el('fraction-bars').setAttribute('aria-hidden', String(!barsReady));
+  for (const p of labels) {
+    const label = el(`label-${p.pair}`), choices = el(`pie-${p.pair}`);
+    label.style.left = `${p.x}px`; label.style.top = `${p.y}px`;
+    choices.style.left = `${p.x}px`; choices.style.top = `${p.y - 29}px`;
+  }
+  for (const r of bars) {
+    const figure = el(`bar-${r.pair}`).parentElement;
+    Object.assign(figure.style, { left: `${r.x}px`, top: `${r.y}px`, width: `${r.width}px` });
+    el(`bar-${r.pair}`).style.height = `${r.height}px`;
+  }
+  document.querySelector('.drawer-front').style.top = `${drawer.y - 18}px`;
+}
+try { bakery = createBakery(el('scene'), { onLayout: placeControls, modelReview }); }
 catch (error) { showSceneError(); console.warn('3D view unavailable:', error.message); }
 render();
 
@@ -146,9 +170,11 @@ function setDrawer(open) {
   hoverPiece = null;
   el('drawer-toggle').setAttribute('aria-expanded', String(open));
   el('drawer-toggle').innerHTML = `${open ? 'Close' : 'Show'} Fraction Bars <span aria-hidden="true">${open ? '⌃' : '⌄'}</span>`;
-  el('fraction-bars').setAttribute('aria-hidden', String(!open));
-  el('fraction-bars').inert = !open;
+  el('fraction-bars').setAttribute('aria-hidden', 'true');
+  el('fraction-bars').inert = true;
   el('drawer').classList.toggle('open', open);
+  if (bakery) bakery.setDrawer(open);
+  else { el('fraction-bars').inert = !open; el('fraction-bars').setAttribute('aria-hidden', String(!open)); }
   emphasize();
 }
 el('drawer-toggle').addEventListener('click', () => setDrawer(el('drawer-toggle').getAttribute('aria-expanded') !== 'true'));
