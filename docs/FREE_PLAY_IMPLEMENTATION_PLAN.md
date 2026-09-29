@@ -1,6 +1,6 @@
 # Free Play Implementation Plan
 
-Planning baseline: September 28, 2026. This document splits [issue #7](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/7) into five achievable implementation issues. It describes future work, not a completed redesign.
+Planning baseline: September 28, 2026. This document splits [issue #7](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/7) into five implementation issues, with teacher-requested visual milestone **03A / #18** inserted after #11 and before #12. Consult the current status for completed work; this sequence does not imply visual acceptance.
 
 ## Preserved Visual Reference
 
@@ -26,17 +26,18 @@ The original #7 referenced an unfinished `docs/paired-pie-bar-redesign` foundati
 
 The local EAP-01/EAP-02/EAP-04 identifiers mentioned in the old issue were not defined in the current curriculum document. Treat them as unestablished design labels, not verified goals. The documented connections remain DM 1.3 G10/G12 and prerequisites for G11, with audit-local provenance and the limits recorded in CURRICULUM. Reference the [current DM Activity 1.3](https://github.com/AbbyUsesAIThatCodes/DesignAndModeling26-27/tree/main/units/01-introduction-to-design/1.3-measuring-matters) throughout implementation. Do not copy restricted PLTW PDFs or source content into this public game repository.
 
-## Five Reviewable Increments
+## Reviewable Increments
 
 | Order | Issue | Bounded Outcome | Stop Before |
 | --- | --- | --- | --- |
 | 1 | [#9 — Exact Free Play State](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/9) | Rendering-independent A/B state, exact actions, meaningful tests, and a written action contract | Replacing the scene or adding new UI |
 | 2 | [#10 — Bakery Scene And Drawer](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/10) | Mockup-informed 3D composition, state-derived pie/bar displays, working accessible drawer, and compact mode shell | Live serving input or Cut/Regroup animation |
 | 3 | [#11 — Linked Selection](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/11) | Bidirectional selection, independent pairs, Clear/Decrease/Increase, and corresponding hover/focus | Transformation animations or assessment feedback |
-| 4 | [#12 — Cut And Regroup](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/12) | Exact synchronized transitions, refusal explanations, input interruption policy, and reduced motion | Lessons, questions, or new recipes |
+| 3A | [#18 — Full 3D Bakery](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/18) | One lit 3D scene, closed movable wedge solids, spatial drawer and bars, screenshots AND a short running-game video | Cut/Regroup gameplay or declaring teacher visual acceptance |
+| 4 | [#12 — Cut And Regroup](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/12) | Physical 3D slicing and regrouping, exact synchronized transitions, refusal explanations, interruption policy, reduced motion, screenshots AND video | Lessons, questions, or new recipes |
 | 5 | [#13 — Classroom Free Play Review](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/13) | Bounded integration/presentation fixes, final evidence, and accurate current documentation | A new redesign or Learn/Challenge implementation |
 
-Step 01 retains the existing playable. Step 02 deliberately introduces a clearly labeled visual preview, with deferred controls and modes honestly unavailable. Step 03 adds serving interaction; Step 04 completes the Free Play mathematical actions. Step 05 verifies the full original scope. Each increment must build and remain reviewable even when later features are not yet available.
+Step 01 retains the existing playable. Step 02 deliberately introduces a clearly labeled visual preview, with deferred controls and modes honestly unavailable. Step 03 adds serving interaction. The teacher’s September 28 review then inserted Step 03A: the initial scene looked too flat compared with Concept B. It requires actual-game screenshots and video, followed by an explicit teacher visual decision before acceptance. Step 04 completes the Free Play mathematical actions. Step 05 verifies the full original scope. Each increment must build and remain reviewable even when later features are not yet available.
 
 Use **Free Play**, **Learn**, and **Challenge** for the current shell, consistent with #7 and the mockup; the preserved discussion also calls the first mode **Free**. Do not interpret the presence of three mode buttons as completion of three modes. Prediction before revealing a result remains an agreed requirement for future Learn/Challenge work; Free Play stays freely exploratory.
 
@@ -55,7 +56,7 @@ Use **Free Play**, **Learn**, and **Challenge** for the current shell, consisten
 | Original #7 Requirement | Main Owner | Verification |
 | --- | --- | --- |
 | Exact independent pair states and counts | #9 | Exhaustive valid states, boundaries, pair independence |
-| Bright 3D blueberry bakery and segmented drawer bars | #10 | Actual laptop screenshots and comparison with this mockup |
+| Bright 3D blueberry bakery and segmented drawer bars | #10 foundation; #18 visual replacement | Actual laptop screenshots, short video, comparison with this mockup, and teacher decision |
 | Common origins, equal wholes, and equal bar lengths | #10, maintained by #11/#12 | Zero/whole and countable sixteenths |
 | Bidirectional serving selection and hover/focus | #11 | Both directions, all counts, focus without state mutation |
 | Clear/Decrease/Increase and fraction labels | #11 | Pointer/keyboard parity and bounded counts |
@@ -77,4 +78,4 @@ Use **Free Play**, **Learn**, and **Challenge** for the current shell, consisten
 7. Leave merge to the teacher. Do not enable auto-merge or manually trigger deployment. The existing main-merge Pages workflow remains unchanged.
 8. The final PR closes #13 and also #7 only after all original Free Play acceptance requirements are satisfied. Learn/Challenge planning follows separately after teacher review of the shared foundation.
 
-No runtime, dependencies, release version, codename, build ledger, or deployment configuration changes are part of this planning PR. No playable build is asserted by this document.
+The original planning PR changed no runtime or build configuration. Current implementation and exact review artifacts are recorded in [Implementation Status](IMPLEMENTATION_STATUS.md). Preserve the accepted version policy, durable ledger, and existing deployment workflow through each implementation increment.

@@ -1,273 +1,206 @@
 import * as THREE from 'three';
+import { TAU, RADIUS, PIE_X, PIE_Z, HIT_Y, BAR_LENGTH, BAR_DEPTH, BAR_Y, BAR_Z, DRAWER_TRAVEL, material, mesh, instances, point, noise, solidSector, pastryRim, pastryWall, berryGeometry, calyxGeometry, dispose } from './bakery-geometry.js';
+import { makeRoom, makeBar, setBarServing } from './bakery-room.js';
 
-export const RECIPES = Object.freeze({
-  blueberry: { name: 'Blueberry', filling: '#44366c', fruit: '#474677', accent: '#9695c3' },
-  cherry: { name: 'Cherry', filling: '#8f233c', fruit: '#b63549', accent: '#f2918d' },
-  apple: { name: 'Apple', filling: '#b76928', fruit: '#ecc16b', accent: '#ffdda0' },
-});
-const TAU = Math.PI * 2;
-const RADIUS = 1.64;
-const positions = [-2.3, 2.3];
-const material = (color, roughness = 0.65) => new THREE.MeshStandardMaterial({ color, roughness });
-const point = (radius, angle, y) => new THREE.Vector3(Math.sin(angle) * radius, y, Math.cos(angle) * radius);
-
-function mesh(group, geometry, mat, x = 0, y = 0, z = 0) {
-  const m = new THREE.Mesh(geometry, mat);
-  m.position.set(x, y, z);
-  m.castShadow = true;
-  m.receiveShadow = true;
-  group.add(m);
-  return m;
-}
-
-function instances(group, geometry, mat, transforms) {
-  if (!transforms.length) { geometry.dispose(); return; }
-  const batch = new THREE.InstancedMesh(geometry, mat, transforms.length);
-  const dummy = new THREE.Object3D();
-  transforms.forEach((t, i) => {
-    dummy.position.copy(t.p);
-    dummy.rotation.set(t.rx || 0, t.ry || 0, t.rz || 0);
-    dummy.scale.set(t.sx || t.s || 1, t.sy || t.s || 1, t.sz || t.s || 1);
-    dummy.updateMatrix();
-    batch.setMatrixAt(i, dummy.matrix);
-  });
-  batch.castShadow = true;
-  batch.receiveShadow = true;
-  group.add(batch);
-}
+// Retained for the historical first-playable modules. Current Free Play is blueberry.
+export const RECIPES = Object.freeze({ blueberry: { name: 'Blueberry', filling: '#44366c', fruit: '#474677', accent: '#9695c3' }, cherry: { name: 'Cherry', filling: '#8f233c', fruit: '#b63549', accent: '#f2918d' }, apple: { name: 'Apple', filling: '#b76928', fruit: '#ecc16b', accent: '#ffdda0' } });
 
 export function makePie(serving, recipeName, side) {
-  const group = new THREE.Group();
-  group.position.x = positions[side];
-  const china = material('#f9f7f0', 0.24);
-  mesh(group, new THREE.CylinderGeometry(1.95, 1.81, 0.13, 80), china, 0, 0.07);
-  const rim = mesh(group, new THREE.TorusGeometry(1.82, 0.06, 10, 80), china, 0, 0.14);
-  rim.rotation.x = Math.PI / 2;
-  const trim = mesh(group, new THREE.TorusGeometry(1.9, 0.015, 6, 80), material('#95aaa1'), 0, 0.12);
-  trim.rotation.x = Math.PI / 2;
+  const group = new THREE.Group(); group.position.set(side ? PIE_X : -PIE_X, 0, PIE_Z);
+  const china = material('#fff4df', 0.22);
+  const profile = [[0, 0.04], [1.48, 0.04], [1.67, 0.065], [1.87, 0.16], [1.93, 0.20], [1.94, 0.24], [1.88, 0.26], [1.7, 0.19], [1.49, 0.14], [0, 0.14]].map(p => new THREE.Vector2(...p));
+  mesh(group, new THREE.LatheGeometry(profile, 96), china);
+  const trim = mesh(group, new THREE.TorusGeometry(1.89, 0.014, 6, 96), material('#c3a16c', 0.35), 0, 0.249); trim.rotation.x = Math.PI / 2;
   const step = TAU / serving.d;
   for (let i = 0; i < serving.d; i++) {
-    const selected = i < serving.n;
-    const start = Math.PI + i * step;
-    const wedge = new THREE.Group();
-    group.add(wedge);
-    const crust = material('#c88739');
-    const dough = material('#d49138');
-    const filling = material(selected ? '#3b185f' : '#565166', 0.3);
-    const fruit = material(selected ? '#302164' : '#494254', 0.26);
-    const gleam = material(selected ? '#b6a2de' : '#aca6b5', 0.4);
-    filling.name = 'serving-filling'; fruit.name = 'serving-fruit'; gleam.name = 'serving-gleam';
-    const base = mesh(wedge, new THREE.CylinderGeometry(RADIUS, RADIUS - 0.08, 0.29, 64, 1, false, start, step), crust, 0, 0.30);
-    base.userData.slice = i + 1;
-    base.userData.side = side;
-    const top = mesh(wedge, new THREE.CylinderGeometry(1.48, 1.49, 0.065, 64, 1, false, start, step), filling, 0, 0.463);
-    top.userData.slice = i + 1;
-    top.userData.side = side;
-    // The decorative population has fixed positions at every denominator.
-    const berries = [], highlights = [], crimps = [], sugar = [], pastry = [];
-    for (let k = 0; k < 180; k++) {
-      const angle = Math.PI + (k * 2.399963229728653) % TAU;
-      if (angle < start || angle >= start + step) continue;
-      const radius = Math.sqrt((k + 0.5) / 180) * 1.37;
-      const p = point(radius, angle, 0.509 + 0.018 * Math.sin(k * 4));
-      berries.push({ p, s: 0.084 + (k % 4) * 0.009, sy: recipeName === 'apple' ? 0.035 : 0.066, sx: recipeName === 'apple' ? 0.12 : undefined, ry: angle });
-      if (k % 3 === 0) highlights.push({ p: p.clone().add(new THREE.Vector3(-0.018, 0.057, 0.017)), s: 0.017 });
+    const start = Math.PI + i * step, wedge = new THREE.Group(); group.add(wedge);
+    wedge.userData = { slice: i + 1, selected: i < serving.n, start, angle: step, side };
+    // Equal core solids define the mathematics; surface decoration never changes it.
+    const base = mesh(wedge, solidSector(1.52, RADIUS, 0.31, start, step), material('#cf8c40', 0.6), 0, 0.305);
+    base.name = 'pastry-solid';
+    const filling = new THREE.MeshPhysicalMaterial({ color: '#3b185f', roughness: 0.27, clearcoat: 0.65, clearcoatRoughness: 0.25 }); filling.name = 'serving-filling';
+    const jelly = mesh(wedge, solidSector(1.49, 1.49, 0.27, start, step), filling, 0, 0.595); jelly.name = 'filling-solid';
+    const rimMat = material('#ffffff', 0.4, { vertexColors: true });
+    mesh(wedge, pastryRim(start, step), rimMat);
+    mesh(wedge, pastryWall(start, step), material('#ffffff', 0.55, { vertexColors: true }));
+    const fruit = new THREE.MeshPhysicalMaterial({ color: '#44347e', roughness: 0.3, clearcoat: 0.85, clearcoatRoughness: 0.22 }); fruit.name = 'serving-fruit';
+    const berries = [], crowns = [], crumbs = [], fillingFruit = [];
+    // Fixed seeded positions/sizes. Vary shape, orientation, bloom and ripeness,
+    // and leave a small lane at each cut so sixteenths remain countable.
+    for (let k = 0; k < 104; k++) {
+      const a = Math.PI + (k * 2.399963229728653) % TAU, r = Math.sqrt((k + 0.5) / 104) * 1.36;
+      if (a < start || a >= start + step) continue;
+      const s = 0.098 + noise(k + 11) * 0.079;
+      const edgeDistance = Math.min(Math.abs(Math.sin(a - start)), Math.abs(Math.sin(start + step - a))) * r;
+      if (edgeDistance < s * 0.60 + 0.01) continue;
+      const p = point(r, a, 0.716 + s * 0.49), sy = s * (0.72 + noise(k + 7) * 0.32);
+      const tint = new THREE.Color('#d4caed').lerp(new THREE.Color('#7b86bf'), noise(k) * 0.65);
+      berries.push({ p, sx: s, sy, sz: s * (0.88 + noise(k + 14) * 0.25), ry: a, rz: (noise(k + 9) - 0.5) * 0.22, color: tint });
+      crowns.push({ p: p.clone().add(new THREE.Vector3(0, sy * 0.845, 0)), s: s * 0.51, ry: a });
     }
-    for (let k = 0; k < 64; k++) {
-      const angle = Math.PI + (k + 0.5) / 64 * TAU;
-      if (angle < start || angle >= start + step) continue;
-      crimps.push({ p: point(1.55, angle, 0.49), sx: 0.105, sy: 0.084, sz: 0.165, ry: angle });
+    instances(wedge, berryGeometry(), fruit, berries);
+    instances(wedge, calyxGeometry(), material('#293044', 0.65, { side: THREE.DoubleSide }), crowns);
+    // Visible fruit fragments in BOTH radial faces, not painted-on cut lines.
+    for (const a of [start, start + step]) for (let k = 1; k <= 9; k++) {
+      fillingFruit.push({ p: point(k * 0.145, a, 0.50 + noise(k) * 0.14), sx: 0.048, sy: 0.058, sz: 0.048 });
     }
-    for (let k = 0; k < 72; k++) {
-      const angle = Math.PI + (k * 1.618) % TAU;
-      if (angle < start || angle >= start + step) continue;
-      sugar.push({ p: point(1.49 + (k % 3) * 0.044, angle, 0.56), s: 0.019, ry: k });
+    instances(wedge, new THREE.SphereGeometry(1, 8, 6), material('#53428c', 0.35), fillingFruit);
+    for (let k = 0; k < 120; k++) {
+      const a = Math.PI + (k + 0.5) / 120 * TAU;
+      if (a < start || a >= start + step) continue;
+      crumbs.push({ p: point(1.51 + noise(k) * 0.11, a, 0.84 + 0.025 * Math.sin(a * 48)), s: 0.012 + noise(k + 5) * 0.01, ry: k, rx: k });
     }
-    // Small baked leaves make apple visually distinct without hiding cuts.
-    if (recipeName === 'apple') for (let k = 0; k < 12; k++) {
-      const angle = Math.PI + (k + 0.5) / 12 * TAU;
-      if (angle >= start && angle < start + step) pastry.push({ p: point(0.96, angle, 0.56), sx: 0.12, sy: 0.035, sz: 0.26, ry: angle });
-    }
-    const sphere = () => new THREE.SphereGeometry(1, 10, 7);
-    instances(wedge, sphere(), fruit, berries);
-    instances(wedge, sphere(), gleam, highlights);
-    instances(wedge, sphere(), dough, crimps);
-    instances(wedge, new THREE.BoxGeometry(1, 1, 1), material('#fff2d1'), sugar);
-    if (pastry.length) instances(wedge, sphere(), dough, pastry);
-    wedge.userData = { slice: i + 1, selected, start, angle: step, side };
-    // Physical, high-contrast grooves stay above the fruit even at sixteenths.
-    // Use tubes, not platform-dependent WebGL line widths.
-    const guide = new THREE.LineCurve3(point(0, start, 0.64), point(RADIUS, start, 0.64));
-    mesh(wedge, new THREE.TubeGeometry(guide, 1, 0.010, 5, false), material('#fff2d9'));
+    instances(wedge, new THREE.BoxGeometry(1, 1, 1), material('#ffe9af'), crumbs);
+    // Thin cuts, distinct from the thicker solid serving border.
+    const path = new THREE.LineCurve3(point(0, start, HIT_Y), point(RADIUS, start, HIT_Y));
+    const cut = mesh(wedge, new THREE.TubeGeometry(path, 1, 0.009, 5, false), material('#f1cf9d'));
+    cut.castShadow = false;
   }
-  // Logical solid hit target excludes fruit, outlines, and the decorative plate.
-  // Its top matches the visible cut guides, including their near-boundary hits.
-  const hit = new THREE.Mesh(new THREE.CylinderGeometry(RADIUS, RADIUS, 0.49, 96), new THREE.MeshBasicMaterial());
-  hit.name = 'serving-hit-target';
-  hit.position.y = 0.395;
-  hit.visible = false;
-  group.add(hit);
-  setPieServing(group, serving);
-  return group;
+  const hit = new THREE.Mesh(new THREE.CylinderGeometry(RADIUS, RADIUS, HIT_Y - 0.15, 128), new THREE.MeshBasicMaterial());
+  hit.name = 'serving-hit-target'; hit.position.y = (HIT_Y + 0.15) / 2; hit.visible = false; group.add(hit);
+  setPieServing(group, serving); return group;
 }
-
 function perimeter(start, angle, radius, height) {
-  const points = Array.from({ length: 65 }, (_, k) => point(radius, start + angle * k / 64, height));
+  const points = Array.from({ length: 97 }, (_, k) => point(radius, start + angle * k / 96, height));
   if (angle < TAU) points.push(point(0, start + angle, height), point(radius, start, height));
-  const path = new THREE.CurvePath();
-  for (let k = 1; k < points.length; k++) path.add(new THREE.LineCurve3(points[k - 1], points[k]));
-  return path;
+  const path = new THREE.CurvePath(); for (let k = 1; k < points.length; k++) path.add(new THREE.LineCurve3(points[k - 1], points[k])); return path;
 }
-
-// Change materials and the serving boundary, retaining the equal solid geometry.
 export function setPieServing(pie, serving) {
-  const previous = pie.getObjectByName('selected-serving');
-  if (previous) { pie.remove(previous); dispose(previous); }
-  const colors = {
-    'serving-filling': ['#565166', '#3b185f'],
-    'serving-fruit': ['#494254', '#302164'],
-    'serving-gleam': ['#aca6b5', '#b6a2de'],
-  };
+  const previous = pie.getObjectByName('selected-serving'); if (previous) { pie.remove(previous); dispose(previous); }
+  const colors = { 'serving-filling': ['#43334e', '#3b185f'], 'serving-fruit': ['#68667a', '#44347e'] };
   pie.children.filter(o => o.userData.slice).forEach(wedge => {
     wedge.userData.selected = wedge.userData.slice <= serving.n;
-    wedge.traverse(o => {
-      if (colors[o.material?.name]) o.material.color.set(colors[o.material.name][Number(wedge.userData.selected)]);
-    });
+    wedge.traverse(o => { if (colors[o.material?.name]) o.material.color.set(colors[o.material.name][Number(wedge.userData.selected)]); });
   });
   if (serving.n > 0) {
-    const outline = mesh(pie, new THREE.TubeGeometry(perimeter(Math.PI, TAU * serving.n / serving.d, 1.65, 0.64), 192, 0.022, 6, false), new THREE.MeshBasicMaterial({ color: '#9653f5' }));
-    outline.name = 'selected-serving';
-    outline.castShadow = false;
+    const outline = new THREE.Group(); outline.name = 'selected-serving';
+    const path = perimeter(Math.PI, TAU * serving.n / serving.d, 1.65, HIT_Y);
+    mesh(outline, new THREE.TubeGeometry(path, 192, 0.029, 6, false), new THREE.MeshBasicMaterial({ color: '#7536ed' }));
+    mesh(outline, new THREE.TubeGeometry(path, 192, 0.011, 5, false), new THREE.MeshBasicMaterial({ color: '#eadcff', depthTest: false }));
+    outline.traverse(o => { o.castShadow = false; }); pie.add(outline);
   }
   pie.userData.serving = { ...serving };
 }
-
-// The origin is back-center; increasing k follows the left side in Top View.
-// Exact cuts belong to the following piece; the common origin belongs to piece 1.
 export function pieceAtPoint(x, z, denominator) {
   const angle = ((Math.atan2(x, z) - Math.PI) % TAU + TAU) % TAU;
   return (Math.floor(angle / (TAU / denominator) + 1e-10) % denominator) + 1;
 }
-
 function pieceOutline(k, d) {
-  const group = new THREE.Group();
-  const path = perimeter(Math.PI + (k - 1) * TAU / d, TAU / d, 1.60, 0.69);
-  mesh(group, new THREE.TubeGeometry(path, 96, 0.037, 5, false), new THREE.MeshBasicMaterial({ color: '#261b35' }));
-  // Dashed ivory over a dark boundary differs in pattern as well as color.
-  const length = path.getLength();
-  const count = Math.ceil(length / 0.16);
+  const group = new THREE.Group(), path = perimeter(Math.PI + (k - 1) * TAU / d, TAU / d, 1.60, HIT_Y + 0.03);
+  mesh(group, new THREE.TubeGeometry(path, 96, 0.031, 5, false), new THREE.MeshBasicMaterial({ color: '#24182c' }));
+  const count = Math.ceil(path.getLength() / 0.16);
   for (let i = 0; i < count; i++) {
     const dash = new THREE.LineCurve3(path.getPointAt(i / count), path.getPointAt((i + 0.52) / count));
-    const mark = mesh(group, new THREE.TubeGeometry(dash, 1, 0.020, 5, false), new THREE.MeshBasicMaterial({ color: '#fff7dc', depthTest: false, depthWrite: false }));
-    // Draw the light dash over its wider dark backing, rather than inside it.
-    mark.renderOrder = 2;
+    const mark = mesh(group, new THREE.TubeGeometry(dash, 1, 0.017, 5, false), new THREE.MeshBasicMaterial({ color: '#fff7dc', depthTest: false, depthWrite: false })); mark.renderOrder = 2;
   }
-  group.traverse(o => { o.castShadow = false; });
-  group.name = 'piece-emphasis';
-  return group;
+  group.traverse(o => { o.castShadow = false; }); group.name = 'piece-emphasis'; return group;
 }
-
-function dispose(group) {
-  const geometries = new Set(), materials = new Set();
-  group.traverse(o => {
-    if (o.geometry) geometries.add(o.geometry);
-    if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => materials.add(m));
-  });
-  geometries.forEach(g => g.dispose());
-  materials.forEach(m => m.dispose());
-}
-
-export function createBakery(canvas) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.autoUpdate = false;
-  renderer.shadowMap.type = THREE.PCFShadowMap;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.92;
-  const scene = new THREE.Scene();
-  const camera = new THREE.OrthographicCamera(-5.3, 5.3, 2, -2, 0.1, 50);
-  camera.position.set(0, 10, 10);
-  camera.lookAt(0, 0, 0);
-  scene.add(new THREE.HemisphereLight('#fff9e9', '#a59a9c', 2.2));
-  const sun = new THREE.DirectionalLight('#fff4db', 3.2);
-  sun.position.set(-3, 8, 5);
-  sun.castShadow = true;
-  sun.shadow.mapSize.set(1024, 1024);
-  Object.assign(sun.shadow.camera, { left: -7, right: 7, top: 5, bottom: -5 });
-  sun.shadow.bias = -0.001;
-  scene.add(sun);
-  // Transparent shadow catcher lets the warm wooden countertop continue into
-  // the DOM labels and drawer without adding a bitmap or changing pie geometry.
-  const counter = mesh(scene, new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ color: '#583b28', opacity: 0.22 }), 0, -0.01);
-  counter.rotation.x = -Math.PI / 2;
-  counter.castShadow = false;
-  let pies = [];
-  let disposed = false;
-  let emphasized = null;
-  const raycaster = new THREE.Raycaster();
-  let topView = false;
-  const render = () => { if (!disposed) renderer.render(scene, camera); };
-  const resize = () => {
-    const { width, height } = canvas.getBoundingClientRect();
-    if (!width || !height) return;
-    renderer.setSize(width, height, false);
-    const span = Math.max(9, (width / height) * (topView ? 4.3 : 3.6));
-    pies.forEach((pie, side) => { pie.position.x = (side ? 1 : -1) * span * 0.25; });
+export function createBakery(canvas, { onLayout = () => {}, modelReview = false } = {}) {
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); renderer.shadowMap.enabled = true;
+  renderer.shadowMap.autoUpdate = false; renderer.shadowMap.type = THREE.PCFShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.98;
+  const scene = new THREE.Scene(); scene.background = new THREE.Color('#eee2c5');
+  // Small original studio reflection map: broad window highlights without the
+  // expensive runtime RoomEnvironment render/prefilter at every page load.
+  const envCanvas = document.createElement('canvas'); envCanvas.width = 256; envCanvas.height = 128;
+  const ctx = envCanvas.getContext('2d'), gradient = ctx.createLinearGradient(0, 0, 0, 128);
+  gradient.addColorStop(0, '#d4e5ff'); gradient.addColorStop(0.5, '#eee5cf'); gradient.addColorStop(1, '#806142');
+  ctx.fillStyle = gradient; ctx.fillRect(0, 0, 256, 128);
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(30, 22, 45, 42); ctx.fillStyle = '#d2e1ff'; ctx.fillRect(168, 33, 30, 26);
+  const reflection = new THREE.CanvasTexture(envCanvas); reflection.colorSpace = THREE.SRGBColorSpace;
+  const pmrem = new THREE.PMREMGenerator(renderer), env = pmrem.fromEquirectangular(reflection);
+  scene.environment = env.texture; scene.environmentIntensity = 0.45; reflection.dispose(); pmrem.dispose();
+  const camera = new THREE.OrthographicCamera(-6, 6, 3, -3, 0.1, 80);
+  scene.add(new THREE.HemisphereLight('#fff3db', '#75999c', 1.05));
+  const sun = new THREE.DirectionalLight('#ffe0a1', 3.6); sun.position.set(-4.5, 7, 4.5); sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -9, right: 9, top: 7, bottom: -7, near: 0.5, far: 25 });
+  sun.shadow.bias = -0.00012; sun.shadow.normalBias = 0.018; sun.shadow.radius = 3; scene.add(sun);
+  const fill = new THREE.DirectionalLight('#d4e7ff', 1.2); fill.position.set(5, 4, -1); scene.add(fill);
+  const { drawer } = makeRoom(scene);
+  const raycaster = new THREE.Raycaster(), reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let pies = [], bars = [], disposed = false, emphasized = null, topView = false;
+  let drawerOpen = false, drawerValue = 0, viewValue = 0, animation = null, frame = 0;
+  let width = 1, height = 1;
+  const project = (x, y, z) => { const p = new THREE.Vector3(x, y, z).project(camera); return { x: (p.x + 1) * width / 2, y: (1 - p.y) * height / 2 }; };
+  const setCamera = () => {
+    const angle = THREE.MathUtils.lerp(modelReview ? 0.50 : 0.68, Math.PI / 2 - 0.001, viewValue);
+    const targetZ = THREE.MathUtils.lerp(0.25, 0.05, viewValue), targetY = 0.10;
+    camera.position.set(0, targetY + 16 * Math.sin(angle), targetZ + 16 * Math.cos(angle)); camera.lookAt(0, targetY, targetZ);
+    const span = Math.max(modelReview ? 11.2 : 12.0, width / height * THREE.MathUtils.lerp(6.1, 7.4, viewValue));
     const halfHeight = span / (width / height) / 2;
-    Object.assign(camera, { left: -span / 2, right: span / 2, top: halfHeight, bottom: -halfHeight });
-    camera.updateProjectionMatrix();
-    renderer.shadowMap.needsUpdate = true;
-    render();
+    Object.assign(camera, { left: -span / 2, right: span / 2, top: halfHeight, bottom: -halfHeight }); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
   };
-  const observer = new ResizeObserver(resize);
-  observer.observe(canvas);
-  const contextLost = event => {
-    event.preventDefault();
-    canvas.dispatchEvent(new CustomEvent('scene-error'));
+  const layout = () => {
+    const labels = ['A', 'B'].map((pair, side) => ({ pair, ...project(side ? PIE_X : -PIE_X, 0.02, 1.20) }));
+    const barRects = ['A', 'B'].map((pair, side) => {
+      const x = side ? PIE_X : -PIE_X, z = BAR_Z + drawer.position.z;
+      const a = project(x - BAR_LENGTH / 2, BAR_Y + 0.047, z - BAR_DEPTH / 2), b = project(x + BAR_LENGTH / 2, BAR_Y + 0.047, z + BAR_DEPTH / 2);
+      return { pair, x: a.x, y: a.y, width: b.x - a.x, height: b.y - a.y };
+    });
+    onLayout({ labels, bars: barRects, drawer: project(0, -0.69, 1.96 + drawer.position.z), moving: Boolean(animation), drawerValue, viewValue });
   };
+  const render = (shadows = false) => {
+    if (disposed) return; if (shadows) renderer.shadowMap.needsUpdate = true;
+    renderer.render(scene, camera); canvas.dataset.drawCalls = String(renderer.info.render.calls); layout();
+  };
+  const tick = time => {
+    if (disposed || !animation) return;
+    const t = Math.min(1, (time - animation.start) / 600), ease = t * t * (3 - 2 * t);
+    drawerValue = THREE.MathUtils.lerp(animation.drawer, Number(drawerOpen), ease);
+    viewValue = THREE.MathUtils.lerp(animation.view, Number(topView), ease);
+    drawer.position.z = drawerValue * DRAWER_TRAVEL; setCamera();
+    if (t === 1) animation = null;
+    render(true); if (animation) frame = requestAnimationFrame(tick);
+  };
+  const transition = () => {
+    cancelAnimationFrame(frame);
+    if (reduced.matches) {
+      animation = null; drawerValue = Number(drawerOpen); viewValue = Number(topView); drawer.position.z = drawerValue * DRAWER_TRAVEL; setCamera(); render(true);
+    } else { animation = { start: performance.now(), drawer: drawerValue, view: viewValue }; frame = requestAnimationFrame(tick); layout(); }
+  };
+  const resize = () => {
+    const rect = canvas.getBoundingClientRect(); if (!rect.width || !rect.height) return;
+    width = rect.width; height = rect.height; renderer.setSize(width, height, false); setCamera(); render(true);
+  };
+  const observer = new ResizeObserver(resize); observer.observe(canvas);
+  const contextLost = event => { event.preventDefault(); canvas.dispatchEvent(new CustomEvent('scene-error')); };
   canvas.addEventListener('webglcontextlost', contextLost);
+  const motionChange = () => { if (reduced.matches) transition(); }; reduced.addEventListener('change', motionChange);
   return {
     update(left, right, recipe = 'blueberry') {
-      let repartitioned = false, changed = false;
+      let rebuild = false;
       [left, right].forEach((serving, side) => {
-        const old = pies[side]?.userData.serving;
-        if (old?.d !== serving.d) {
-          repartitioned = true;
-          if (pies[side]) { scene.remove(pies[side]); dispose(pies[side]); }
-          pies[side] = makePie(serving, recipe, side);
-          scene.add(pies[side]);
-          emphasized = null;
-        } else if (old.n !== serving.n) { setPieServing(pies[side], serving); changed = true; }
+        if (pies[side]?.userData.serving.d !== serving.d) {
+          if (pies[side]) { scene.remove(pies[side]); dispose(pies[side]); drawer.remove(bars[side]); dispose(bars[side]); }
+          pies[side] = makePie(serving, recipe, side); bars[side] = makeBar(serving, side); scene.add(pies[side]); drawer.add(bars[side]); rebuild = true;
+          if (modelReview) {
+            const wedge = pies[side].children.find(o => o.userData.slice === Math.ceil(serving.d * 0.7));
+            const a = wedge.userData.start + wedge.userData.angle / 2;
+            wedge.position.copy(point(0.52, a, 0.10));
+          }
+        } else if (pies[side].userData.serving.n !== serving.n) { setPieServing(pies[side], serving); setBarServing(bars[side], serving); }
       });
-      // Serving and focus changes leave the solids/shadow map unchanged.
-      if (repartitioned) resize();
-      else if (changed) render();
+      if (rebuild) { emphasized = null; resize(); } else render();
     },
     pick(clientX, clientY) {
+      if (disposed || modelReview) return null;
       const rect = canvas.getBoundingClientRect();
-      if (!rect.width || !rect.height || disposed) return null;
       raycaster.setFromCamera(new THREE.Vector2((clientX - rect.left) / rect.width * 2 - 1, -(clientY - rect.top) / rect.height * 2 + 1), camera);
       const hits = raycaster.intersectObjects(pies.map(p => p.getObjectByName('serving-hit-target')), false);
       if (!hits.length) return null;
-      const pie = hits[0].object.parent;
-      const local = pie.worldToLocal(hits[0].point.clone());
+      const pie = hits[0].object.parent, local = pie.worldToLocal(hits[0].point.clone());
       return { pair: pies.indexOf(pie) === 0 ? 'A' : 'B', k: pieceAtPoint(local.x, local.z, pie.userData.serving.d) };
     },
     emphasize(piece) {
       if (emphasized?.pair === piece?.pair && emphasized?.k === piece?.k) return;
-      pies.forEach(pie => {
-        const outline = pie.getObjectByName('piece-emphasis');
-        if (outline) { pie.remove(outline); dispose(outline); }
-      });
+      pies.forEach(pie => { const outline = pie.getObjectByName('piece-emphasis'); if (outline) { pie.remove(outline); dispose(outline); } });
       emphasized = piece;
-      if (piece) {
-        const pie = pies[piece.pair === 'A' ? 0 : 1];
-        pie.add(pieceOutline(piece.k, pie.userData.serving.d));
-      }
+      if (piece && !modelReview) { const pie = pies[piece.pair === 'A' ? 0 : 1]; pie.add(pieceOutline(piece.k, pie.userData.serving.d)); }
       render();
     },
-    setTopView(top) { topView = top; camera.position.set(0, top ? 14 : 10, top ? 0.001 : 10); camera.lookAt(0, 0, 0); resize(); },
-    dispose() { disposed = true; observer.disconnect(); canvas.removeEventListener('webglcontextlost', contextLost); dispose(scene); renderer.dispose(); },
+    setDrawer(open) { drawerOpen = open; transition(); },
+    setTopView(top) { topView = top; transition(); },
+    dispose() { disposed = true; cancelAnimationFrame(frame); observer.disconnect(); reduced.removeEventListener('change', motionChange); canvas.removeEventListener('webglcontextlost', contextLost); dispose(scene); env.dispose(); renderer.dispose(); },
   };
 }
