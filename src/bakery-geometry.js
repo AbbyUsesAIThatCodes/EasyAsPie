@@ -67,10 +67,12 @@ export function pastryRim(start, angle) {
     }
   }
   // Close the decorative rim too; exposed ends remain usable on separated wedges.
-  for (const [row, reverse] of [[0, false], [seg, true]]) for (let j = 1; j < around - 1; j++) {
+  for (const [row, reverse] of [[0, true], [seg, false]]) for (let j = 1; j < around - 1; j++) {
     const n = row * (around + 1); indices.push(n, n + (reverse ? j + 1 : j), n + (reverse ? j : j + 1));
   }
-  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3)); g.setIndex(indices); g.computeVertexNormals(); return g;
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  for (let i = 0; i < indices.length; i += 3) [indices[i + 1], indices[i + 2]] = [indices[i + 2], indices[i + 1]];
+  g.setIndex(indices); g.computeVertexNormals(); return g;
 }
 export function berryGeometry() {
   const g = new THREE.SphereGeometry(1, 14, 10), a = g.attributes.position;
@@ -107,5 +109,7 @@ export function pastryWall(start, angle) {
   }
   indices.push(0, 3, 2, 0, 2, 1);
   const last = count * 4; indices.push(last, last + 1, last + 2, last, last + 2, last + 3);
-  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3)); g.setIndex(indices); g.computeVertexNormals(); return g;
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  for (let i = 0; i < indices.length; i += 3) [indices[i + 1], indices[i + 2]] = [indices[i + 2], indices[i + 1]];
+  g.setIndex(indices); g.computeVertexNormals(); return g;
 }

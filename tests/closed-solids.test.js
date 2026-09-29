@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { solidSector, TAU, RADIUS } from '../src/bakery-geometry.js';
+import { solidSector, pastryWall, pastryRim, TAU, RADIUS } from '../src/bakery-geometry.js';
 
 // Weld coincident triangle positions and require two oppositely directed uses
 // of every edge, including the radial cuts that partial cylinders omit.
@@ -34,5 +34,12 @@ test('every movable pastry/filling sector is closed, outward-facing and equal-vo
       if (whole === undefined) whole = total;
       assert.ok(Math.abs(total - whole) < 1e-6, 'Changing d preserves the exact tessellated whole volume.');
     }
+  }
+});
+
+test('decorative pastry shells are closed and face outward', () => {
+  for (const make of [pastryWall, pastryRim]) for (const d of [2, 4, 8, 16]) {
+    const source = make(Math.PI, TAU / d), g = source.toNonIndexed();
+    audit(g); g.dispose(); source.dispose();
   }
 });

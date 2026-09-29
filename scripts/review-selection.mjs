@@ -34,13 +34,18 @@ const layout = async () => {
   const result = await page.evaluate(() => {
     const rect = id => { const r = document.getElementById(id).getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height, bottom: r.bottom }; };
     return { width: innerWidth, height: innerHeight, scrollWidth: document.documentElement.scrollWidth, scrollHeight: document.documentElement.scrollHeight,
-      scene: rect('scene'), build: rect('build-identity'), A: rect('bar-A'), B: rect('bar-B') };
+      scene: rect('scene'), build: rect('build-identity'), A: rect('bar-A'), B: rect('bar-B'), toggle: rect('drawer-toggle'), labelA: rect('label-A'), labelB: rect('label-B'), open: document.getElementById('drawer-toggle').getAttribute('aria-expanded') === 'true' };
   });
   assert.ok(result.scrollWidth <= result.width, 'No horizontal overflow.');
   assert.ok(result.scrollHeight <= result.height + 1, 'Laptop layout fits without vertical scrolling.');
   assert.ok(result.scene.height > 200 && result.scene.bottom <= result.height, 'The pies stay visible.');
   assert.ok(result.build.bottom <= result.height && result.build.width > 0, 'Complete build ID stays on screen.');
   assert.ok(Math.abs(result.A.width - result.B.width) < 0.1, 'Bars have equal whole lengths.');
+  for (const key of ['toggle', 'labelA', 'labelB', ...(result.open ? ['A', 'B'] : [])]) {
+    const r = result[key];
+    assert.ok(r.y >= result.scene.y && r.bottom <= result.scene.bottom + 1, `${key} stays inside the visible scene.`);
+    assert.ok(r.x >= 0 && r.x + r.width <= result.width + 1, `${key} stays on screen.`);
+  }
   return result;
 };
 const pairValues = { A: { n: 1, d: 2 }, B: { n: 2, d: 4 } };
@@ -103,7 +108,7 @@ async function piePoint(pair, piece, portion = 0.5, top = true) {
   const span = Math.max(12, r.width / r.height * (top ? 7.4 : 6.1));
   const scale = r.width / span, radius = 1.14;
   const elevation = top ? Math.PI / 2 - 0.001 : 0.68;
-  const targetZ = top ? 0.05 : 0.25;
+  const targetZ = top ? 0.40 : 0.25;
   const x = (pair === 'A' ? -2.55 : 2.55) + Math.sin(angle) * radius;
   const z = -0.65 + Math.cos(angle) * radius;
   return { x: r.x + r.width / 2 + x * scale,
@@ -214,7 +219,7 @@ try {
       await pointSelect('A', 1, 0.5, false);
       await pointSelect('B', pairValues.B.d, 0.5, false);
       await pointSelect('A', pairValues.A.d, 0.5, false);
-      await page.locator('#view').click(); await settle(); await verify();
+      await page.locator('#view').click(); await settle(); await verify(); await layout();
       await keyboardSelect('B', Math.max(1, pairValues.B.d - 1), 'bar');
       await page.keyboard.press('Home'); await verify();
       await shot(`${width}x${height}-${fixture || 'normal'}-focus`);
@@ -224,7 +229,7 @@ try {
   await keyboardSelect('A', 7, 'pie');
   assert.notEqual(await page.locator('#pie-A [data-piece="7"]').evaluate(e => getComputedStyle(e).outlineStyle), 'none');
   await shot('1280x720-pie-keyboard');
-  await page.locator('#view').click(); await settle(); await verify();
+  await page.locator('#view').click(); await settle(); await verify(); await layout();
   await page.setViewportSize({ width: 1366, height: 768 }); await settle(); await verify();
   if (await page.locator('#fullscreen').isVisible()) {
     await page.locator('#fullscreen').click(); await page.waitForFunction(() => Boolean(document.fullscreenElement)); await verify(); await layout();
