@@ -8,7 +8,7 @@ import { resolve, extname } from 'node:path';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const root = resolve('dist');
 const manifest = JSON.parse(await readFile(`${root}/build.json`, 'utf8'));
-const output = resolve(process.env.REVIEW_OUTPUT || 'docs/review/issue-11');
+const output = resolve(process.env.REVIEW_OUTPUT || 'docs/review/issue-18');
 await mkdir(output, { recursive: true });
 const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json' };
 const server = createServer(async (req, res) => {
@@ -22,11 +22,13 @@ const url = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({ headless: true, executablePath: process.env.CHROMIUM_PATH || undefined,
   args: ['--no-sandbox', '--disable-dev-shm-usage', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 const messages = [], checks = [];
+const started = Date.now();
 const page = await browser.newPage({ viewport: { width: 1366, height: 768 } });
 page.on('pageerror', e => messages.push({ type: 'pageerror', message: e.message }));
 page.on('console', m => { if (['error', 'warning'].includes(m.type())) messages.push({ type: m.type(), message: m.text() }); });
+page.setDefaultNavigationTimeout(60000);
 const values = () => page.locator('.fraction').allTextContents();
-const settle = () => page.waitForFunction(() => document.getAnimations().length === 0);
+const settle = () => page.waitForFunction(() => document.getAnimations().length === 0 && document.getElementById('scene').dataset.moving === 'false');
 const shot = name => page.screenshot({ path: `${output}/${name}.png` });
 const layout = async () => {
   const result = await page.evaluate(() => {
@@ -72,6 +74,7 @@ async function verify() {
 }
 
 async function start(fixture = '') {
+  console.log(`Loading ${fixture || 'normal'} (${Math.round((Date.now() - started) / 1000)}s)`);
   await page.goto(`${url}/${fixture ? '?preview=' + fixture : ''}`);
   await page.waitForFunction(() => document.getElementById('scene').width > 0);
   assert.equal(await page.locator('#scene-error').isVisible(), false);
@@ -97,10 +100,14 @@ async function action(pair, type) {
 async function piePoint(pair, piece, portion = 0.5, top = true) {
   const r = await page.locator('#scene').boundingBox();
   const angle = Math.PI + (piece - 1 + portion) * 2 * Math.PI / pairValues[pair].d;
-  const span = Math.max(9, r.width / r.height * (top ? 4.3 : 3.6));
+  const span = Math.max(12, r.width / r.height * (top ? 7.4 : 6.1));
   const scale = r.width / span, radius = 1.14;
-  return { x: r.x + r.width * (pair === 'A' ? 0.25 : 0.75) + Math.sin(angle) * radius * scale,
-    y: r.y + r.height / 2 + (Math.cos(angle) * radius * (top ? 1 : Math.SQRT1_2) - 0.64 * (top ? 0 : Math.SQRT1_2)) * scale };
+  const elevation = top ? Math.PI / 2 - 0.001 : 0.68;
+  const targetZ = top ? 0.05 : 0.25;
+  const x = (pair === 'A' ? -2.55 : 2.55) + Math.sin(angle) * radius;
+  const z = -0.65 + Math.cos(angle) * radius;
+  return { x: r.x + r.width / 2 + x * scale,
+    y: r.y + r.height / 2 + ((z - targetZ) * Math.sin(elevation) - (0.99 - 0.10) * Math.cos(elevation)) * scale };
 }
 async function pointSelect(pair, k, portion = 0.5, top = true) {
   const { x, y } = await piePoint(pair, k, portion, top);
@@ -154,7 +161,7 @@ try {
   checks.push({ check: 'Real Tab order, closed-region exclusion, Escape restores toggle focus', result: 'passed' });
 
   for (const fixture of ['halves', 'quarters', 'eighths', 'sixteenths']) {
-    await start(fixture); await open(); await page.locator('#view').click();
+    await start(fixture); await open(); await page.locator('#view').click(); await settle();
     for (const pair of ['A', 'B']) {
       const d = pairValues[pair].d;
       // Each direction covers all d+1 states, zero through its own Clear control.
@@ -207,7 +214,7 @@ try {
       await pointSelect('A', 1, 0.5, false);
       await pointSelect('B', pairValues.B.d, 0.5, false);
       await pointSelect('A', pairValues.A.d, 0.5, false);
-      await page.locator('#view').click(); await verify();
+      await page.locator('#view').click(); await settle(); await verify();
       await keyboardSelect('B', Math.max(1, pairValues.B.d - 1), 'bar');
       await page.keyboard.press('Home'); await verify();
       await shot(`${width}x${height}-${fixture || 'normal'}-focus`);
@@ -217,8 +224,8 @@ try {
   await keyboardSelect('A', 7, 'pie');
   assert.notEqual(await page.locator('#pie-A [data-piece="7"]').evaluate(e => getComputedStyle(e).outlineStyle), 'none');
   await shot('1280x720-pie-keyboard');
-  await page.locator('#view').click(); await verify();
-  await page.setViewportSize({ width: 1366, height: 768 }); await verify();
+  await page.locator('#view').click(); await settle(); await verify();
+  await page.setViewportSize({ width: 1366, height: 768 }); await settle(); await verify();
   if (await page.locator('#fullscreen').isVisible()) {
     await page.locator('#fullscreen').click(); await page.waitForFunction(() => Boolean(document.fullscreenElement)); await verify(); await layout();
     await page.locator('#fullscreen').click(); await page.waitForFunction(() => !document.fullscreenElement); await verify();
@@ -230,6 +237,10 @@ try {
   await page.emulateMedia({ reducedMotion: 'reduce' }); await open();
   assert.equal(await page.locator('#fraction-bars').evaluate(e => getComputedStyle(e).transitionDuration), '0s');
   assert.equal(await page.evaluate(() => document.getAnimations().length), 0);
+  assert.equal(await page.locator('#scene').getAttribute('data-moving'), 'false');
+  assert.equal(await page.locator('#scene').getAttribute('data-drawer-progress'), '1');
+  await page.locator('#view').click(); await verify();
+  assert.equal(await page.locator('#scene').getAttribute('data-moving'), 'false');
   await keyboardSelect('A', 5, 'bar');
   await page.keyboard.press('End'); await verify();
   await page.keyboard.press('ArrowRight'); await verify();
