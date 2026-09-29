@@ -100,6 +100,12 @@ function placeControls({ labels, bars, drawer, moving, drawerValue, viewValue })
   el('scene').dataset.moving = String(moving);
   el('scene').dataset.drawerProgress = String(drawerValue);
   el('scene').dataset.viewProgress = String(viewValue);
+  // Labels/native targets are usable once the tiles have cleared the counter.
+  // During travel, only the actual 3D drawer moves through the scene.
+  const barsReady = el('drawer-toggle').getAttribute('aria-expanded') === 'true' && drawerValue >= 0.999;
+  el('fraction-bars').style.visibility = barsReady ? 'visible' : 'hidden';
+  el('fraction-bars').inert = !barsReady;
+  el('fraction-bars').setAttribute('aria-hidden', String(!barsReady));
   for (const p of labels) {
     const label = el(`label-${p.pair}`), choices = el(`pie-${p.pair}`);
     label.style.left = `${p.x}px`; label.style.top = `${p.y}px`;
@@ -164,10 +170,11 @@ function setDrawer(open) {
   hoverPiece = null;
   el('drawer-toggle').setAttribute('aria-expanded', String(open));
   el('drawer-toggle').innerHTML = `${open ? 'Close' : 'Show'} Fraction Bars <span aria-hidden="true">${open ? '⌃' : '⌄'}</span>`;
-  el('fraction-bars').setAttribute('aria-hidden', String(!open));
-  el('fraction-bars').inert = !open;
+  el('fraction-bars').setAttribute('aria-hidden', 'true');
+  el('fraction-bars').inert = true;
   el('drawer').classList.toggle('open', open);
-  bakery?.setDrawer(open);
+  if (bakery) bakery.setDrawer(open);
+  else { el('fraction-bars').inert = !open; el('fraction-bars').setAttribute('aria-hidden', String(!open)); }
   emphasize();
 }
 el('drawer-toggle').addEventListener('click', () => setDrawer(el('drawer-toggle').getAttribute('aria-expanded') !== 'true'));

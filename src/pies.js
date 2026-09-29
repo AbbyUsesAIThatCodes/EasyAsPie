@@ -114,7 +114,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   const camera = new THREE.OrthographicCamera(-6, 6, 3, -3, 0.1, 80);
   scene.add(new THREE.HemisphereLight('#fff3db', '#75999c', 1.05));
   const sun = new THREE.DirectionalLight('#ffe0a1', 3.6); sun.position.set(-4.5, 7, 4.5); sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -9, right: 9, top: 7, bottom: -7, near: 0.5, far: 25 });
+  sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -9, right: 9, top: 7, bottom: -7, near: 0.5, far: 25 });
   sun.shadow.bias = -0.00012; sun.shadow.normalBias = 0.018; sun.shadow.radius = 3; scene.add(sun);
   const fill = new THREE.DirectionalLight('#d4e7ff', 1.2); fill.position.set(5, 4, -1); scene.add(fill);
   const { drawer } = makeRoom(scene);

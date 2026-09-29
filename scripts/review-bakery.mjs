@@ -24,14 +24,14 @@ const monitor = page => {
   page.on('pageerror', e => messages.push(e.message));
   page.on('console', m => { if (['warning', 'error'].includes(m.type())) messages.push(m.text()); });
 };
-const settle = page => page.waitForFunction(() => document.querySelector('#scene').dataset.moving === 'false');
+const settle = async page => { await page.waitForFunction(() => document.querySelector('#scene').dataset.moving === 'false'); await page.screenshot(); };
 let start;
 const chapter = name => chapters.push({ seconds: Number(((Date.now() - start) / 1000).toFixed(2)), name });
 try {
   const context = await browser.newContext({ viewport: { width: 1366, height: 768 }, recordVideo: { dir: `${output}/raw`, size: { width: 1366, height: 768 } } });
   const page = await context.newPage(); monitor(page);
   const recordingStart = Date.now();
-  await page.goto(url); await settle(page);
+  await page.goto(url); await settle(page); await page.screenshot();
   assert.equal(await page.locator('#build-identity').textContent(), manifest.id);
   start = Date.now(); const trimStart = (start - recordingStart) / 1000;
   chapter('Default Composition And Full Build ID'); await page.waitForTimeout(3000);
@@ -69,7 +69,7 @@ try {
   await inspect.evaluate(() => { window.reviewFrames = []; const tick = t => { window.reviewFrames.push(t); if (window.reviewFrames.length < 180) window.reviewFrame = requestAnimationFrame(tick); }; window.reviewFrame = requestAnimationFrame(tick); });
   const begin = Date.now(); await inspect.locator('#drawer-toggle').click(); await settle(inspect);
   const frames = await inspect.evaluate(() => { cancelAnimationFrame(window.reviewFrame); return window.reviewFrames; });
-  metrics.push({ action: 'Drawer open', wallMs: Date.now() - begin, animationFrameCallbacks: frames.length, frameIntervalsMs: frames.slice(1).map((t, i) => Number((t - frames[i]).toFixed(2))) });
+  metrics.push({ action: 'Drawer open', wallMs: Date.now() - begin, animationFrameCallbacks: frames.length, drawCalls: await inspect.locator('#scene').getAttribute('data-draw-calls'), frameIntervalsMs: frames.slice(1).map((t, i) => Number((t - frames[i]).toFixed(2))) });
   const gpu = await inspect.locator('#scene').evaluate(c => { const gl = c.getContext('webgl2'), ext = gl.getExtension('WEBGL_debug_renderer_info'); return { renderer: ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER), error: gl.getError() }; });
   assert.equal(gpu.error, 0); assert.deepEqual(messages, []);
   await writeFile(`${output}/media-results.json`, JSON.stringify({ build: manifest.id, browser: browser.version(), gpu, duration, chapters, metrics, messages, note: 'Actual software-rendered browser capture; classroom hardware and projector not tested. Model-review separation is static geometry inspection, not Cut/Regroup gameplay.' }, null, 2) + '\n');
