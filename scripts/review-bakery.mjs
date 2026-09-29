@@ -30,6 +30,7 @@ const chapter = name => chapters.push({ seconds: Number(((Date.now() - start) / 
 try {
   const context = await browser.newContext({ viewport: { width: 1366, height: 768 }, recordVideo: { dir: `${output}/raw`, size: { width: 1366, height: 768 } } });
   const page = await context.newPage(); monitor(page);
+  page.setDefaultNavigationTimeout(180000);
   const recordingStart = Date.now();
   await page.goto(url); await settle(page); await page.screenshot();
   assert.equal(await page.locator('#build-identity').textContent(), manifest.id);
@@ -55,9 +56,9 @@ try {
   await page.locator('#view').click(); assert.equal(await page.locator('#scene').getAttribute('data-moving'), 'false'); await page.waitForTimeout(1300);
   await page.locator('#view').click(); await page.waitForTimeout(2000);
   const recording = page.video(); await context.close(); const raw = await recording.path();
-  execFileSync('ffmpeg', ['-y', '-ss', String(trimStart), '-i', raw, '-c:v', 'libx264', '-preset', 'medium', '-crf', '22', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-an', `${output}/bakery-review.mp4`], { stdio: 'pipe' });
+  execFileSync('ffmpeg', ['-y', '-ss', String(trimStart), '-i', raw, '-c:v', 'libx264', '-preset', 'medium', '-crf', '22', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-an', `${output}/bakery-full-capture.mp4`], { stdio: 'pipe' });
   await rm(`${output}/raw`, { recursive: true });
-  const duration = Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'default=noprint_wrappers=1:nokey=1', `${output}/bakery-review.mp4`], { encoding: 'utf8' }).trim());
+  const duration = Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'default=noprint_wrappers=1:nokey=1', `${output}/bakery-full-capture.mp4`], { encoding: 'utf8' }).trim());
   console.log(`Captured ${duration}s production-game video.`);
   const inspect = await browser.newPage({ viewport: { width: 1366, height: 768 } }); monitor(inspect);
   await inspect.goto(`${url}/?preview=quarters&review=solids`); await settle(inspect);
@@ -65,7 +66,8 @@ try {
   // A screenshot crop from the very same running scene, no rescaling or beauty render.
   await inspect.screenshot({ path: `${output}/pastry-close-up.png`, clip: { x: 155, y: 205, width: 500, height: 300 } });
   await inspect.goto(url); await settle(inspect);
-  // Measure the actual wall time/frame opportunities on this renderer, not a hardware promise.
+  // Includes Playwright input/settling and screenshot readback. rAF callbacks
+  // also run while the scene is idle: this is NOT rendered FPS or input latency.
   await inspect.evaluate(() => { window.reviewFrames = []; const tick = t => { window.reviewFrames.push(t); if (window.reviewFrames.length < 180) window.reviewFrame = requestAnimationFrame(tick); }; window.reviewFrame = requestAnimationFrame(tick); });
   const begin = Date.now(); await inspect.locator('#drawer-toggle').click(); await settle(inspect);
   const frames = await inspect.evaluate(() => { cancelAnimationFrame(window.reviewFrame); return window.reviewFrames; });
