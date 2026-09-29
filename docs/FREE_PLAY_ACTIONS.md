@@ -1,6 +1,6 @@
 # Free Play Action Contract
 
-Implemented by `src/free-play.js` for [issue #9](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/9). This is the rendering-independent foundation for the [Current Direction](DESIGN-DISCUSSION-2026-09-28.md#current-direction), not a new mode in the existing first playable.
+Implemented by `src/free-play.js` for [issue #9](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/9). This is the rendering-independent foundation for the [Current Direction](DESIGN-DISCUSSION-2026-09-28.md#current-direction), now used by the read-only #10 visual preview.
 
 ## State And Ownership
 
@@ -33,6 +33,6 @@ Cut and valid Regroup preserve the exact amount, including zero and whole. They 
 
 ## Integration Boundary
 
-The current Examples/Challenge playable still uses its existing session model. This module is deliberately not wired into that UI in #9. #10 introduces the state-derived visual preview; #11 adds serving controls in both representations; #12 adds Cut/Regroup controls, refusal feedback, and transitions. Keyboard operation, visible focus, non-color feedback, and reduced motion accompany each relevant UI increment.
+Step #9 deliberately retained the old Examples/Challenge session model. Step #10 now feeds both pies, both bars, and their labels from one `createFreePlay()` snapshot. Drawer/camera/full-screen changes never write that snapshot; #11 adds serving controls in both representations; #12 adds Cut/Regroup controls, refusal feedback, and transitions. Keyboard operation, visible focus, non-color feedback, and reduced motion accompany each relevant UI increment.
 
 `tests/free-play.test.js` checks all 34 valid fractions against all 34 partner states in both directions, every selectable count, bounded serving actions, exact transformations and round trips, rejection/recovery, and immutable ownership. These are mathematical behavior checks, not evidence of student assessment or ruler-reading mastery.
