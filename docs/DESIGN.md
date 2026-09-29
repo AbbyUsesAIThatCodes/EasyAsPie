@@ -4,7 +4,7 @@
 
 The [preserved Current Direction](DESIGN-DISCUSSION-2026-09-28.md#current-direction) governs the paired pie/bar redesign. Each independent pair shares one exact fraction; its equal-length bar mirrors its pie without units or ruler ticks. The [Free Play Action Contract](FREE_PLAY_ACTIONS.md) now defines the tested state foundation, serving changes, and exact Cut/Regroup behavior. See [Implementation Status](IMPLEMENTATION_STATUS.md) for what is connected to the UI.
 
-The sections below preserve the historical first-playable design, including its Examples/Challenge teaching sequence and cosmetic recipes. The current #10 visual preview replaces the runtime entrypoint with two blueberry pies, the Free Play shell, and a working state-derived drawer. Linked serving controls remain future work in #11–#12. Old mode modules and validation evidence remain preserved; they are not exposed as redesigned modes. Prediction before revealing results belongs to future Learn/Challenge content; Free Play is exploratory.
+The sections below preserve the historical first-playable design, including its Examples/Challenge teaching sequence and cosmetic recipes. The current #11 Free Play preview connects both blueberry pies, bars, labels, and announcements to exact serving actions, with pointer and keyboard access. Hover/focus emphasizes one corresponding piece without changing the amount. Cut/Regroup presentation remains #12. Old mode modules and validation evidence remain preserved; they are not exposed as redesigned modes. Prediction before revealing results belongs to future Learn/Challenge content; Free Play is exploratory.
 
 ## The Idea
 
