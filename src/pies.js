@@ -37,7 +37,7 @@ function instances(group, geometry, mat, transforms) {
 }
 
 export function makePie(serving, recipeName, side) {
-    const group = new THREE.Group();
+  const group = new THREE.Group();
   group.position.x = positions[side];
   const china = material('#f9f7f0', 0.24);
   mesh(group, new THREE.CylinderGeometry(1.95, 1.81, 0.13, 80), china, 0, 0.07);
@@ -56,6 +56,7 @@ export function makePie(serving, recipeName, side) {
     const filling = material(selected ? '#3b185f' : '#565166', 0.3);
     const fruit = material(selected ? '#302164' : '#494254', 0.26);
     const gleam = material(selected ? '#b6a2de' : '#aca6b5', 0.4);
+    filling.name = 'serving-filling'; fruit.name = 'serving-fruit'; gleam.name = 'serving-gleam';
     const base = mesh(wedge, new THREE.CylinderGeometry(RADIUS, RADIUS - 0.08, 0.29, 64, 1, false, start, step), crust, 0, 0.30);
     base.userData.slice = i + 1;
     base.userData.side = side;
@@ -99,17 +100,70 @@ export function makePie(serving, recipeName, side) {
     const guide = new THREE.LineCurve3(point(0, start, 0.64), point(RADIUS, start, 0.64));
     mesh(wedge, new THREE.TubeGeometry(guide, 1, 0.010, 5, false), material('#fff2d9'));
   }
+  // Logical solid hit target excludes fruit, outlines, and the decorative plate.
+  // Its top matches the visible cut guides, including their near-boundary hits.
+  const hit = new THREE.Mesh(new THREE.CylinderGeometry(RADIUS, RADIUS, 0.49, 96), new THREE.MeshBasicMaterial());
+  hit.name = 'serving-hit-target';
+  hit.position.y = 0.395;
+  hit.visible = false;
+  group.add(hit);
+  setPieServing(group, serving);
+  return group;
+}
+
+function perimeter(start, angle, radius, height) {
+  const points = Array.from({ length: 65 }, (_, k) => point(radius, start + angle * k / 64, height));
+  if (angle < TAU) points.push(point(0, start + angle, height), point(radius, start, height));
+  const path = new THREE.CurvePath();
+  for (let k = 1; k < points.length; k++) path.add(new THREE.LineCurve3(points[k - 1], points[k]));
+  return path;
+}
+
+// Change materials and the serving boundary, retaining the equal solid geometry.
+export function setPieServing(pie, serving) {
+  const previous = pie.getObjectByName('selected-serving');
+  if (previous) { pie.remove(previous); dispose(previous); }
+  const colors = {
+    'serving-filling': ['#565166', '#3b185f'],
+    'serving-fruit': ['#494254', '#302164'],
+    'serving-gleam': ['#aca6b5', '#b6a2de'],
+  };
+  pie.children.filter(o => o.userData.slice).forEach(wedge => {
+    wedge.userData.selected = wedge.userData.slice <= serving.n;
+    wedge.traverse(o => {
+      if (colors[o.material?.name]) o.material.color.set(colors[o.material.name][Number(wedge.userData.selected)]);
+    });
+  });
   if (serving.n > 0) {
-    const start = Math.PI, end = start + step * serving.n;
-    const points = Array.from({ length: 97 }, (_, k) => point(1.65, start + (end - start) * k / 96, 0.64));
-    if (serving.n < serving.d) {
-      points.push(point(0, end, 0.64), point(1.65, start, 0.64));
-    }
-    // A continuous perimeter distinguishes selection without relying on color.
-    const path = new THREE.CurvePath();
-    for (let k = 1; k < points.length; k++) path.add(new THREE.LineCurve3(points[k - 1], points[k]));
-    mesh(group, new THREE.TubeGeometry(path, 192, 0.022, 6, false), new THREE.MeshBasicMaterial({ color: '#9653f5' }));
+    const outline = mesh(pie, new THREE.TubeGeometry(perimeter(Math.PI, TAU * serving.n / serving.d, 1.65, 0.64), 192, 0.022, 6, false), new THREE.MeshBasicMaterial({ color: '#9653f5' }));
+    outline.name = 'selected-serving';
+    outline.castShadow = false;
   }
+  pie.userData.serving = { ...serving };
+}
+
+// The origin is back-center; increasing k follows the left side in Top View.
+// Exact cuts belong to the following piece; the common origin belongs to piece 1.
+export function pieceAtPoint(x, z, denominator) {
+  const angle = ((Math.atan2(x, z) - Math.PI) % TAU + TAU) % TAU;
+  return (Math.floor(angle / (TAU / denominator) + 1e-10) % denominator) + 1;
+}
+
+function pieceOutline(k, d) {
+  const group = new THREE.Group();
+  const path = perimeter(Math.PI + (k - 1) * TAU / d, TAU / d, 1.60, 0.69);
+  mesh(group, new THREE.TubeGeometry(path, 96, 0.037, 5, false), new THREE.MeshBasicMaterial({ color: '#261b35' }));
+  // Dashed ivory over a dark boundary differs in pattern as well as color.
+  const length = path.getLength();
+  const count = Math.ceil(length / 0.16);
+  for (let i = 0; i < count; i++) {
+    const dash = new THREE.LineCurve3(path.getPointAt(i / count), path.getPointAt((i + 0.52) / count));
+    const mark = mesh(group, new THREE.TubeGeometry(dash, 1, 0.020, 5, false), new THREE.MeshBasicMaterial({ color: '#fff7dc', depthTest: false, depthWrite: false }));
+    // Draw the light dash over its wider dark backing, rather than inside it.
+    mark.renderOrder = 2;
+  }
+  group.traverse(o => { o.castShadow = false; });
+  group.name = 'piece-emphasis';
   return group;
 }
 
@@ -127,6 +181,7 @@ export function createBakery(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.shadowMap.enabled = true;
+  renderer.shadowMap.autoUpdate = false;
   renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 0.92;
@@ -149,6 +204,8 @@ export function createBakery(canvas) {
   counter.castShadow = false;
   let pies = [];
   let disposed = false;
+  let emphasized = null;
+  const raycaster = new THREE.Raycaster();
   let topView = false;
   const render = () => { if (!disposed) renderer.render(scene, camera); };
   const resize = () => {
@@ -160,6 +217,7 @@ export function createBakery(canvas) {
     const halfHeight = span / (width / height) / 2;
     Object.assign(camera, { left: -span / 2, right: span / 2, top: halfHeight, bottom: -halfHeight });
     camera.updateProjectionMatrix();
+    renderer.shadowMap.needsUpdate = true;
     render();
   };
   const observer = new ResizeObserver(resize);
@@ -171,10 +229,43 @@ export function createBakery(canvas) {
   canvas.addEventListener('webglcontextlost', contextLost);
   return {
     update(left, right, recipe = 'blueberry') {
-      pies.forEach(p => { scene.remove(p); dispose(p); });
-      pies = [makePie(left, recipe, 0), makePie(right, recipe, 1)];
-      pies.forEach(p => scene.add(p));
-      resize();
+      let repartitioned = false, changed = false;
+      [left, right].forEach((serving, side) => {
+        const old = pies[side]?.userData.serving;
+        if (old?.d !== serving.d) {
+          repartitioned = true;
+          if (pies[side]) { scene.remove(pies[side]); dispose(pies[side]); }
+          pies[side] = makePie(serving, recipe, side);
+          scene.add(pies[side]);
+          emphasized = null;
+        } else if (old.n !== serving.n) { setPieServing(pies[side], serving); changed = true; }
+      });
+      // Serving and focus changes leave the solids/shadow map unchanged.
+      if (repartitioned) resize();
+      else if (changed) render();
+    },
+    pick(clientX, clientY) {
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height || disposed) return null;
+      raycaster.setFromCamera(new THREE.Vector2((clientX - rect.left) / rect.width * 2 - 1, -(clientY - rect.top) / rect.height * 2 + 1), camera);
+      const hits = raycaster.intersectObjects(pies.map(p => p.getObjectByName('serving-hit-target')), false);
+      if (!hits.length) return null;
+      const pie = hits[0].object.parent;
+      const local = pie.worldToLocal(hits[0].point.clone());
+      return { pair: pies.indexOf(pie) === 0 ? 'A' : 'B', k: pieceAtPoint(local.x, local.z, pie.userData.serving.d) };
+    },
+    emphasize(piece) {
+      if (emphasized?.pair === piece?.pair && emphasized?.k === piece?.k) return;
+      pies.forEach(pie => {
+        const outline = pie.getObjectByName('piece-emphasis');
+        if (outline) { pie.remove(outline); dispose(outline); }
+      });
+      emphasized = piece;
+      if (piece) {
+        const pie = pies[piece.pair === 'A' ? 0 : 1];
+        pie.add(pieceOutline(piece.k, pie.userData.serving.d));
+      }
+      render();
     },
     setTopView(top) { topView = top; camera.position.set(0, top ? 14 : 10, top ? 0.001 : 10); camera.lookAt(0, 0, 0); resize(); },
     dispose() { disposed = true; observer.disconnect(); canvas.removeEventListener('webglcontextlost', contextLost); dispose(scene); renderer.dispose(); },

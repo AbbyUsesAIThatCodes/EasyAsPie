@@ -1,14 +1,14 @@
 # Free Play Action Contract
 
-Implemented by `src/free-play.js` for [issue #9](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/9). This is the rendering-independent foundation for the [Current Direction](DESIGN-DISCUSSION-2026-09-28.md#current-direction), now used by the read-only #10 visual preview.
+Implemented by `src/free-play.js` for [issue #9](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/9). This is the rendering-independent foundation for the [Current Direction](DESIGN-DISCUSSION-2026-09-28.md#current-direction), now used by the interactive #11 Free Play preview.
 
 ## State And Ownership
 
 `createFreePlay()` returns an immutable `{ A: { n, d }, B: { n, d } }` snapshot, initially A = 1/2 and B = 2/4 as in the mockup. An optional `{ A, B }` supplies either or both starting fractions. Each is copied and validated through `fraction()` from `src/fractions.js`; invalid counts/denominators throw before any snapshot is returned. Caller-owned objects are never mutated or retained.
 
-Each pair has exactly one authoritative fraction. Its future pie, bar, and label read that same fraction. Denominators are 2, 4, 8, 16; numerator is an integer from 0 through d. Keep the displayed counts: 2/4 does not automatically become 1/2, and a whole remains d/d. Both pairs describe equal blueberry wholes; their future bars have equal lengths, no units, and no ruler ticks.
+Each pair has exactly one authoritative fraction. Its pie, bar, and label read that same fraction. Denominators are 2, 4, 8, 16; numerator is an integer from 0 through d. Keep the displayed counts: 2/4 does not automatically become 1/2, and a whole remains d/d. Both pairs describe equal blueberry wholes; their bars have equal lengths, no units, and no ruler ticks.
 
-Hover, focus, drawer/camera state, and animation progress belong outside this mathematical snapshot. They do not commit a serving. Future adapters must dispatch against the latest snapshot and render both representations from the returned state; do not store separate pie/bar counts or commit a captured old state when an animation finishes. Interruption and animation policy belongs to #12.
+Hover, focus, drawer/camera state, and animation progress belong outside this mathematical snapshot. They do not commit a serving. Adapters must dispatch against the latest snapshot and render both representations from the returned state; do not store separate pie/bar counts or commit a captured old state when an animation finishes. Interruption and animation policy belongs to #12.
 
 ## Actions And Results
 
@@ -33,6 +33,6 @@ Cut and valid Regroup preserve the exact amount, including zero and whole. They 
 
 ## Integration Boundary
 
-Step #9 deliberately retained the old Examples/Challenge session model. Step #10 now feeds both pies, both bars, and their labels from one `createFreePlay()` snapshot. Drawer/camera/full-screen changes never write that snapshot; #11 adds serving controls in both representations; #12 adds Cut/Regroup controls, refusal feedback, and transitions. Keyboard operation, visible focus, non-color feedback, and reduced motion accompany each relevant UI increment.
+Step #9 deliberately retained the old Examples/Challenge session model. Step #10 introduced the state-derived scene. Step #11 dispatches pointer/keyboard serving actions against the latest immutable snapshot and immediately updates both representations, labels, and announcements. Hover/focus and drawer/camera/full-screen changes never write that snapshot. #12 adds Cut/Regroup controls, refusal feedback, and transitions. Keyboard operation, visible focus, non-color feedback, and reduced motion accompany each relevant UI increment.
 
 `tests/free-play.test.js` checks all 34 valid fractions against all 34 partner states in both directions, every selectable count, bounded serving actions, exact transformations and round trips, rejection/recovery, and immutable ownership. These are mathematical behavior checks, not evidence of student assessment or ruler-reading mastery.

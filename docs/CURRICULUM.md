@@ -43,3 +43,7 @@ The [action contract](FREE_PLAY_ACTIONS.md) supports the existing G10/G12 connec
 ## Bakery Preview Review
 
 For #10, the current linked Activity 1.3 index was consulted again on September 28, 2026. Preferred editions and matching teacher coverage remain pending review; no restricted source files were copied or re-audited. The preview displays equal subdivisions and two equivalent default servings, supporting the existing audit-local G10/G12 connections and prerequisites for G11. Its unitless bars are state-derived displays, not rulers or an assessment. Student serving input follows in #11; no new curriculum identifiers or mastery claims are introduced.
+
+## Linked Selection Review
+
+For #11, the current linked Activity 1.3 index was consulted on September 28, 2026 (America/New_York). The index still leaves preferred source editions and matching teacher coverage pending review. No restricted source files were copied or re-audited. Students can now choose a contiguous serving in either representation and observe its paired selected-count/whole-count label, using the existing audit-local G10/G12 connections and prerequisites for G11. Hover/focus identifies corresponding pieces without committing an answer. This is exploratory fraction feedback, not correctness grading or evidence of ruler mastery; no new standards mapping is claimed.

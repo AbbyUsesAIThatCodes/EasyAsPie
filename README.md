@@ -4,11 +4,11 @@
 
 A 3D fraction game for Design And Modeling, **1.3 — Measuring Matters**. Compare two equal-sized pies and discover why 1/2, 2/4, 4/8, and 8/16 describe the same amount.
 
-## Current Preview
+## Current Free Play Preview
 
-The **0.2.0 Free Play visual preview** introduces the blueberry bakery and fraction-bar drawer. Both pies read the tested exact state: **A = 1/2**, **B = 2/4**. Open **Show Fraction Bars** to see the corresponding equal-length bars. **Top View / Angled View** and supported **Full Screen** controls work without changing either serving.
+The **0.2.0 Free Play preview** now connects both blueberry pies to their matching fraction bars. It starts at **A = 1/2**, **B = 2/4**. Select a slice or bar segment to select that piece and all earlier pieces from the common back-center origin. Each pair has **Clear**, **Decrease**, and **Increase**; editing A leaves B unchanged. Pie, bar, fraction, selected-count label, and announcement update together.
 
-This increment is deliberately read-only: serving selection, Clear/Decrease/Increase, and Cut/Regroup arrive in #11–#12. **Learn** and **Challenge** are labeled **Coming Later** and disabled. The original Examples/Challenge modes are historical first-playable work, not completed redesigned lessons.
+**Cut And Regroup** remain visibly **Coming Later** for #12. **Learn** and **Challenge** are labeled **Coming Later** and disabled. The original Examples/Challenge modes are historical first-playable work, not completed redesigned lessons.
 
 The pies use equal modeled geometry, golden scalloped crusts, blueberry filling, and selected-serving outlines. Bars have no ruler units or ticks. This local instructional supplement supports fraction equivalence before ruler work; it does not independently assess physical measurement.
 
@@ -41,11 +41,13 @@ The scene uses original procedural Three.js meshes with equal geometry for each 
 
 ## Review And Teach
 
-Tab reaches the available controls; Enter or Space operates a button. The drawer retains focus on its toggle and opens immediately with reduced motion enabled. Muted pieces remain part of the same whole. The full build ID in the footer is selectable text.
+Click either pie or its matching bar to select a contiguous serving; **Clear** selects zero. A solid pie outline and bar dots mark the selected serving. A separate dashed outline and piece caption follow hover or focus without changing the fraction.
 
-Read-only review fixtures are available at `?preview=sixteenths` (A = 3/16, B = 8/16) and `?preview=empty-whole` (A = 0/16, B = 16/16). They are visibly labeled test fixtures, use the same validated model, and work in the built artifact; omit the query for the normal preview.
+Tab visits each pie, serving controls, the persistent drawer toggle, then each open bar. Within a pie or bar, arrow keys, Home, and End explore individual pieces; Enter or Space selects. Boundary controls use `aria-disabled` and ignore activation while retaining keyboard focus. **Escape** in the drawer closes it and returns focus to **Show Fraction Bars**; hidden controls are inert. **Top View / Angled View**, supported **Full Screen**, and drawer changes preserve both servings. Reduced motion removes drawer transitions. The complete footer build ID is selectable text.
 
-[Teacher Notes](docs/TEACHER.md) distinguish current controls from historical worked keys. [Issue 10 Review](docs/review/issue-10/README.md) includes real running-game screenshots, mockup comparison, and browser checks. With Playwright installed separately, `node scripts/review-browser.mjs` runs the optional browser acceptance harness against `dist/`; `PLAYWRIGHT_MODULE` and `CHROMIUM_PATH` may point to existing installations. It does not build or deploy.
+Built-artifact review fixtures are available at `?preview=halves`, `?preview=quarters`, `?preview=eighths`, `?preview=sixteenths` (A = 3/16, B = 8/16), and `?preview=empty-whole` (A = 0/16, B = 16/16). They are labeled starting fixtures with the same live serving controls; no denominator picker is introduced. Omit the query for normal Free Play.
+
+[Teacher Notes](docs/TEACHER.md) explain current controls. [Issue 11 Review](docs/review/issue-11/README.md) records running-artifact screenshots, the complete selection matrix, build identity, and limitations. With Playwright installed separately, run `node scripts/review-selection.mjs` against `dist/`; `PLAYWRIGHT_MODULE`, `CHROMIUM_PATH`, and `REVIEW_OUTPUT` can point to existing installations and a separate output directory. It does not build or deploy. The [Step 02 screenshots and original harness](docs/review/issue-10/README.md) remain historical evidence for the read-only preview.
 
 ## GitHub Pages
 

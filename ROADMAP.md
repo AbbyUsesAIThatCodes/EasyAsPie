@@ -14,7 +14,7 @@
 
 Each PR closes its own issue on merge. Only the final PR also closes #7, once the full checklist is satisfied. Preserve a concise `docs/IMPLEMENTATION_STATUS.md` handoff from #9 onward, and update later issue descriptions when teacher review changes the plan. Learn and Challenge content are separate future work; the sequence establishes their shared interaction foundation.
 
-Step 01 is merged via PR #15. Step 02 introduces the 0.2.0 visual preview for review; consult [Implementation Status](docs/IMPLEMENTATION_STATUS.md) before beginning #11.
+Steps 01 and 02 are merged via PRs #15 and #16. Step 03 implements linked pointer/keyboard serving selection for review. After its PR is merged, begin #12 from updated main; consult [Implementation Status](docs/IMPLEMENTATION_STATUS.md) and the teacher’s review decisions first.
 
 ## Initial Review History
 

@@ -1,10 +1,16 @@
 # EasyAsPie Teacher Notes
 
-## Current Visual Preview — Step 02
+## Current Free Play Preview — Step 03
 
-The 0.2.0 preview displays two equal blueberry pies and their matching unitless bars. It starts at 1/2 and 2/4. **Show Fraction Bars / Close Fraction Bars**, **Top View / Angled View**, and supported **Full Screen** work. Tab reaches available controls; Enter or Space activates them. The drawer keeps keyboard focus on its toggle; reduced motion removes its transition. Outlined pie servings and marked bar segments supplement color. The visible fraction labels state selected pieces and total equal pieces.
+Two equal blueberry pies and their unitless fraction bars start at 1/2 and 2/4. Select piece k in either representation to serve the first k pieces, beginning at the back-center cut and moving down the left in Top View. This chooses an amount; it does not toggle isolated slices. A and B are independent. **Clear**, **Decrease**, and **Increase** also update the paired pie, bar, fraction label, count, and polite announcement together. The whole stays fixed.
 
-Serving selection and Clear/Decrease/Increase are deferred to #11; Cut/Regroup controls and transitions to #12. Learn and Challenge are disabled and labeled Coming Later. This is a visual review increment, not a completed student activity or assessment. No scores or student information are collected. Read-only sixteenths and empty/whole fixtures are documented in [README](../README.md#review-and-teach).
+A solid outline marks the selected pie serving, and dots mark selected bar segments. A dashed outline and piece caption identify hover/keyboard focus in both representations without changing the serving. Muted pieces still belong to the whole. No scoring or correctness colors are used in Free Play.
+
+Tab reaches each pie, serving controls, the drawer toggle, then each open bar. Arrow keys, Home, and End move among pieces within the focused pie/bar; Enter or Space selects. **Clear** reaches zero. At an empty serving, Clear/Decrease have disabled semantics; Increase has them at a whole. These buttons keep their place in the focus order so reaching a boundary never drops keyboard focus. **Escape** from a bar closes the drawer and returns focus to its toggle. Closed bars cannot receive focus. The normal pie keyboard controls display a named piece button when focused, with the corresponding outline directly on the 3D slice.
+
+**Show Fraction Bars / Close Fraction Bars**, **Top View / Angled View**, and supported **Full Screen** preserve the amounts. Reduced motion removes drawer transitions; selection feedback is immediate. Reload starts over. Labeled starting fixtures cover other denominators for review; see [README](../README.md#review-and-teach).
+
+**Cut And Regroup** remain visibly **Coming Later** for #12. Learn and Challenge remain disabled. This is an exploratory preview, not an assessment. No student data or scores are collected. It supports the existing audit-local G10/G12 connections and prerequisites for G11; actual ruler work belongs in MeasureTwice. Classroom hardware/projector and screen-reader signoff remain part of #13.
 
 ## Historical First-Playable Notes
 
