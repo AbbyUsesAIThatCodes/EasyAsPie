@@ -45,5 +45,7 @@ test('review fixtures use the same validated immutable state as the default prev
   assert.deepEqual(previewState('sixteenths'), { A: { n: 3, d: 16 }, B: { n: 8, d: 16 } });
   assert.deepEqual(previewState('empty-whole'), { A: { n: 0, d: 16 }, B: { n: 16, d: 16 } });
   assert.deepEqual(previewState('unknown'), { A: { n: 1, d: 2 }, B: { n: 2, d: 4 } });
+  for (const name of ['__proto__', 'constructor', 'toString']) assert.deepEqual(previewState(name), { A: { n: 1, d: 2 }, B: { n: 2, d: 4 } });
+  for (const [name, d] of [['halves', 2], ['quarters', 4], ['eighths', 8]]) assert.deepEqual(previewState(name), { A: { n: 1, d }, B: { n: d / 2, d } });
   assert.ok(Object.isFrozen(previewState('sixteenths').A));
 });
