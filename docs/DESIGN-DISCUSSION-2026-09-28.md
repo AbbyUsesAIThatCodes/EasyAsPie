@@ -17,6 +17,12 @@ These decisions take precedence over the original ruler proposal below and the f
 - **Ruler Work:** Actual rulers belong in MeasureTwice. EasyAsPie uses fraction bars representing one whole, without inch or centimeter measurements.
 - **Curriculum:** Base each lesson and challenge on the Measuring Matters curricular goals and document its source connection. Record the correct response, likely misconception, feedback, and assistance; distinguish independent success from success after help.
 
+### September 28 Visual Review — Step 03A
+
+The teacher rejected the flat appearance of the Step 03 preview relative to Concept B, while retaining its linked-selection foundation in PR #17. **#18 now precedes #12**: build the pies, plates, counter, cabinetry, drawer, and fraction bars in one lit 3D scene. Pies need substantial pastry depth, irregular blueberries, glossy filling, exposed interior faces, and grounded live shadows. The drawer must travel in depth. Accessible text and native controls may remain projected HTML overlays.
+
+Actual production-game screenshots at both laptop sizes and a short gameplay video are required before teacher review and merge. Mathematical checks do not establish visual acceptance. #12 subsequently supplies physical cutting and moving slices, also with screenshots and video before merge. The new scene remains **awaiting teacher visual review** until that decision is recorded.
+
 ## How To Use The Preserved Proposal
 
 The complete supplied `Pasted markdown.md` follows unchanged. It contains the curricular rationale, discovery examples, five proposed lessons, challenge bank, sample feedback, interface ideas, and suggested implementation order. Detailed lesson wording and implementation boundaries remain proposals to refine when creating issues.
