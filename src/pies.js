@@ -98,7 +98,7 @@ function pieceOutline(k, d) {
 export function createBakery(canvas, { onLayout = () => {}, modelReview = false } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); renderer.shadowMap.enabled = true;
-  renderer.shadowMap.autoUpdate = false; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.autoUpdate = false; renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.98;
   const scene = new THREE.Scene(); scene.background = new THREE.Color('#eee2c5');
   // Small original studio reflection map: broad window highlights without the
