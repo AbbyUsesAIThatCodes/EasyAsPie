@@ -2,13 +2,14 @@ import './style.css';
 import { createBakery } from './pies.js';
 import { createFreePlay, applyFreePlayAction } from './free-play.js';
 import { previewState, fixtureNames } from './preview-fixtures.js';
+import { createLearningModes } from './learning-modes.js';
 
 // Only accepted actions replace this snapshot. Emphasis and view state are separate.
 const params = new URLSearchParams(location.search);
 const fixture = params.get('preview');
 const modelReview = params.get('review') === 'solids';
 let state = fixture ? previewState(fixture) : createFreePlay();
-let busy = false, actionEpoch = 0;
+let busy = false, actionEpoch = 0, modeController = null;
 const fixtureName = Object.hasOwn(fixtureNames, fixture) ? fixtureNames[fixture] : null;
 const pairs = ['A', 'B'];
 const fractionText = f => `${f.n}/${f.d}`;
@@ -99,8 +100,12 @@ function render() {
   bakery?.update(state.A, state.B);
   emphasize();
 }
-function feedback(message) { el('action-feedback').textContent = message; }
-async function act(action) {
+function feedback(message) {
+  el('action-feedback').textContent = message;
+  if (modeController?.getMode() !== 'free' && modeController) document.querySelector('.preview-note p').textContent = message;
+}
+async function act(action, demonstration = false) {
+  if (!demonstration && modeController && !modeController.beforeAction(action)) return;
   if (busy) { feedback('The slices are moving. Wait for them to settle, or choose Reset.'); return; }
   const result = applyFreePlayAction(state, action);
   if (!result.ok) { feedback(result.reason.message); return; }
@@ -116,8 +121,14 @@ async function act(action) {
   }
   if (from.d !== to.d) { hoverPiece = null; focusPiece = null; }
   state = result.state; render();
+  modeController?.onState(state);
   if (from.d !== to.d) feedback('Pie '+action.pair+': '+fractionText(from)+' = '+fractionText(to)+'. Same amount, '+to.d+' equal pieces in the whole.');
   el('announcement').textContent = 'Pie '+action.pair+': '+countText(state[action.pair])+', '+fractionText(state[action.pair])+' of the whole. Pie and bar match.';
+}
+function loadState(next) {
+  ++actionEpoch; bakery?.cancelTransformation(); busy = false;
+  el('app').setAttribute('aria-busy','false');
+  state = createFreePlay(next); hoverPiece = null; focusPiece = null; render();
 }
 function resetGame() {
   ++actionEpoch; bakery?.cancelTransformation(); busy = false;
@@ -141,7 +152,7 @@ function placeControls({ labels, bars, drawer, moving, drawerValue, viewValue })
   for (const p of labels) {
     const label = el(`label-${p.pair}`), choices = el(`pie-${p.pair}`);
     label.style.left = `${p.x}px`; label.style.top = `${innerWidth < 700 ? Math.max(215, p.y - 235) : p.y - 20}px`;
-    choices.style.left = `${p.x}px`; choices.style.top = `${p.y - 29}px`;
+    choices.style.left = `${p.x}px`; choices.style.top = `${p.y - (innerWidth < 700 ? 29 : 70)}px`;
   }
   for (const r of bars) {
     const figure = el(`bar-${r.pair}`).parentElement;
@@ -180,7 +191,7 @@ function bindPieceControls() { document.querySelectorAll('[data-piece]').forEach
   });
 }); }
 bindPieceControls();
-el('reset').addEventListener('click', resetGame);
+el('reset').addEventListener('click', () => modeController?.getMode() === 'free' ? resetGame() : modeController?.reset());
 document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
   if (button.getAttribute('aria-disabled') === 'true') return;
   act({ pair: button.dataset.pair, type: button.dataset.action });
@@ -250,3 +261,4 @@ document.addEventListener('fullscreenchange', () => {
 window.addEventListener('resize', () => hover(null));
 window.addEventListener('blur', () => hover(null));
 window.addEventListener('pagehide', event => { if (!event.persisted) bakery?.dispose(); });
+modeController = createLearningModes({ getState: () => state, loadState, act, feedback, setFeedback: tone => bakery?.setFeedback('B',tone) });

@@ -1,26 +1,32 @@
 # EasyAsPie Teacher Notes
 
-## Current Free Play Preview — Step 03A
+## Integrated Overnight Review
 
-Two equal blueberry pies and their unitless fraction bars start at 1/2 and 2/4. Select piece k in either representation to serve the first k pieces, beginning at the back-center cut and moving down the left in Top View. This chooses an amount; it does not toggle isolated slices. A and B are independent. **Clear**, **Decrease**, and **Increase** also update the paired pie, bar, fraction label, count, and polite announcement together. The whole stays fixed.
+The current provisional build combines PR19's 3D bakery, PR20's physical slicing and PR22's three modes. [Playable build and exact evidence](review/issue-21/README.md). Manual merge order is PR19 → PR20 → PR22; teacher visual acceptance and #13 classroom review remain pending.
 
-A solid outline marks the selected pie serving, and dots mark selected bar segments. A dashed outline and piece caption identify hover/keyboard focus in both representations without changing the serving. Muted pieces still belong to the whole. No scoring or correctness colors are used in Free Play.
+In **Free Play**, each pie/bar pair has its own exact serving. Selecting piece k serves the first k pieces from the back-center origin, moving down the left in Top View. Clear chooses zero. Cut doubles numerator and denominator and shows a knife passing through the solid pie. Regroup halves both numbers when representable. The whole and amount stay fixed; an odd numerator cannot be halved into whole larger pieces. Refusals explain why. Servings cannot change mid-animation; Reset cancels it safely.
 
-Tab reaches each pie, serving controls, the drawer toggle, then each open bar. Arrow keys, Home, and End move among pieces within the focused pie/bar; Enter or Space selects. **Clear** reaches zero. At an empty serving, Clear/Decrease have disabled semantics; Increase has them at a whole. These buttons keep their place in the focus order so reaching a boundary never drops keyboard focus. **Escape** from a bar closes the drawer and returns focus to its toggle. Closed bars and bars still traveling out from beneath the counter cannot receive focus; they become available when the drawer has opened. The normal pie keyboard controls display a named piece button when focused, with the corresponding outline directly on the 3D slice.
+In **Learn**, commit a prediction before revealing the physical change, then build an equivalent serving in Pie B. The prediction selector is disabled during motion; feedback and the completion record evaluate the original committed answer. Pie A stays the reference. The three local lessons are:
 
-**Show Fraction Bars / Close Fraction Bars**, **Top View / Angled View**, and supported **Full Screen** preserve the amounts. Reduced motion makes both the spatial drawer and camera transitions immediate; selection feedback is immediate. Reload starts over. Labeled starting fixtures cover other denominators for review; see [README](../README.md#review-and-teach).
+| Lesson | Prediction | Matching Pie B | Explanation |
+| --- | --- | --- | --- |
+| Same Serving, More Pieces | 1/2 → 2/4: numerator 2 | 4/8 | Double both numbers; the amount stays fixed. |
+| Same Serving, Fewer Pieces | 12/16 → 6/8: numerator 6 | 3/4 | Combine pairs; divide both numbers. |
+| From Pie To Bar | 3/8 → 6/16: numerator 6 | 6/16 | One eighth becomes two sixteenths in both representations. |
 
-**Cut And Regroup** remain visibly **Coming Later** for #12. Learn and Challenge remain disabled. This is an exploratory preview, not an assessment. No student data or scores are collected. It supports the existing audit-local G10/G12 connections and prerequisites for G11; actual ruler work belongs in MeasureTwice. Classroom hardware/projector and screen-reader signoff remain part of #13.
+In **Challenge**, match ten orders using Pie B's fixed denominator. The ten answer keys in the historical table below are reused unchanged. Incorrect answers cannot advance. A hint, reference use or detour to Learn marks a previously started unfinished order as helped, including a route through Free Play. Prior selected responses survive these visits. Help viewed before starting an order is not counted retroactively. First-try-without-help, helped and retried counts are separate; helped/retried can overlap. Repeated correct submission cannot inflate results. Reset starts a fresh round. There is no timer, identity collection, persistent storage or score transmission.
 
-The environment is now one modeled scene. Native bar buttons sit over the projected 3D bar tiles, preserving keyboard operation and visible focus. Opening the drawer does not shrink or move the pies. Both pies always share one orthographic camera and apparent scale.
+The solid purple border marks a serving; dots mark selected bar pieces. A dashed outline and shader glow show the same hovered/focused piece without selecting. Red/green assessment feedback is supplemented by explicit Correct/Not Yet text and a fraction explanation. Changing the answer clears stale feedback. A completed round remains practice evidence, not measurement mastery.
 
-The explicit `?preview=quarters&review=solids` **Model Review · Separated Solids** fixture offsets one wedge in each pie to expose its crust, filling and cut faces. It is a static inspection view, not a Cut control or cutting demonstration. Serving buttons still edit the exact fractions; direct pie picking is disabled in this labeled geometry view because wedges are displaced. Return to the plain game URL for normal play.
+Drag the background or use the orbit buttons to move the camera. Top View resets its comparison angle. Both pies always use equal orthographic scale. The drawer physically slides while its native bar targets follow. Tab, arrows, Home/End and Enter/Space operate pieces. Escape from a bar closes the drawer and returns focus. Bold vocabulary supports nested hover/focus explanations; activating it opens the reference, which Escape closes. Reduced motion commits transitions immediately. Free Play state survives visits to the other modes; Reset affects only the active mode.
 
-Review [the screenshots and short video](review/issue-18/README.md) before approving this visual milestone. Visual acceptance is pending. After teacher approval and merge, #12 supplies physical slicing and regrouping and must also include actual-game screenshots and video.
+This supports audit-local DM1.3 G10/G12, with G11 prerequisite vocabulary only. The current curricular-goals DOCX was read in full at the pinned revision recorded in [Curriculum Mapping](CURRICULUM.md). The official glossary remains missing in the audit; definitions in the game are explicitly locally written. Ask students to explain why both numbers change together, then check transfer separately with an actual ruler.
+
+Real touch-device, classroom projector and assistive-technology review remain pending. The approved Concept B is still richer in microtexture/lighting than the procedural game. Static Model Review screenshots expose closed cut faces; actual Cut/Regroup is demonstrated separately in the gameplay video.
 
 ## Historical First-Playable Notes
 
-Everything below records the earlier Examples/Challenge game and its keys. Those modes and cosmetic recipes are not available in the current preview. Preserve this history without using it as the control guide for the rebuild. [Implementation Status](IMPLEMENTATION_STATUS.md) is the current handoff.
+Everything below records the earlier Examples/Challenge game and its keys. The earlier eight-example presentation and cosmetic recipes are historical; the ten exact Challenge keys are reused by the new mode. Preserve this history without using it as the control guide for the rebuild. [Implementation Status](IMPLEMENTATION_STATUS.md) is the current handoff.
 
 ## Before Play
 
