@@ -146,7 +146,7 @@ try {
   await start();
   await shot('initial');
   const visited = [];
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 32; i++) {
     await page.keyboard.press('Tab');
     const current = await page.evaluate(() => ({ id: document.activeElement.id, parent: document.activeElement.parentElement?.id, piece: document.activeElement.dataset.piece }));
     visited.push(current);
