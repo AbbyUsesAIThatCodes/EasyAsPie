@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {sliceMotion} from './slice-motion.js';
 import { TAU, RADIUS, PIE_X, PIE_Z, HIT_Y, BAR_LENGTH, BAR_DEPTH, BAR_Y, BAR_Z, DRAWER_TRAVEL, material, mesh, instances, point, noise, solidSector, pastryRim, pastryWall, berryGeometry, calyxGeometry, dispose } from './bakery-geometry.js';
 import { makeRoom, makeBar, setBarServing } from './bakery-room.js';
 
@@ -121,7 +122,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   const raycaster = new THREE.Raycaster(), reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let pies = [], bars = [], disposed = false, emphasized = null, topView = false;
   let drawerOpen = false, drawerValue = 0, viewValue = 0, animation = null, frame = 0;
-  let width = 1, height = 1, yaw = 0, tilt = 0;
+  let width = 1, height = 1, yaw = 0, tilt = 0, finishSlices = null;
   const project = (x, y, z) => { const p = new THREE.Vector3(x, y, z).project(camera); return { x: (p.x + 1) * width / 2, y: (1 - p.y) * height / 2 }; };
   const setCamera = () => {
     const angle = THREE.MathUtils.clamp(THREE.MathUtils.lerp(modelReview ? 0.50 : 0.68, Math.PI / 2 - 0.001, viewValue) + tilt, 0.42, Math.PI / 2 - 0.001);
@@ -167,7 +168,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   const observer = new ResizeObserver(resize); observer.observe(canvas);
   const contextLost = event => { event.preventDefault(); canvas.dispatchEvent(new CustomEvent('scene-error')); };
   canvas.addEventListener('webglcontextlost', contextLost);
-  const motionChange = () => { if (reduced.matches) transition(); }; reduced.addEventListener('change', motionChange);
+  const motionChange = () => { if (reduced.matches) { finishSlices?.(); transition(); } }; reduced.addEventListener('change', motionChange);
   return {
     update(left, right, recipe = 'blueberry') {
       let rebuild = false;
@@ -184,8 +185,25 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       });
       if (rebuild) { emphasized = null; resize(); } else render();
     },
+    transform(pair, type, from, to) {
+      finishSlices?.();
+      const side = pair === 'A' ? 0 : 1;
+      const states = pies.map(p => ({...p.userData.serving}));
+      const commit = () => { states[side] = to; this.update(states[0], states[1]); };
+      if (type === 'cut') commit();
+      canvas.dataset.slicing = 'true';
+      return new Promise(resolve => {
+        let completed = false;
+        const finish = sliceMotion(pies[side], bars[side], type, from, to, {
+          reduced, onFrame: () => render(true),
+          onFinish: () => { completed = true; finishSlices = null; commit(); canvas.dataset.slicing = 'false'; render(true); resolve(); }
+        });
+        if (!completed) finishSlices = finish;
+      });
+    },
+    cancelTransformation() { finishSlices?.(); },
     pick(clientX, clientY) {
-      if (disposed || modelReview) return null;
+      if (disposed || modelReview || canvas.dataset.slicing === 'true') return null;
       const rect = canvas.getBoundingClientRect();
       raycaster.setFromCamera(new THREE.Vector2((clientX - rect.left) / rect.width * 2 - 1, -(clientY - rect.top) / rect.height * 2 + 1), camera);
       const hits = raycaster.intersectObjects(pies.map(p => p.getObjectByName('serving-hit-target')), false);
@@ -194,6 +212,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       return { pair: pies.indexOf(pie) === 0 ? 'A' : 'B', k: pieceAtPoint(local.x, local.z, pie.userData.serving.d) };
     },
     emphasize(piece) {
+      if (piece && (!Number.isInteger(piece.k) || piece.k < 1 || piece.k > pies[piece.pair === 'A' ? 0 : 1]?.userData.serving.d || canvas.dataset.slicing === 'true')) piece = null;
       if (emphasized?.pair === piece?.pair && emphasized?.k === piece?.k) return;
       pies.forEach(pie => { const outline = pie.getObjectByName('piece-emphasis'); if (outline) { pie.remove(outline); dispose(outline); }
         pie.traverse(o => { if (o.material?.name === 'serving-fruit') { o.material.emissive.set('#6e37e7'); o.material.emissiveIntensity = 0; } });
@@ -208,6 +227,6 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
     setTopView(top) { topView = top; yaw = 0; tilt = 0; transition(); },
     orbit(dx, dy = 0) { yaw = THREE.MathUtils.clamp(yaw + dx, -0.22, 0.22); tilt = THREE.MathUtils.clamp(tilt + dy, -0.16, 0.18); setCamera(); render(); },
     resetCamera() { yaw = 0; tilt = 0; topView = false; transition(); },
-    dispose() { disposed = true; cancelAnimationFrame(frame); observer.disconnect(); reduced.removeEventListener('change', motionChange); canvas.removeEventListener('webglcontextlost', contextLost); dispose(scene); env.dispose(); renderer.dispose(); },
+    dispose() { finishSlices?.(); disposed = true; cancelAnimationFrame(frame); observer.disconnect(); reduced.removeEventListener('change', motionChange); canvas.removeEventListener('webglcontextlost', contextLost); dispose(scene); env.dispose(); renderer.dispose(); },
   };
 }

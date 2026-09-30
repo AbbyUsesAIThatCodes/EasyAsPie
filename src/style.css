@@ -116,3 +116,14 @@ footer { position: absolute; bottom: 0; width: 100%; z-index: 12; background: #f
   .build-identity code { font-size: 9px; }
 }
 .bakery:has(.drawer.open) .legend { display: none; }
+.transform-controls { display: flex; justify-content: center; gap: 8px; margin-top: 5px; }
+.transform-controls button { padding: 5px 17px; font-size: 13px; background: #eee0ff; border-color: #9870cc; }
+.transform-controls button:hover { background: #dbc3ff; }
+.action-feedback { position: absolute; z-index: 7; bottom: 41px; left: 50%; transform: translateX(-50%); margin: 0; width: max-content; max-width: 68%; padding: 7px 14px; border-radius: 12px; background: #fff8e9ee; box-shadow: 0 3px 10px #44305e28; text-align: center; font-size: 11px; pointer-events: none; }
+.legend { display: none; }
+@media(max-width:700px) {
+ .pie-label { width: 42%; }
+ .transform-controls { gap: 4px; }
+ .transform-controls button { padding: 5px 7px; font-size: 11px; }
+ .action-feedback { max-width: 94%; width: 94%; bottom: 75px; font-size: 11px; }
+}
