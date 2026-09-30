@@ -154,7 +154,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
     const angle = THREE.MathUtils.clamp(THREE.MathUtils.lerp(modelReview ? 0.50 : 0.68, Math.PI / 2 - 0.001, viewValue) + tilt, 0.42, Math.PI / 2 - 0.001);
     const targetZ = THREE.MathUtils.lerp(0.25, 0.40, viewValue), targetY = 0.10;
     camera.position.set(16 * Math.cos(angle) * Math.sin(yaw), targetY + 16 * Math.sin(angle), targetZ + 16 * Math.cos(angle) * Math.cos(yaw)); camera.lookAt(0, targetY, targetZ);
-    const span = Math.max(12, width / height * THREE.MathUtils.lerp(6.1, 7.4, viewValue));
+    const span = Math.max(12, width / height * THREE.MathUtils.lerp(6.1, 8.5, viewValue));
     const halfHeight = span / (width / height) / 2;
     Object.assign(camera, { left: -span / 2, right: span / 2, top: halfHeight, bottom: -halfHeight }); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
   };

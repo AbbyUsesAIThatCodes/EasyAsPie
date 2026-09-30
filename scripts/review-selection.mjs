@@ -106,7 +106,7 @@ async function action(pair, type) {
 async function piePoint(pair, piece, portion = 0.5, top = true) {
   const r = await page.locator('#scene').boundingBox();
   const angle = Math.PI + (piece - 1 + portion) * 2 * Math.PI / pairValues[pair].d;
-  const span = Math.max(12, r.width / r.height * (top ? 7.4 : 6.1));
+  const span = Math.max(12, r.width / r.height * (top ? 8.5 : 6.1));
   const scale = r.width / span, radius = 1.14;
   const elevation = top ? Math.PI / 2 - 0.001 : 0.68;
   const targetZ = top ? 0.40 : 0.25;
