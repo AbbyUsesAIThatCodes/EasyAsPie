@@ -50,8 +50,21 @@ try{
  await page.locator('#orbit-right').click();await page.locator('#orbit-right').click();await chapter('Camera Orbit With Projected Bar Controls');
  await page.locator('#bar-A [data-piece="2"]').click();assert.equal(await page.locator('#label-A .fraction').textContent(),'2/2');
  await page.locator('#drawer-toggle').click();await settle(page);await chapter('Closing Drawer And Live Shadows');
+ if(process.env.REVIEW_TRANSFORMS==='1') {
+  await page.locator('#reset').click();await settle(page);
+  await page.locator('#drawer-toggle').click();await settle(page);
+  for(let i=0;i<3;i++) {
+    await page.locator('[data-action="cut"][data-pair="A"]').click();
+    if(i===0){await page.waitForTimeout(550);await page.screenshot({path:resolve(output,'physical-cut.png')});}
+    await page.waitForFunction(()=>document.querySelector('#app').getAttribute('aria-busy')!=='true');
+    await chapter('Physical Cut '+(i+1));
+  }
+  await page.locator('#pie-A [data-piece="12"]').focus();await page.keyboard.press('Enter');
+  for(let i=0;i<2;i++){await page.locator('[data-action="regroup"][data-pair="A"]').click();await page.waitForFunction(()=>document.querySelector('#app').getAttribute('aria-busy')!=='true');await chapter('Physical Regroup '+(i+1));}
+  await page.screenshot({path:resolve(output,'regrouped-serving.png')});
+ }
  await page.emulateMedia({reducedMotion:'reduce'});await page.locator('#drawer-toggle').click();await settle(page);await chapter('Reduced Motion Immediate Drawer');
- await page.waitForTimeout(Math.max(1000,36000-(Date.now()-start)));
+ await page.waitForTimeout(Math.max(1000,(process.env.REVIEW_TRANSFORMS==='1'?45000:36000)-(Date.now()-start)));
  const video=page.video();await context.close();await video.saveAs(resolve(output,'bakery-review.webm'));
  const gpu=await p.locator('#scene').evaluate(c=>{const gl=c.getContext('webgl2'),e=gl.getExtension('WEBGL_debug_renderer_info');return {renderer:e?gl.getParameter(e.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),error:gl.getError()};});
  assert.deepEqual(messages,[]);assert.equal(gpu.error,0);

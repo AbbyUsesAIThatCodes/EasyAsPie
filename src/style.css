@@ -15,6 +15,7 @@ button:disabled { cursor: default; color: #776878; box-shadow: none; }
 .modes { display: flex; padding: 4px; gap: 4px; border: 1px solid #c7b69e; background: #fff0dd; border-radius: 40px; }
 .modes button { min-width: 108px; border: 0; border-radius: 28px; background: transparent; box-shadow: none; padding: 8px 17px; font-size: 16px; }
 .modes .active { background: linear-gradient(#7f51cb, #5930aa); color: #fff9f1; box-shadow: inset 0 1px 1px #ac8ee2, 0 2px 3px #44245e25; }
+.modes button.active:hover:enabled { background:linear-gradient(#7545c2,#512797); color:#fff9f1; }
 .modes button small { display: block; font-size: 9px; font-weight: 400; margin-top: 2px; }
 .view-controls { justify-self: end; display: flex; gap: 8px; }
 .view-controls button { padding: 9px 11px; font-size: 12px; }
@@ -116,3 +117,59 @@ footer { position: absolute; bottom: 0; width: 100%; z-index: 12; background: #f
   .build-identity code { font-size: 9px; }
 }
 .bakery:has(.drawer.open) .legend { display: none; }
+.transform-controls { display: flex; justify-content: center; gap: 8px; margin-top: 5px; }
+.transform-controls button { padding: 5px 17px; font-size: 13px; background: #eee0ff; border-color: #9870cc; }
+.transform-controls button:hover { background: #dbc3ff; }
+.action-feedback { position: absolute; z-index: 7; bottom: 41px; left: 50%; transform: translateX(-50%); margin: 0; width: max-content; max-width: 68%; padding: 7px 14px; border-radius: 12px; background: #fff8e9ee; box-shadow: 0 3px 10px #44305e28; text-align: center; font-size: 11px; pointer-events: none; }
+.legend { display: none; }
+@media(max-width:700px) {
+ .pie-label { width: 42%; }
+ .transform-controls { gap: 4px; }
+ .transform-controls button { padding: 5px 7px; font-size: 11px; }
+ .action-feedback { max-width: 94%; width: 94%; bottom: 75px; font-size: 11px; }
+}
+
+/* Compact floating activities leave the physical pies and drawer playable. */
+.learning-card { position:absolute; z-index:9; left:50%; bottom:34px; transform:translateX(-50%); width:min(970px,94%); padding:5px 15px; border:1px solid #ddb686; border-radius:17px; background:linear-gradient(135deg,#fff9edfa,#fff0d9fa); box-shadow:0 8px 26px #39244338,inset 0 2px white; font-size:11px; }
+.learning-card[hidden],.vocabulary-bar[hidden] { display:none; }
+.activity-head,.activity-actions { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:7px 13px; }
+.activity-head { margin-bottom:5px; }
+.activity-head h2 { font-size:15px; color:#623589; margin:0; }
+.learning-card button,.vocabulary-bar button { font-size:11px; padding:5px 10px; }
+.learning-card select { max-width:240px; border:1px solid #b49a82; border-radius:7px; padding:4px; font:inherit; color:inherit; background:#fffdf5; }
+.learning-card p { margin:5px 0 0; text-align:center; }
+.activity-feedback { min-height:16px; font-weight:700; }
+.activity-feedback.correct { color:#14623a; }
+.activity-feedback.incorrect { color:#a32d36; }
+body:not([data-mode="free"]) .transform-controls,body:not([data-mode="free"]) #label-A .serving-controls,body:not([data-mode="free"]) .action-feedback { display:none; }
+.vocabulary-bar { position:absolute; left:50%; bottom:84px; z-index:9; transform:translateX(-50%); border-radius:12px; padding:5px 10px; background:#fff5e8ef; box-shadow:0 2px 12px #39244328; width:max-content; max-width:94%; text-align:center; font-size:11px; }
+.term { position:relative; display:inline-block; color:#64259e; cursor:help; border-bottom:1px dotted #765393; outline-offset:3px; }
+.term b { font-weight:800; }
+.term:focus-visible { outline:2px dashed #351b4d; }
+.term-tip { display:none; position:absolute; z-index:30; bottom:calc(100% - 1px); left:50%; transform:translateX(-50%); width:235px; max-width:75vw; padding:13px; border:1px solid #ac87c7; border-radius:12px; background:#fffdf6; color:#322239; font-weight:400; box-shadow:0 8px 25px #36224738; text-align:left; line-height:1.6; cursor:default; white-space:normal; }
+.term:hover > .term-tip,.term:focus-within > .term-tip { display:block; }
+.term-tip small { display:block; margin-top:5px; font-size:9px; color:#735581; }
+.term-tip .term-tip { left:0; transform:none; }
+dialog { color:#322239; border:1px solid #bc97cb; border-radius:20px; padding:22px; width:min(650px,92vw); max-height:86vh; overflow:auto; background:#fff8ec; box-shadow:0 18px 90px #21133188; }
+dialog::backdrop { background:#22143399; backdrop-filter:blur(3px); }
+.reference-head { display:flex; align-items:center; justify-content:space-between; gap:15px; position:sticky; top:-22px; background:#fff8ec; z-index:2; }
+.reference-head h2 { margin:5px 0; color:#623589; }
+@media(min-width:701px) {
+ body:not([data-mode="free"]) .drawer-front button { position:fixed; top:135px; left:50%; transform:translateX(-50%); min-width:160px; padding:7px; font-size:11px; }
+}
+@media(min-width:1100px) {
+ .learning-card { width:min(970px,calc(100% - 480px)); }
+}
+dialog h3 { color:#623589; margin-bottom:5px; }
+dialog p { font-size:14px; line-height:1.7; margin-top:0; }
+@media(max-width:700px) {
+ .learning-card { bottom:76px; padding:10px; width:94%; font-size:11px; }
+ .activity-head,.activity-actions { gap:6px; }
+ .activity-head h2 { font-size:14px; }
+ .learning-card select { max-width:205px; }
+ .vocabulary-bar { bottom:143px; font-size:10px; }
+ .term-tip { width:210px; }
+ .vocabulary-bar > .term:first-child > .term-tip { left:0; transform:none; }
+ .vocabulary-bar > .term:last-of-type > .term-tip { left:auto; right:0; transform:none; }
+}
+

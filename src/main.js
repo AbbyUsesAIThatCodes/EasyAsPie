@@ -2,12 +2,14 @@ import './style.css';
 import { createBakery } from './pies.js';
 import { createFreePlay, applyFreePlayAction } from './free-play.js';
 import { previewState, fixtureNames } from './preview-fixtures.js';
+import { createLearningModes } from './learning-modes.js';
 
 // Only accepted actions replace this snapshot. Emphasis and view state are separate.
 const params = new URLSearchParams(location.search);
 const fixture = params.get('preview');
 const modelReview = params.get('review') === 'solids';
 let state = fixture ? previewState(fixture) : createFreePlay();
+let busy = false, actionEpoch = 0, modeController = null;
 const fixtureName = Object.hasOwn(fixtureNames, fixture) ? fixtureNames[fixture] : null;
 const pairs = ['A', 'B'];
 const fractionText = f => `${f.n}/${f.d}`;
@@ -18,7 +20,7 @@ const pieceButtons = (pair, kind) => Array.from({ length: state[pair].d }, (_, i
   `<button type="button" class="${kind === 'bar' ? 'bar-segment' : 'pie-choice'}" data-pair="${pair}" data-piece="${i + 1}" tabindex="${i === 0 ? 0 : -1}" aria-label="${pieceName(pair, i + 1)}">${kind === 'bar' ? '<span class="selection-mark" aria-hidden="true">●</span>' : `Pie ${pair} · Piece ${i + 1} of ${state[pair].d} · Select`}</button>`).join('');
 function pieLabel(pair) {
   return `<section class="pie-label" id="label-${pair}" aria-labelledby="title-${pair}"><h2 id="title-${pair}">Pie ${pair}</h2><strong class="fraction"></strong><span class="count" id="count-${pair}"></span>
-    <div class="serving-controls" role="group" aria-label="Pie ${pair} Serving Controls" aria-describedby="count-${pair}">${['clear', 'decrease', 'increase'].map(type => `<button type="button" data-action="${type}" data-pair="${pair}" aria-label="${type[0].toUpperCase() + type.slice(1)} Pie ${pair} Serving">${type === 'clear' ? 'Clear' : type === 'decrease' ? '−' : '+'}</button>`).join('')}</div></section>`;
+    <div class="serving-controls" role="group" aria-label="Pie ${pair} Serving Controls" aria-describedby="count-${pair}">${['clear', 'decrease', 'increase'].map(type => `<button type="button" data-action="${type}" data-pair="${pair}" aria-label="${type[0].toUpperCase() + type.slice(1)} Pie ${pair} Serving">${type === 'clear' ? 'Clear' : type === 'decrease' ? '−' : '+'}</button>`).join('')}</div><div class="transform-controls">${['cut','regroup'].map(type => `<button type="button" data-action="${type}" data-pair="${pair}">${type === 'cut' ? '✂ Cut' : '↶ Regroup'}</button>`).join('')}</div></section>`;
 }
 function bar(pair) {
   return `<figure class="bar-pair"><figcaption>Pie ${pair} <span>·</span> <strong id="bar-fraction-${pair}"></strong></figcaption>
@@ -29,10 +31,10 @@ document.querySelector('#app').innerHTML = `
   <header class="header">
     <a class="brand" href="./" aria-label="EasyAsPie Home"><span>EasyAs<span class="brand-pie">Pie</span></span><small>The Fraction Bakery</small></a>
     <nav class="modes" aria-label="Game Modes"><button type="button" class="active" aria-pressed="true" id="free-play">Free Play</button><button type="button" disabled>Learn <small>Coming Later</small></button><button type="button" disabled>Challenge <small>Coming Later</small></button></nav>
-    <div class="view-controls"><button id="orbit-left" type="button" aria-label="Orbit Camera Left">↶</button><button id="orbit-right" type="button" aria-label="Orbit Camera Right">↷</button><button id="view" type="button" aria-pressed="false">Top View</button><button id="fullscreen" type="button">Full Screen ↗</button></div>
+    <div class="view-controls"><button id="reset" type="button">Reset</button><button id="orbit-left" type="button" aria-label="Orbit Camera Left">↶</button><button id="orbit-right" type="button" aria-label="Orbit Camera Right">↷</button><button id="view" type="button" aria-pressed="false">Top View</button><button id="fullscreen" type="button">Full Screen ↗</button></div>
   </header>
   <main>
-    <div class="preview-note"><h1>${modelReview ? 'Model Review · Separated Solids' : fixtureName ? `${fixtureName} Test Fixture` : 'Free Play Preview'}</h1><p>${modelReview ? 'Static geometry inspection. Serving amounts are unchanged.' : 'Select a piece to serve it and all pieces before it.'} <span>Cut And Regroup — Coming Later</span></p></div>
+    <div class="preview-note"><h1>${modelReview ? 'Model Review · Separated Solids' : fixtureName ? `${fixtureName} Test Fixture` : 'Free Play Preview'}</h1><p>${modelReview ? 'Static geometry inspection. Serving amounts are unchanged.' : 'Select a piece to serve it and all pieces before it.'} <span>Cut or regroup: keep the same amount.</span></p></div>
     <section class="bakery" aria-label="Two equal blueberry pies and their fraction bars">
       <div class="stage">
 
@@ -43,7 +45,7 @@ document.querySelector('#app').innerHTML = `
       </div>
       <div class="pie-labels">${pairs.map(pieLabel).join('')}</div>
       <div class="legend"><p><span class="selected-key" aria-hidden="true"></span>Solid outline / ● = selected <span class="legend-separator">·</span> Dashed outline = piece in focus</p><p id="keyboard-help">Tab to a pie or bar. Arrow keys, Home, or End explore pieces; Enter or Space selects. Clear selects zero.</p></div>
-      <p id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+      <p id="action-feedback" class="action-feedback" role="status" aria-live="polite">Drag the background to orbit. The outline keeps the whole and serving in view.</p><p id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
       <div class="drawer" id="drawer">
         <div class="drawer-front"><h2>Fraction Bars</h2><span class="drawer-handle" aria-hidden="true"></span><button id="drawer-toggle" type="button" aria-expanded="false" aria-controls="fraction-bars">Show Fraction Bars <span aria-hidden="true">⌄</span></button></div>
         <div class="drawer-reveal" id="fraction-bars" role="region" aria-label="Fraction Bars" aria-hidden="true" inert><div class="drawer-clip"><div class="drawer-tray">${pairs.map(bar).join('')}</div></div></div>
@@ -57,7 +59,8 @@ let bakery, focusPiece = null, hoverPiece = null;
 const samePiece = (a, b) => a?.pair === b?.pair && a?.k === b?.k;
 function emphasize() {
   // The most recent pointer/keyboard modality wins; neither ever changes n/d.
-  const piece = hoverPiece || focusPiece;
+  const candidate = busy ? null : hoverPiece || focusPiece;
+  const piece = candidate && candidate.k >= 1 && candidate.k <= state[candidate.pair].d ? candidate : null;
   document.querySelectorAll('[data-piece]').forEach(button => {
     button.classList.toggle('emphasized', Boolean(piece && button.dataset.pair === piece.pair && Number(button.dataset.piece) === piece.k));
   });
@@ -65,10 +68,20 @@ function emphasize() {
   el('piece-hint').hidden = !piece;
   if (piece) el('piece-hint').textContent = `Pie ${piece.pair} · Piece ${piece.k} of ${state[piece.pair].d} · Select to serve the first ${piece.k}`;
 }
-function hover(piece) { if (!samePiece(hoverPiece, piece)) { hoverPiece = piece; emphasize(); } }
+function hover(piece) { if (busy) piece = null; if (!samePiece(hoverPiece, piece)) { hoverPiece = piece; emphasize(); } }
 function render() {
   for (const pair of pairs) {
     const f = state[pair];
+    for (const kind of ['pie','bar']) {
+      const group = el(kind+'-'+pair);
+      if (group.children.length !== f.d) {
+        const focused = group.contains(document.activeElement);
+        const k = Math.min(f.d, Number(document.activeElement?.dataset.piece) || 1);
+        group.innerHTML = pieceButtons(pair,kind); group.style.setProperty('--pieces', f.d);
+        bindPieceControls();
+        if (focused) group.querySelector('[data-piece="'+k+'"]').focus();
+      }
+    }
     el(`label-${pair}`).querySelector('.fraction').textContent = fractionText(f);
     el(`label-${pair}`).querySelector('.count').textContent = countText(f);
     el(`bar-fraction-${pair}`).textContent = fractionText(f);
@@ -78,7 +91,7 @@ function render() {
       button.setAttribute('aria-label', pieceName(pair, k));
     });
     document.querySelectorAll(`[data-action][data-pair="${pair}"]`).forEach(button => {
-      const disabled = button.dataset.action === 'increase' ? f.n === f.d : f.n === 0;
+      const disabled = ['cut','regroup'].includes(button.dataset.action) ? false : button.dataset.action === 'increase' ? f.n === f.d : f.n === 0;
       // Keep the just-operated control focused at a boundary, with disabled semantics.
       button.setAttribute('aria-disabled', String(disabled));
     });
@@ -87,12 +100,42 @@ function render() {
   bakery?.update(state.A, state.B);
   emphasize();
 }
-function act(action) {
+function feedback(message) {
+  el('action-feedback').textContent = message;
+  if (modeController?.getMode() !== 'free' && modeController) document.querySelector('.preview-note p').textContent = message;
+}
+async function act(action, demonstration = false) {
+  if (!demonstration && modeController && !modeController.beforeAction(action)) return;
+  if (busy) { feedback('The slices are moving. Wait for them to settle, or choose Reset.'); return; }
   const result = applyFreePlayAction(state, action);
-  if (!result.ok) return;
-  state = result.state;
-  render();
-  el('announcement').textContent = `Pie ${action.pair}: ${countText(state[action.pair])}, ${fractionText(state[action.pair])} of the whole. Pie and bar match.`;
+  if (!result.ok) { feedback(result.reason.message); return; }
+  const from = state[action.pair], to = result.state[action.pair];
+  const token = ++actionEpoch;
+  if (from.d !== to.d) {
+    busy = true; hoverPiece = null; focusPiece = null; emphasize();
+    el('app').setAttribute('aria-busy','true');
+    feedback('Pie '+action.pair+': '+fractionText(from)+' → '+fractionText(to)+'. The same serving; '+(action.type==='cut'?'smaller':'larger')+' equal pieces.');
+    await bakery?.transform(action.pair, action.type, from, to);
+    if (token !== actionEpoch) return;
+    busy = false; el('app').setAttribute('aria-busy','false');
+  }
+  if (from.d !== to.d) { hoverPiece = null; focusPiece = null; }
+  state = result.state; render();
+  modeController?.onState(state);
+  if (from.d !== to.d) feedback('Pie '+action.pair+': '+fractionText(from)+' = '+fractionText(to)+'. Same amount, '+to.d+' equal pieces in the whole.');
+  el('announcement').textContent = 'Pie '+action.pair+': '+countText(state[action.pair])+', '+fractionText(state[action.pair])+' of the whole. Pie and bar match.';
+}
+function loadState(next) {
+  ++actionEpoch; bakery?.cancelTransformation(); busy = false;
+  el('app').setAttribute('aria-busy','false');
+  state = createFreePlay(next); hoverPiece = null; focusPiece = null; render();
+}
+function resetGame() {
+  ++actionEpoch; bakery?.cancelTransformation(); busy = false;
+  el('app').setAttribute('aria-busy','false');
+  state = createFreePlay(); hoverPiece = null; focusPiece = null; render();
+  bakery?.resetCamera(); el('view').setAttribute('aria-pressed','false'); el('view').textContent='Top View';
+  feedback('Reset: Pie A is 1/2 and Pie B is 2/4. Both servings are the same amount.');
 }
 const showSceneError = () => { el('scene-error').hidden = false; el('view').disabled = true; document.querySelector('.bakery').classList.add('scene-unavailable'); };
 el('scene').addEventListener('scene-error', showSceneError);
@@ -108,8 +151,8 @@ function placeControls({ labels, bars, drawer, moving, drawerValue, viewValue })
   el('fraction-bars').setAttribute('aria-hidden', String(!barsReady));
   for (const p of labels) {
     const label = el(`label-${p.pair}`), choices = el(`pie-${p.pair}`);
-    label.style.left = `${p.x}px`; label.style.top = `${innerWidth < 700 ? Math.max(215, p.y - 205) : p.y}px`;
-    choices.style.left = `${p.x}px`; choices.style.top = `${p.y - 29}px`;
+    label.style.left = `${p.x}px`; label.style.top = `${innerWidth < 700 ? Math.max(215, p.y - 235) : p.y - 20}px`;
+    choices.style.left = `${p.x}px`; choices.style.top = `${p.y - (innerWidth < 700 ? 29 : 70)}px`;
   }
   for (const r of bars) {
     const figure = el(`bar-${r.pair}`).parentElement;
@@ -123,7 +166,9 @@ catch (error) { showSceneError(); console.warn('3D view unavailable:', error.mes
 render();
 
 const pieceOf = button => ({ pair: button.dataset.pair, k: Number(button.dataset.piece) });
-document.querySelectorAll('[data-piece]').forEach(button => {
+function bindPieceControls() { document.querySelectorAll('[data-piece]').forEach(button => {
+  if (button.dataset.bound) return;
+  button.dataset.bound = 'true';
   button.addEventListener('click', () => act({ ...pieceOf(button), type: 'select' }));
   button.addEventListener('focus', () => {
     hoverPiece = null;
@@ -144,7 +189,9 @@ document.querySelectorAll('[data-piece]').forEach(button => {
     buttons[next].focus();
     emphasize();
   });
-});
+}); }
+bindPieceControls();
+el('reset').addEventListener('click', () => modeController?.getMode() === 'free' ? resetGame() : modeController?.reset());
 document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
   if (button.getAttribute('aria-disabled') === 'true') return;
   act({ pair: button.dataset.pair, type: button.dataset.action });
@@ -214,3 +261,4 @@ document.addEventListener('fullscreenchange', () => {
 window.addEventListener('resize', () => hover(null));
 window.addEventListener('blur', () => hover(null));
 window.addEventListener('pagehide', event => { if (!event.persisted) bakery?.dispose(); });
+modeController = createLearningModes({ getState: () => state, loadState, act, feedback, setFeedback: tone => bakery?.setFeedback('B',tone) });

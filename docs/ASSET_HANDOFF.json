@@ -1,0 +1,32 @@
+{
+  "repository": "AbbyUsesAIThatCodes/EasyAsPie",
+  "sourceRevision": "8b0ae6f9018bcc51b99bef0b818c638c39220cd7",
+  "build": "0.3.1_Unassigned_pr-22_build-002_20260930T035728Z_g8b0ae6f9018b_web",
+  "sharedCatalogChanged": false,
+  "hashNormalization": "LF, matching Git text blobs",
+  "proceduralSources": [
+    {
+      "path": "src/bakery-geometry.js",
+      "sha256": "754c71fe060d694a5a39b3f97fbe1537e56229f42be0a17accb7dac07c4c2eab"
+    },
+    {
+      "path": "src/bakery-room.js",
+      "sha256": "1c5e07ff7cbbe7c7acbeac24d409830984bd03a41477ff9c9c5a17e0c5623b3d"
+    },
+    {
+      "path": "src/pies.js",
+      "sha256": "7f3006c4c1bdc7097ee6cb0f5713ddf26c6472ffc3adeb4d87cd7563864fe4c8"
+    },
+    {
+      "path": "src/slice-motion.js",
+      "sha256": "bb849091fd637c74668b10bb84d76d7964cc0a43b43e7b115675f1bf4c3d9a6e"
+    }
+  ],
+  "dependencies": {
+    "three": "0.186.1"
+  },
+  "attribution": "Original EasyAsPie procedural geometry, textures and animation. Preserve upstream source and Three.js notices. Comic Sans is requested from the device; no font file is redistributed.",
+  "exportStatus": "Source handoff only; no standalone GLB export claimed. Parent consolidates shared assets.",
+  "supersedesSourceRevision": "e3c0846d25998babb027dd6cecd3e66ec3ebf7ab",
+  "changeNote": "Narrower radial berry-center clearance retains coverage at sixteenths; core wedge solids and fraction math unchanged."
+}

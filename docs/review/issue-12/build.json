@@ -1,0 +1,16 @@
+{
+  "id": "0.2.0_Unassigned_pr-20_build-002_20260930T031729Z_g0d89560b71c4_web",
+  "version": "0.2.0",
+  "codename": null,
+  "codenameSlug": "Unassigned",
+  "scope": "pr-20",
+  "pr": 20,
+  "ordinal": 2,
+  "builtAt": "2026-09-30T03:17:29.000Z",
+  "sha": "0d89560b71c4c26a45766e97d2700bc233abf065",
+  "dirty": false,
+  "sourceFingerprint": "57a285f2f61a420ec68c2791913dc97a754df119c60b8b7519b2c711105e3500",
+  "prHead": "0d89560b71c4c26a45766e97d2700bc233abf065",
+  "target": "web",
+  "reservation": "refs/tags/easyaspie-builds/pr-20/000002"
+}
