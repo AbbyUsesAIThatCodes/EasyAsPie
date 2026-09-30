@@ -2,7 +2,7 @@
 
 ## Identity Contract
 
-`package.json` is the authoritative release record. `version` is **0.4.0** for the authorized comparison, flavor, drawer guidance and local progress feature increment. Earlier 0.3.1 records remain unchanged. PR22 build 001 retains its original 0.3.0 identity. Earlier PR19/PR20 artifacts retain 0.2.0 and their original identities. Teacher visual/classroom acceptance remains pending. During 0.x development, minor versions introduce game features and patches fix behavior or delivery. There is no persistent save format yet. `releaseCodename` is null: the owner has not selected a codename. The literal **Unassigned** is an explicit placeholder, not an invented milestone name. Replace that one field when a name is approved; document its version range here.
+`package.json` is the authoritative release record. `version` is **0.4.0** for the authorized comparison, flavor, drawer guidance and local progress feature increment. Earlier 0.3.1 records remain unchanged. PR22 build 001 retains its original 0.3.0 identity. Earlier PR19/PR20 artifacts retain 0.2.0 and their original identities. Teacher visual/classroom acceptance remains pending. During 0.x development, minor versions introduce game features and patches fix behavior or delivery. The local save format uses schema 1 and taskset equivalence-20-v1; the build identity is recorded separately, so compatible future builds can preserve work. Unsupported schema/taskset data is not overwritten. `releaseCodename` is null: the owner has not selected a codename. The literal **Unassigned** is an explicit placeholder, not an invented milestone name. Replace that one field when a name is approved; document its version range here.
 
 Canonical ID: `VERSION_CODENAME_SCOPE_build-NNN_UTC_gREVISION[_dirty-FINGERPRINT]_TARGET`. Scope is `pr-N`, `main`, or explicitly `local-...`; target is `web` or `web-dev`. The manifest keeps the full SHA, SHA-256 source fingerprint, full UTC precision, PR head when applicable, and dirty flag. The displayed revision has 12 characters. A single timestamp is captured immediately before Vite receives its build metadata; page loads never generate an identity.
 
@@ -41,6 +41,7 @@ Each invocation creates an immutable manifest in `.build/ID.json`, builds into `
 | PR description/template | `.github/pull_request_template.md` | Link to exact check run and build ID | Implemented |
 | Agent instructions | `AGENTS.md` | Links to this contract | Implemented |
 | Hosted identity | `/EasyAsPie/build.json`, `/EasyAsPie/BUILD.md`, visible label | Deploy existing artifact without rebuilding | Existing live main build; separate from review stack |
+| Local work and activity download | `src/progress.js`, `src/activity-report.js`; browser key `easyaspie.progress.v1` and downloaded HTML | Save/export embeds the actual manifest identity; original session build retained | Implemented in the local-progress draft |
 | IDE/About displays | None exist in this game | IDE terminals use the documented npm commands | N/A |
 
 Adding a build entrypoint or identity display requires updating this inventory. Never edit generated timestamps, reset shared counters, rename an existing build, or claim a review build is deployed.

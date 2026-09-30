@@ -78,3 +78,30 @@ There is no timer, penalty, or speed score. A round has ten fixed prompts. The s
 - “Point to 1/4 inch, 2/8 inch, and 4/16 inch on your ruler.” This physical follow-up checks transfer to the source's measurement target; it is not part of the game score.
 
 Ask for an explanation alongside the correct serving. Students can match areas visually without yet understanding the multiplicative relationship. A completed round is practice evidence, not a mastery claim. Actual classroom laptop, projector, and assistive-technology review remain necessary before classroom adoption.
+
+## Current Twenty-Order Answer Key
+
+These are distinct conversion tuples; directions and scaling factors are varied deliberately. All use equal wholes and exact supported partitions. The report lists every submitted response and recorded help; a first correct answer with no recorded help is not a claim of independently verified mastery. No student name is collected.
+
+| Order | Target | Requested Pieces | Exact Answer | Purpose |
+| --- | --- | --- | --- | --- |
+| 1 | 1/2 | 4 | 2/4 | Expand By 2 |
+| 2 | 1/4 | 8 | 2/8 | Expand By 2 |
+| 3 | 3/4 | 8 | 6/8 | Expand By 2 |
+| 4 | 3/8 | 16 | 6/16 | Expand By 2 |
+| 5 | 7/8 | 16 | 14/16 | Expand By 2 |
+| 6 | 12/16 | 4 | 3/4 | Regroup By 4 |
+| 7 | 2/16 | 8 | 1/8 | Regroup By 2 |
+| 8 | 6/8 | 4 | 3/4 | Regroup By 2 |
+| 9 | 2/2 | 16 | 16/16 | One Whole Under A New Partition |
+| 10 | 0/8 | 16 | 0/16 | Zero Under A New Partition |
+| 11 | 1/2 | 8 | 4/8 | Expand By 4 |
+| 12 | 1/4 | 16 | 4/16 | Expand By 4 |
+| 13 | 3/4 | 16 | 12/16 | Expand By 4 |
+| 14 | 1/8 | 16 | 2/16 | Expand By 2 |
+| 15 | 5/8 | 16 | 10/16 | Expand By 2 |
+| 16 | 8/16 | 2 | 1/2 | Regroup By 8 |
+| 17 | 4/16 | 4 | 1/4 | Regroup By 4 |
+| 18 | 10/16 | 8 | 5/8 | Regroup By 2 |
+| 19 | 14/16 | 8 | 7/8 | Regroup By 2 |
+| 20 | 4/8 | 2 | 1/2 | Regroup By 4 |

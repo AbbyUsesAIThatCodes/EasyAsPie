@@ -12,6 +12,7 @@ const settle=()=>page.waitForFunction(()=>document.querySelector('#app').getAttr
 const value=pair=>page.locator('#label-'+pair+' .fraction').textContent();
 const click=async(pair,type)=>{await page.locator(`[data-action="${type}"][data-pair="${pair}"]`).click();await settle();};
 const select=async(pair,n)=>{if(n===0)await click(pair,'clear');else {await page.locator(`#pie-${pair} [data-piece="${n}"]`).focus();await page.keyboard.press('Enter');}};
+await page.addInitScript(()=>localStorage.removeItem('easyaspie.progress.v1'));
 try{
  await page.goto(url);await settle();assert.equal(await page.locator('#build-identity').textContent(),manifest.id);
  await page.locator('#drawer-toggle').click();await settle();

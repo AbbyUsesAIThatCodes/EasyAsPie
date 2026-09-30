@@ -42,7 +42,7 @@ test('a full round terminates once and keeps each result, including zero and who
   }
   assert.equal(s.complete, true);
   assert.equal(s.results.length, CHALLENGES.length);
-  assert.equal(s.results.filter(r => r.firstTry).length, 10);
+  assert.equal(s.results.filter(r => r.firstTry).length, CHALLENGES.length);
   assert.equal(advance(s), s);
   assert.equal(submit(s), s);
   assert.equal(useHint(s), s);

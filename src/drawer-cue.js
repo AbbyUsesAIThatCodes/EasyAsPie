@@ -1,7 +1,7 @@
 export const QUIET_MS = 600_000;
 // Wall-clock quiet period survives reload; visible-time animation never catches up.
-export function createDrawerCue({quietUntil=0}={}) {
- return {quietUntil:Number.isFinite(quietUntil)&&quietUntil>0?quietUntil:0,opened:false,visibleMs:0,lastTime:null};
+export function createDrawerCue({quietUntil=0,opened=false}={}) {
+ return {quietUntil:Number.isFinite(quietUntil)&&quietUntil>0?quietUntil:0,opened:opened===true,visibleMs:0,lastTime:null};
 }
 export function settleDrawerCue(state,open,user,now) {
  if(!user)return {...state,opened:false};

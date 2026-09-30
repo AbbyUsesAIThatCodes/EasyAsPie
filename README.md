@@ -14,7 +14,7 @@ The provisional overnight stack is **PR19 → PR20 → PR22**. Review the [integ
 
 - **Free Play:** select a contiguous serving in either pie or bar, clear/increase/decrease it, then physically Cut or Regroup while preserving the amount. A and B stay independent. Cut stops at sixteenths; Regroup refuses an odd numerator or a denominator below two, with an explanation.
 - **Learn:** three prediction → real 3D demonstration → matching-serving lessons. Each has specific feedback, replay and a completion check.
-- **Challenge:** ten untimed orders using the existing exact fraction tasks. Wrong answers cannot advance; hints, reference use and learning detours count as assistance. The summary distinguishes helped work, retries and first tries without help.
+- **Challenge:** twenty untimed orders using the existing exact fraction tasks. Wrong answers cannot advance; hints, reference use and learning detours count as assistance. The summary distinguishes helped work, retries and first tries without help.
 
 The pies have closed pastry/filling solids, glossy varied berry meshes, warm lighting and live shadows. A real wooden drawer carries the physical bars. Drag the scene or use the orbit buttons to move the shared orthographic camera. Comic Sans controls float above the scene. Purple serving outlines and dashed hover/focus marks remain distinct; assessment red/green also includes explicit text.
 
@@ -26,7 +26,7 @@ Install Node.js 22.12 or later, then run `npm ci`, `npm run dev`. For production
 
 Each review ZIP includes Start Review.cmd and a small localhost-only Node server. No deployment is required. The final integrated preview on Jess_PC uses port 4187; PR20 uses 4188, and PR19 uses 4189. These task-owned previews are separate from live Pages.
 
-Tab reaches the scene's native pie controls, serving controls and drawer. Arrow keys, Home and End explore pieces; Enter or Space selects. Clear chooses zero. Escape in a bar closes the drawer and restores toggle focus. Escape also closes the reference. Closed/traveling bars are inert. Reduced motion commits slicing, drawer and view changes immediately. Reset affects the active mode; reload starts a fresh session. No student identity or performance data is stored or transmitted.
+Tab reaches the scene's native pie controls, serving controls and drawer. Arrow keys, Home and End explore pieces; Enter or Space selects. Clear chooses zero. Escape in a bar closes the drawer and restores toggle focus. Escape also closes the reference. Closed/traveling bars are inert. Reduced motion commits slicing, drawer and view changes immediately. Reset Mode affects the active mode. Work, independent flavors, committed predictions, submitted order responses and help history are saved only in this browser until Clear Saved Work is chosen; there is no automatic expiry, account or server upload. Reload restores validated committed work. Unsupported/corrupt saves are retained without overwriting until explicitly cleared. Completing Challenge enables a local HTML activity-report download with responses, retries, help and exact build identity.
 
 Review fixtures: `?preview=halves`, `quarters`, `eighths`, `sixteenths` or `empty-whole`. The normal start is A = 1/2, B = 2/4. `?preview=quarters&review=solids` is an explicitly labeled static geometry inspection, separate from actual cutting gameplay.
 

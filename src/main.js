@@ -1,4 +1,5 @@
 import './style.css';
+import {STORAGE_KEY,encodeProgress,decodeProgress} from './progress.js';
 import {createDrawerCue,settleDrawerCue,tickDrawerCue} from './drawer-cue.js';
 import { FREE_INSTRUCTION, pieName } from './presentation.js';
 import { RECIPES, createBakery } from './pies.js';
@@ -12,6 +13,8 @@ const fixture = params.get('preview');
 const modelReview = params.get('review') === 'solids';
 let state = fixture ? previewState(fixture) : createFreePlay();
 let busy = false, actionEpoch = 0, modeController = null;
+let storageReady=false,storageBlocked=false,saveTimer=null;
+const canPersist=!fixture&&!modelReview;
 const fixtureName = Object.hasOwn(fixtureNames, fixture) ? fixtureNames[fixture] : null;
 const pairs = ['A', 'B'];
 let flavors = { A: 'blueberry', B: 'blueberry' };
@@ -35,11 +38,11 @@ document.querySelector('#app').innerHTML = `
   <header class="header">
     <a class="brand" href="./" aria-label="EasyAsPie Home"><span>EasyAs<span class="brand-pie">Pie</span></span><small>The Fraction Bakery</small></a>
     <nav class="modes" aria-label="Game Modes"><button type="button" class="active" aria-pressed="true" id="free-play">Free Play</button><button type="button" disabled>Learn <small>Coming Later</small></button><button type="button" disabled>Challenge <small>Coming Later</small></button></nav>
-    <div class="view-controls"><button id="reset" type="button">Reset</button><button id="orbit-left" type="button" aria-label="Orbit Camera Left">↶</button><button id="orbit-right" type="button" aria-label="Orbit Camera Right">↷</button><button id="view" type="button" aria-pressed="false">Top View</button><button id="fullscreen" type="button">Full Screen ↗</button></div>
+    <div class="view-controls"><button id="reset" type="button">Reset Mode</button><button id="orbit-left" type="button" aria-label="Orbit Camera Left">↶</button><button id="orbit-right" type="button" aria-label="Orbit Camera Right">↷</button><button id="view" type="button" aria-pressed="false">Top View</button><button id="fullscreen" type="button">Full Screen ↗</button></div>
   </header>
   <main>
     <div class="preview-note"><h1>${modelReview ? 'Model Review · Separated Solids' : fixtureName ? `${fixtureName} Test Fixture` : 'Free Play Preview'}</h1><p>${modelReview ? 'Static geometry inspection. Serving amounts are unchanged.' : FREE_INSTRUCTION}</p></div>
-    <section class="bakery" aria-label="Two equal blueberry pies and their fraction bars">
+    <section class="bakery" aria-label="Equal-sized pies and their fraction bars">
       <div class="stage">
 
         <canvas id="scene" role="img"></canvas>
@@ -56,7 +59,7 @@ document.querySelector('#app').innerHTML = `
       </div>
     </section>
   </main>
-  <footer><span class="footer-note">Same-sized pies. Equal-length bars.</span><div class="build-identity"><span>Build</span><code id="build-identity"></code></div></footer>`;
+  <footer><div class="local-progress"><span id="save-status" role="status" title="Saved on this browser and device until you clear it. No account or upload.">Work Stays In This Browser</span><button id="clear-saved-work" type="button" aria-label="Clear Saved Work And Restart" title="Clear all saved pie work and restart">Clear Saved Work</button></div><div class="build-identity"><span>Build</span><code id="build-identity"></code></div></footer>`;
 
 el('build-identity').textContent = __BUILD_IDENTITY__.id;
 let bakery, focusPiece = null, hoverPiece = null;
@@ -137,7 +140,7 @@ async function act(action, demonstration = false) {
   }
   if (from.d !== to.d) { hoverPiece = null; focusPiece = null; }
   state = result.state; render();
-  modeController?.onState(state);
+  modeController?.onState(state);changed();
   if (from.d !== to.d) feedback(name(action.pair)+': '+fractionText(from)+' = '+fractionText(to)+'. Same amount, '+to.d+' equal pieces in the whole.');
   el('announcement').textContent = name(action.pair)+': '+countText(state[action.pair])+', '+fractionText(state[action.pair])+' of the whole. Pie and bar match.';
 }
@@ -151,14 +154,14 @@ function resetGame() {
   el('app').setAttribute('aria-busy','false');document.querySelectorAll('[data-flavor]').forEach(e=>e.disabled=false);
   state = createFreePlay(); hoverPiece = null; focusPiece = null; render();
   bakery?.resetCamera(); el('view').setAttribute('aria-pressed','false'); el('view').textContent='Top View';
-  feedback('Reset: Test Pie 1 is 1/2 and Test Pie 2 is 2/4. Both servings are the same amount.');
+  changed();feedback('Reset: Test Pie 1 is 1/2 and Test Pie 2 is 2/4. Both servings are the same amount.');
 }
 const showSceneError = () => { el('scene-error').hidden = false; el('view').disabled = true; document.querySelector('.bakery').classList.add('scene-unavailable'); };
 el('scene').addEventListener('scene-error', showSceneError);
 function placeControls({ labels, bars, drawer, handle, moving, drawerValue, viewValue }) {
   Object.assign(el('drawer-toggle').style,{left:handle.x+'px',top:handle.y+'px',width:Math.max(44,handle.width)+'px'});
   Object.assign(cue.style,{left:handle.x+'px',top:(handle.y-57)+'px'});
-  if(drawerIntent && !moving && drawerValue===Number(drawerIntent.open)){drawerCue=settleDrawerCue(drawerCue,drawerIntent.open,drawerIntent.user,Date.now());drawerIntent=null;cue.hidden=true;}
+  if(drawerIntent && !moving && drawerValue===Number(drawerIntent.open)){if(drawerIntent.user!==null)drawerCue=settleDrawerCue(drawerCue,drawerIntent.open,drawerIntent.user,Date.now());drawerIntent=null;cue.hidden=true;changed();}
   el('scene').dataset.moving = String(moving);
   el('scene').dataset.drawerProgress = String(drawerValue);
   el('scene').dataset.viewProgress = String(viewValue);
@@ -283,13 +286,38 @@ document.addEventListener('fullscreenchange', () => {
 });
 window.addEventListener('resize', () => hover(null));
 window.addEventListener('blur', () => hover(null));
-window.addEventListener('pagehide', event => { if (!event.persisted) bakery?.dispose(); });
+window.addEventListener('pagehide', event => { if (!event.persisted) { saveProgress();++actionEpoch;modeController?.suspend();bakery?.dispose(); } });
 function setMode(mode) {
-  const locked=mode==='challenge';
+  const locked=mode==='challenge';document.querySelector('.bakery').setAttribute('aria-label',locked?'Customer Pie And Written Order':'Equal-Sized Pies And Their Fraction Bars');
   el('label-A').hidden=locked;el('pie-A').hidden=locked;el('pie-A').inert=locked;
   if(locked){setDrawer(false,false);cue.hidden=true;drawerCue={...drawerCue,opened:false,lastTime:null};}
   el('drawer-toggle').disabled=locked;el('drawer-toggle').title=locked?'Fraction bars are closed for this order.':'';
   bakery?.setMode(mode);bakery?.setExampleVisible(!locked);hoverPiece=null;focusPiece=null;render();
 }
-for(const select of document.querySelectorAll('[data-flavor]'))select.addEventListener('change',()=>{if(busy)return;flavors={...flavors,[select.dataset.flavor]:select.value};render();});
-modeController = createLearningModes({ setMode, getState: () => state, loadState, act, feedback, setFeedback: tone => bakery?.setFeedback('B',tone) });
+for(const select of document.querySelectorAll('[data-flavor]'))select.addEventListener('change',()=>{if(busy)return;flavors={...flavors,[select.dataset.flavor]:select.value};render();changed();});
+modeController = createLearningModes({ identity:__BUILD_IDENTITY__,changed,setMode, getState: () => state, loadState, act, feedback, setFeedback: tone => bakery?.setFeedback('B',tone) });
+
+function progressSnapshot(){return {...modeController.snapshot(),flavors,drawer:{open:el('drawer-toggle').getAttribute('aria-expanded')==='true',opened:drawerCue.opened&&el('drawer-toggle').getAttribute('aria-expanded')==='true',quietUntil:drawerCue.quietUntil}};}
+function saveProgress(){
+ clearTimeout(saveTimer);if(!storageReady||storageBlocked||!canPersist)return;
+ try{localStorage.setItem(STORAGE_KEY,encodeProgress(progressSnapshot(),__BUILD_IDENTITY__));el('save-status').textContent='Saved Only In This Browser';}
+ catch(error){el('save-status').textContent='Could Not Save — Keep This Page Open';console.warn('Local progress could not be saved:',error.message);}
+}
+function changed(){if(storageReady&&!storageBlocked&&canPersist){clearTimeout(saveTimer);saveTimer=setTimeout(saveProgress,100);}}
+if(canPersist){
+ try{
+  const text=localStorage.getItem(STORAGE_KEY);
+  if(text){
+   const saved=decodeProgress(text).state;flavors=saved.flavors;for(const pair of pairs)document.querySelector('[data-flavor="'+pair+'"]').value=flavors[pair];
+   modeController.restore(saved);drawerCue=createDrawerCue(saved.drawer);setDrawer(saved.drawer.open,null);
+   el('save-status').textContent='Restored — Saved Only In This Browser';
+  }
+ }catch(error){storageBlocked=true;el('save-status').textContent='Saved Work Could Not Be Restored — Clear To Start Fresh';console.warn('Saved work retained without overwriting:',error.message);}
+ storageReady=true;if(!storageBlocked)changed();
+}else el('save-status').textContent='Review Fixture — Saving Is Off';
+el('clear-saved-work').addEventListener('click',()=>{
+ try{localStorage.removeItem(STORAGE_KEY);storageReady=false;clearTimeout(saveTimer);location.reload();}
+ catch{el('save-status').textContent='Could Not Clear Browser Storage';}
+});
+window.addEventListener('pagehide',saveProgress);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)saveProgress();});
