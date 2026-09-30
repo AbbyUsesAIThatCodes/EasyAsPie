@@ -29,7 +29,7 @@ try{
  // Regression: a hover/focus above the target denominator must not survive regroup.
  await page.goto(url+'/?preview=sixteenths');await settle();
  await page.locator('#view').click();await settle();
- const sceneRect=await page.locator('#scene').boundingBox(),scale=sceneRect.width/Math.max(12,sceneRect.width/sceneRect.height*7.4),a=Math.PI+15.5*Math.PI*2/16;
+ const sceneRect=await page.locator('#scene').boundingBox(),scale=sceneRect.width/Math.max(12,sceneRect.width/sceneRect.height*8.5),a=Math.PI+15.5*Math.PI*2/16;
  const oldPiece16={x:sceneRect.x+sceneRect.width/2+(2.55+Math.sin(a)*1.14)*scale,y:sceneRect.y+sceneRect.height/2+(-.65+Math.cos(a)*1.14-.4)*scale};
  await page.mouse.move(oldPiece16.x,oldPiece16.y);assert.match(await page.locator('#piece-hint').textContent(),/Piece 16 of 16/);
  await page.locator('[data-action="regroup"][data-pair="B"]').click();

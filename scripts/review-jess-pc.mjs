@@ -43,7 +43,7 @@ try{
  await page.locator('#bar-B [data-piece="3"]').click();await chapter('Bar To Pie Selection');
  await page.locator('#pie-A button').first().focus();await page.keyboard.press('End');await page.keyboard.press('Enter');await chapter('Keyboard Pie To Bar Selection');
  await page.locator('#view').click();await settle(page);await chapter('Top View');
- const r=await page.locator('#scene').boundingBox(), scale=r.width/Math.max(12,r.width/r.height*7.4);
+ const r=await page.locator('#scene').boundingBox(), scale=r.width/Math.max(12,r.width/r.height*8.5);
  await page.mouse.click(r.x+r.width/2+(-2.55-1.14)*scale,r.y+r.height/2+(-.65-.4)*scale);
  assert.equal(await page.locator('#label-A .fraction').textContent(),'1/2');await chapter('Direct Pie Pointer Selection');
  await page.locator('#view').click();await settle(page);await chapter('Angled View');
