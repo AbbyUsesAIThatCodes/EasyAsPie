@@ -7,3 +7,5 @@ Recovered September 30 on Jess_PC from PR19 head `c65f9b8297e3`. The earlier pro
 The current Jess_PC pass adds a full-viewport scene, Comic Sans floating controls, richer pastry/berry materials, live 2048-square shadows, and bounded camera orbit. Native bar targets follow the same orthographic projection. Current review media and exact manifest will be saved in `jess-pc/` after browser verification; this checkpoint is not a visual-acceptance claim.
 
 Teacher visual approval remains pending. Tonight's explicit authorization permits provisional successive draft PRs: finish #19, then stack #12 on it, with manual merge order preserved. No merge or deployment is authorized. The workflow is unchanged: only main pushes or manual main runs can deploy; pull requests only verify and create review artifacts.
+
+The completed [Jess_PC review package](jess-pc/README.md) now contains the verified playable build, full selection matrix, desktop/phone screenshots and actual-game video.
