@@ -26,6 +26,26 @@ try{
  checks.push('Animated 1/2 → 2/4 → 4/8 → 8/16; 12/16 → 6/8 → 3/4; partner preserved during rapid actions.');
  await page.locator('[data-action="cut"][data-pair="A"]').click();await page.locator('#reset').click();await settle();await page.waitForTimeout(1600);
  assert.deepEqual(await page.locator('.fraction').allTextContents(),['1/2','2/4']);checks.push('Reset cancels motion without a late stale-state write.');
+ // Regression: a hover/focus above the target denominator must not survive regroup.
+ await page.goto(url+'/?preview=sixteenths');await settle();
+ await page.locator('#view').click();await settle();
+ const sceneRect=await page.locator('#scene').boundingBox(),scale=sceneRect.width/Math.max(12,sceneRect.width/sceneRect.height*7.4),a=Math.PI+15.5*Math.PI*2/16;
+ const oldPiece16={x:sceneRect.x+sceneRect.width/2+(2.55+Math.sin(a)*1.14)*scale,y:sceneRect.y+sceneRect.height/2+(-.65+Math.cos(a)*1.14-.4)*scale};
+ await page.mouse.move(oldPiece16.x,oldPiece16.y);assert.match(await page.locator('#piece-hint').textContent(),/Piece 16 of 16/);
+ await page.locator('[data-action="regroup"][data-pair="B"]').click();
+ await page.mouse.move(oldPiece16.x,oldPiece16.y);
+ assert.equal(await page.locator('#piece-hint').isVisible(),false);
+ await settle();assert.equal(await value('B'),'4/8');
+ assert.equal(await page.locator('#piece-hint').isVisible(),false);
+ assert.equal(await page.locator('[data-piece].emphasized').count(),0);
+ await page.goto(url+'/?preview=sixteenths');await settle();
+ await page.locator('[data-action="regroup"][data-pair="B"]').click();
+ await page.locator('#pie-B [data-piece="16"]').focus();await page.keyboard.press('Enter');
+ await settle();assert.equal(await value('B'),'4/8');
+ assert.equal(await page.locator('#pie-B [data-piece="8"]').evaluate(e=>e===document.activeElement),true);
+ assert.ok(!(await page.locator('#piece-hint').textContent()).includes('16 of 8'));
+ assert.equal(await page.locator('#pie-B [data-piece="8"]').evaluate(e=>e.classList.contains('emphasized')),true);
+ checks.push('Regroup 8/16 → 4/8 clears stationary old-piece-16 pointer hover and clamps old-piece-16 keyboard focus to piece 8; activation during motion does not change the amount.');
  await page.emulateMedia({reducedMotion:'reduce'});
  let transformations=0, refusals=0;
  for(const [fixture,d]of[['halves',2],['quarters',4],['eighths',8],['sixteenths',16]])for(const pair of ['A','B']){

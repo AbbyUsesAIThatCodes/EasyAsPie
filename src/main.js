@@ -58,7 +58,8 @@ let bakery, focusPiece = null, hoverPiece = null;
 const samePiece = (a, b) => a?.pair === b?.pair && a?.k === b?.k;
 function emphasize() {
   // The most recent pointer/keyboard modality wins; neither ever changes n/d.
-  const piece = hoverPiece || focusPiece;
+  const candidate = busy ? null : hoverPiece || focusPiece;
+  const piece = candidate && candidate.k >= 1 && candidate.k <= state[candidate.pair].d ? candidate : null;
   document.querySelectorAll('[data-piece]').forEach(button => {
     button.classList.toggle('emphasized', Boolean(piece && button.dataset.pair === piece.pair && Number(button.dataset.piece) === piece.k));
   });
@@ -66,7 +67,7 @@ function emphasize() {
   el('piece-hint').hidden = !piece;
   if (piece) el('piece-hint').textContent = `Pie ${piece.pair} · Piece ${piece.k} of ${state[piece.pair].d} · Select to serve the first ${piece.k}`;
 }
-function hover(piece) { if (!samePiece(hoverPiece, piece)) { hoverPiece = piece; emphasize(); } }
+function hover(piece) { if (busy) piece = null; if (!samePiece(hoverPiece, piece)) { hoverPiece = piece; emphasize(); } }
 function render() {
   for (const pair of pairs) {
     const f = state[pair];
@@ -113,6 +114,7 @@ async function act(action) {
     if (token !== actionEpoch) return;
     busy = false; el('app').setAttribute('aria-busy','false');
   }
+  if (from.d !== to.d) { hoverPiece = null; focusPiece = null; }
   state = result.state; render();
   if (from.d !== to.d) feedback('Pie '+action.pair+': '+fractionText(from)+' = '+fractionText(to)+'. Same amount, '+to.d+' equal pieces in the whole.');
   el('announcement').textContent = 'Pie '+action.pair+': '+countText(state[action.pair])+', '+fractionText(state[action.pair])+' of the whole. Pie and bar match.';

@@ -203,7 +203,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
     },
     cancelTransformation() { finishSlices?.(); },
     pick(clientX, clientY) {
-      if (disposed || modelReview) return null;
+      if (disposed || modelReview || canvas.dataset.slicing === 'true') return null;
       const rect = canvas.getBoundingClientRect();
       raycaster.setFromCamera(new THREE.Vector2((clientX - rect.left) / rect.width * 2 - 1, -(clientY - rect.top) / rect.height * 2 + 1), camera);
       const hits = raycaster.intersectObjects(pies.map(p => p.getObjectByName('serving-hit-target')), false);
@@ -212,6 +212,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       return { pair: pies.indexOf(pie) === 0 ? 'A' : 'B', k: pieceAtPoint(local.x, local.z, pie.userData.serving.d) };
     },
     emphasize(piece) {
+      if (piece && (!Number.isInteger(piece.k) || piece.k < 1 || piece.k > pies[piece.pair === 'A' ? 0 : 1]?.userData.serving.d || canvas.dataset.slicing === 'true')) piece = null;
       if (emphasized?.pair === piece?.pair && emphasized?.k === piece?.k) return;
       pies.forEach(pie => { const outline = pie.getObjectByName('piece-emphasis'); if (outline) { pie.remove(outline); dispose(outline); }
         pie.traverse(o => { if (o.material?.name === 'serving-fruit') { o.material.emissive.set('#6e37e7'); o.material.emissiveIntensity = 0; } });
