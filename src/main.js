@@ -1,4 +1,5 @@
 import './style.css';
+import {createDrawerCue,settleDrawerCue,tickDrawerCue} from './drawer-cue.js';
 import { FREE_INSTRUCTION, pieName } from './presentation.js';
 import { RECIPES, createBakery } from './pies.js';
 import { createFreePlay, applyFreePlayAction } from './free-play.js';
@@ -50,7 +51,7 @@ document.querySelector('#app').innerHTML = `
       <div class="legend"><p><span class="selected-key" aria-hidden="true"></span>Solid outline / ● = selected <span class="legend-separator">·</span> Dashed outline = piece in focus</p><p id="keyboard-help">Tab to a pie or bar. Arrow keys, Home, or End explore pieces; Enter or Space selects. Clear selects zero.</p></div>
       <p id="action-feedback" class="action-feedback" role="status" aria-live="polite">Drag the background to orbit. The outline keeps the whole and serving in view.</p><p id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
       <div class="drawer" id="drawer">
-        <div class="drawer-front"><h2>Fraction Bars</h2><span class="drawer-handle" aria-hidden="true"></span><button id="drawer-toggle" type="button" aria-expanded="false" aria-controls="fraction-bars">Show Fraction Bars <span aria-hidden="true">⌄</span></button></div>
+        <div class="drawer-front"><h2>Fraction Bars</h2><span class="drawer-handle" aria-hidden="true"></span><button id="drawer-toggle" type="button" aria-label="Open Fraction Bars" title="Open Fraction Bars" aria-expanded="false" aria-controls="fraction-bars"><span class="sr-only">Open Fraction Bars</span></button></div>
         <div class="drawer-reveal" id="fraction-bars" role="region" aria-label="Fraction Bars" aria-hidden="true" inert><div class="drawer-clip"><div class="drawer-tray">${pairs.map(bar).join('')}</div></div></div>
       </div>
     </section>
@@ -59,6 +60,10 @@ document.querySelector('#app').innerHTML = `
 
 el('build-identity').textContent = __BUILD_IDENTITY__.id;
 let bakery, focusPiece = null, hoverPiece = null;
+let drawerCue=createDrawerCue(),drawerIntent=null;
+const cue=document.createElement('div');cue.id='drawer-cue';cue.hidden=true;cue.setAttribute('aria-hidden','true');cue.innerHTML='<span class="cue-sparkle">✦</span><span class="cue-arrow">↓</span><span class="cue-sparkle">✧</span>';el('drawer').append(cue);
+setInterval(()=>{const result=tickDrawerCue(drawerCue,{now:Date.now(),enabled:!el('drawer-toggle').disabled,visible:!document.hidden});drawerCue=result.state;cue.hidden=!result.show;el('drawer-toggle').dataset.quietUntil=String(drawerCue.quietUntil);},100);
+document.addEventListener('visibilitychange',()=>{if(document.hidden){drawerCue={...drawerCue,lastTime:null};cue.hidden=true;}});
 const samePiece = (a, b) => a?.pair === b?.pair && a?.k === b?.k;
 function emphasize() {
   // The most recent pointer/keyboard modality wins; neither ever changes n/d.
@@ -150,7 +155,10 @@ function resetGame() {
 }
 const showSceneError = () => { el('scene-error').hidden = false; el('view').disabled = true; document.querySelector('.bakery').classList.add('scene-unavailable'); };
 el('scene').addEventListener('scene-error', showSceneError);
-function placeControls({ labels, bars, drawer, moving, drawerValue, viewValue }) {
+function placeControls({ labels, bars, drawer, handle, moving, drawerValue, viewValue }) {
+  Object.assign(el('drawer-toggle').style,{left:handle.x+'px',top:handle.y+'px',width:Math.max(44,handle.width)+'px'});
+  Object.assign(cue.style,{left:handle.x+'px',top:(handle.y-57)+'px'});
+  if(drawerIntent && !moving && drawerValue===Number(drawerIntent.open)){drawerCue=settleDrawerCue(drawerCue,drawerIntent.open,drawerIntent.user,Date.now());drawerIntent=null;cue.hidden=true;}
   el('scene').dataset.moving = String(moving);
   el('scene').dataset.drawerProgress = String(drawerValue);
   el('scene').dataset.viewProgress = String(viewValue);
@@ -174,7 +182,7 @@ function placeControls({ labels, bars, drawer, moving, drawerValue, viewValue })
 }
 try { bakery = createBakery(el('scene'), { onLayout: placeControls, modelReview }); }
 catch (error) { showSceneError(); console.warn('3D view unavailable:', error.message); }
-render();
+setDrawer(false,false);render();
 
 const pieceOf = button => ({ pair: button.dataset.pair, k: Number(button.dataset.piece) });
 function bindPieceControls() { document.querySelectorAll('[data-piece]').forEach(button => {
@@ -235,17 +243,20 @@ window.addEventListener('pointerup', () => { dragStart = null; });
 el('scene').addEventListener('pointercancel', () => { dragStart = null; dragged = false; });
 el('orbit-left').addEventListener('click', () => bakery?.orbit(-0.08));
 el('orbit-right').addEventListener('click', () => bakery?.orbit(0.08));
-function setDrawer(open) {
+function setDrawer(open,user=true) {
   if(open && document.body.dataset.mode === 'challenge') return;
   if (!open && el('fraction-bars').contains(document.activeElement)) el('drawer-toggle').focus();
+  drawerIntent={open,user};
   hoverPiece = null;
   el('drawer-toggle').setAttribute('aria-expanded', String(open));
-  el('drawer-toggle').innerHTML = `${open ? 'Close' : 'Show'} Fraction Bars <span aria-hidden="true">${open ? '⌃' : '⌄'}</span>`;
+  el('drawer-toggle').innerHTML=`<span class="sr-only">${open?'Close':'Open'} Fraction Bars</span>`;el('drawer-toggle').setAttribute('aria-label',`${open?'Close':'Open'} Fraction Bars`);el('drawer-toggle').title=`${open?'Close':'Open'} Fraction Bars`;
+  el('drawer-toggle').setAttribute('aria-label',`${open?'Close':'Open'} Fraction Bars`);
+  el('drawer-toggle').title=`${open?'Close':'Open'} Fraction Bars`;
   el('fraction-bars').setAttribute('aria-hidden', 'true');
   el('fraction-bars').inert = true;
   el('drawer').classList.toggle('open', open);
   if (bakery) bakery.setDrawer(open);
-  else { el('fraction-bars').inert = !open; el('fraction-bars').setAttribute('aria-hidden', String(!open)); }
+  else { el('fraction-bars').inert = !open; el('fraction-bars').setAttribute('aria-hidden', String(!open));drawerCue=settleDrawerCue(drawerCue,open,user,Date.now());drawerIntent=null; }
   emphasize();
 }
 el('drawer-toggle').addEventListener('click', () => setDrawer(el('drawer-toggle').getAttribute('aria-expanded') !== 'true'));
@@ -276,9 +287,9 @@ window.addEventListener('pagehide', event => { if (!event.persisted) bakery?.dis
 function setMode(mode) {
   const locked=mode==='challenge';
   el('label-A').hidden=locked;el('pie-A').hidden=locked;el('pie-A').inert=locked;
-  if(locked)setDrawer(false);
+  if(locked){setDrawer(false,false);cue.hidden=true;drawerCue={...drawerCue,opened:false,lastTime:null};}
   el('drawer-toggle').disabled=locked;el('drawer-toggle').title=locked?'Fraction bars are closed for this order.':'';
-  bakery?.setExampleVisible(!locked);hoverPiece=null;focusPiece=null;render();
+  bakery?.setMode(mode);bakery?.setExampleVisible(!locked);hoverPiece=null;focusPiece=null;render();
 }
 for(const select of document.querySelectorAll('[data-flavor]'))select.addEventListener('change',()=>{if(busy)return;flavors={...flavors,[select.dataset.flavor]:select.value};render();});
 modeController = createLearningModes({ setMode, getState: () => state, loadState, act, feedback, setFeedback: tone => bakery?.setFeedback('B',tone) });

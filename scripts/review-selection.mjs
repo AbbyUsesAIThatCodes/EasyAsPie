@@ -29,7 +29,7 @@ page.on('pageerror', e => messages.push({ type: 'pageerror', message: e.message 
 page.on('console', m => { if (['error', 'warning'].includes(m.type())) messages.push({ type: m.type(), message: m.text() }); });
 page.setDefaultNavigationTimeout(180000);
 const values = () => page.locator('.fraction').allTextContents();
-const settle = () => page.waitForFunction(() => document.getAnimations().length === 0 && document.getElementById('scene').dataset.moving === 'false');
+const settle = () => page.waitForFunction(() => document.getElementById('scene').dataset.moving === 'false');
 const shot = name => page.screenshot({ path: `${output}/${name}.png` });
 const layout = async () => {
   const result = await page.evaluate(() => {
