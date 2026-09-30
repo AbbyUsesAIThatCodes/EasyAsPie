@@ -123,6 +123,17 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   let pies = [], bars = [], disposed = false, emphasized = null, topView = false;
   let drawerOpen = false, drawerValue = 0, viewValue = 0, animation = null, frame = 0;
   let width = 1, height = 1, yaw = 0, tilt = 0, finishSlices = null;
+  const feedbackTones = [null,null];
+  const paintFeedback = () => pies.forEach((pie, side) => {
+    const tone = feedbackTones[side], color = tone === 'correct' ? '#1a9857' : tone === 'incorrect' ? '#d84252' : '#7536ed';
+    pie.getObjectByName('selected-serving')?.children[0]?.material.color.set(color);
+    pie.children.filter(o => o.userData.slice).forEach(wedge => wedge.traverse(o => {
+      if (o.material?.name !== 'serving-fruit') return;
+      const focus = emphasized?.pair === (side ? 'B' : 'A') && emphasized.k === wedge.userData.slice;
+      o.material.emissive.set(focus ? '#6e37e7' : color);
+      o.material.emissiveIntensity = focus ? .3 : tone && wedge.userData.selected ? .2 : 0;
+    }));
+  });
   const project = (x, y, z) => { const p = new THREE.Vector3(x, y, z).project(camera); return { x: (p.x + 1) * width / 2, y: (1 - p.y) * height / 2 }; };
   const setCamera = () => {
     const angle = THREE.MathUtils.clamp(THREE.MathUtils.lerp(modelReview ? 0.50 : 0.68, Math.PI / 2 - 0.001, viewValue) + tilt, 0.42, Math.PI / 2 - 0.001);
@@ -183,7 +194,9 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
           }
         } else if (pies[side].userData.serving.n !== serving.n) { setPieServing(pies[side], serving); setBarServing(bars[side], serving); }
       });
-      if (rebuild) { emphasized = null; resize(); } else render();
+      if (rebuild) emphasized = null;
+      paintFeedback();
+      if (rebuild) resize(); else render();
     },
     transform(pair, type, from, to) {
       finishSlices?.();
@@ -221,8 +234,9 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       if (piece && !modelReview) { const pie = pies[piece.pair === 'A' ? 0 : 1]; pie.add(pieceOutline(piece.k, pie.userData.serving.d));
         pie.children.find(o => o.userData.slice === piece.k)?.traverse(o => { if (o.material?.name === 'serving-fruit') o.material.emissiveIntensity = 0.3; });
       }
-      render();
+      paintFeedback(); render();
     },
+    setFeedback(pair, tone) { feedbackTones[pair === 'A' ? 0 : 1] = tone; paintFeedback(); render(); },
     setDrawer(open) { drawerOpen = open; transition(); },
     setTopView(top) { topView = top; yaw = 0; tilt = 0; transition(); },
     orbit(dx, dy = 0) { yaw = THREE.MathUtils.clamp(yaw + dx, -0.22, 0.22); tilt = THREE.MathUtils.clamp(tilt + dy, -0.16, 0.18); setCamera(); render(); },

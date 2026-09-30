@@ -1,0 +1,83 @@
+import {createSession,currentTask,selectSlices,markAssisted,useHint,submit,advance} from './session.js';
+import {createFreePlay} from './free-play.js';
+import {convert,compare} from './fractions.js';
+const terms={
+ whole:{title:'Whole',text:'The complete pie or the entire bar used as one unit. Our two wholes have the same size.'},
+ numerator:{title:'Numerator',text:'The top number counts the equal pieces selected. In 3/8, three pieces are selected.'},
+ denominator:{title:'Denominator',text:'The bottom number counts all the equal pieces in one {whole}. In 3/8, the whole has eight equal pieces.'},
+ equivalent:{title:'Equivalent Fractions',text:'Different fraction names for the same amount of the same-sized {whole}. Multiply or divide both numbers by the same factor.'},
+ regroup:{title:'Regroup',text:'Combine adjacent equal pieces into larger equal pieces while keeping the selected amount. An odd {numerator} cannot be halved into whole larger pieces.'}
+};
+export function term(key){const t=terms[key];return `<span class="term" tabindex="0" role="button" data-term="${key}" aria-label="Open ${t.title} Reference"><b>${t.title}</b><span class="term-tip" role="tooltip">${t.text.replace(/\{(\w+)\}/g,(_,k)=>term(k))}<small>Click or press Enter to open the reference.</small></span></span>`;}
+export const LESSONS=Object.freeze([
+ {title:'Same Serving, More Pieces',from:{n:1,d:2},to:8,action:'cut',prediction:2,prompt:'Predict the numerator after each half is cut in two.',explanation:'1/2 = 2/4: both numbers doubled. The selected amount stayed fixed.'},
+ {title:'Same Serving, Fewer Pieces',from:{n:12,d:16},to:4,action:'regroup',prediction:6,prompt:'Predict the numerator after adjacent sixteenths regroup in pairs.',explanation:'12/16 = 6/8: both numbers halved. The serving did not shrink.'},
+ {title:'From Pie To Bar',from:{n:3,d:8},to:16,action:'cut',prediction:6,prompt:'Predict how many sixteenths match three eighths.',explanation:'3/8 = 6/16: each eighth becomes two sixteenths, in the pie and its bar.'}
+]);
+export function createLearningModes(api){
+ let mode='free',free=api.getState(),lessonIndex=0,phase='predict',prediction='',lessonMessage='',lessonAssisted=false,learningBusy=false;
+ let session=createSession(),challengeMessage='',challengeTone='',epoch=0;
+ const completed=new Map();
+ const card=document.createElement('section');card.id='learning-card';card.className='learning-card';card.hidden=true;card.setAttribute('aria-label','Learning Activity');document.querySelector('.bakery').append(card);
+ const vocab=document.createElement('div');vocab.className='vocabulary-bar';vocab.innerHTML=`${term('numerator')} / ${term('denominator')} · ${term('equivalent')} <button data-reference>Reference</button>`;document.querySelector('.bakery').append(vocab);
+ const dialog=document.createElement('dialog');dialog.id='fraction-reference';dialog.innerHTML=`<div class="reference-head"><h2>Fraction Reference</h2><button id="close-reference">Close</button></div><p>Our pies and bars are different models of the same-sized ${term('whole')}.</p>${Object.entries(terms).map(([key,t])=>`<section id="reference-${key}"><h3>${t.title}</h3><p>${t.text.replace(/\{(\w+)\}/g,(_,k)=>term(k))}</p></section>`).join('')}<h3>Camera And Keyboard</h3><p>Drag the scene to orbit, or use the two arrow buttons. Top View restores a centered comparison. Tab to a pie or open bar; arrows, Home and End explore pieces, Enter or Space selects. Escape closes the drawer or this reference.</p><h3>Learning Connection</h3><p>This local fraction model supports equal subdivisions and equivalent fractions from the Measuring Matters audit (DM 1.3 G10/G12). Actual ruler reading and classroom measurement require separate evidence. These definitions are locally written, not a recovered official glossary.</p><a href="https://github.com/AbbyUsesAIThatCodes/EasyAsPie/blob/main/docs/CURRICULUM.md" target="_blank" rel="noreferrer">Curriculum Sources And Limits</a>`;document.body.append(dialog);
+ const showReference=key=>{if(mode==='challenge'){session=markAssisted(session);challengeMessage='Reference used. This order is now marked as helped.';render();}else if(mode==='learn'){lessonAssisted=true;}dialog.showModal();if(key)dialog.querySelector('#reference-'+key)?.scrollIntoView({block:'nearest'});};
+ document.querySelector('#close-reference').onclick=()=>dialog.close();
+ document.addEventListener('click',event=>{const t=event.target.closest('[data-term],[data-reference]');if(!t)return;event.stopPropagation();if(!dialog.open)showReference(t.dataset.term);else dialog.querySelector('#reference-'+t.dataset.term)?.scrollIntoView({block:'nearest'});});
+ document.addEventListener('keydown',event=>{if(event.target.matches('.term')&&['Enter',' '].includes(event.key)){event.preventDefault();if(!dialog.open)showReference(event.target.dataset.term);}});
+ const setScene=(A,B)=>{api.loadState(createFreePlay({A,B}));api.setFeedback(null);};
+ function startLesson(index){++epoch;lessonIndex=index;phase='predict';prediction='';lessonMessage='Make a prediction before testing it.';lessonAssisted=false;learningBusy=false;const l=LESSONS[index];setScene(l.from,{n:0,d:l.to});render();}
+ function challengeScene(){const t=currentTask(session);setScene(t.from,{n:session.selected,d:t.to});}
+ function changeMode(next){if(next===mode)return;if(mode==='free')free=api.getState();if(mode==='challenge'&&next==='learn')session=markAssisted(session);++epoch;learningBusy=false;mode=next;document.body.dataset.mode=mode;
+  document.querySelectorAll('[data-mode]').forEach(b=>{b.classList.toggle('active',b.dataset.mode===mode);b.setAttribute('aria-pressed',String(b.dataset.mode===mode));});
+  if(mode==='free')api.loadState(free);else if(mode==='learn')startLesson(lessonIndex);else challengeScene();
+  api.feedback(mode==='free'?'Explore freely. Cut and regroup preserve the amount.':mode==='learn'?'Predict, test, then build the matching serving.':'Build Pie B to match the order. Submit when ready.');render();
+ }
+ document.querySelector('.modes').innerHTML='<button id="free-play" data-mode="free" class="active" aria-pressed="true">Free Play</button><button id="learn" data-mode="learn" aria-pressed="false">Learn</button><button id="challenge" data-mode="challenge" aria-pressed="false">Challenge</button>';
+ document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>changeMode(b.dataset.mode));
+ function render(){
+  card.hidden=mode==='free';vocab.hidden=mode!=='free';
+  document.querySelector('.preview-note h1').textContent=mode==='free'?'Free Play':mode==='learn'?'Learn Together':'Bakery Orders';
+  if(mode==='free')return;
+  if(mode==='learn'){
+   const l=LESSONS[lessonIndex];
+   card.innerHTML=`<div class="activity-head"><label>Lesson <select id="lesson-select" ${learningBusy?'disabled':''}>${LESSONS.map((x,i)=>`<option value="${i}" ${i===lessonIndex?'selected':''}>${x.title}</option>`).join('')}</select></label><span>${phase==='predict'?`Predict the ${term('numerator')}.`:phase==='done'?'Lesson Check Complete':`Build ${term('equivalent')} in Pie B.`}</span><button data-reference>Reference</button></div>
+    ${phase==='predict'?`<div class="activity-actions"><span>${l.prompt}</span><label>Your Prediction <select id="prediction"><option value="">Choose</option>${Array.from({length:17},(_,n)=>`<option ${String(n)===prediction?'selected':''}>${n}</option>`).join('')}</select></label><button id="test-prediction" ${learningBusy?'disabled':''}>Test My Prediction</button></div>`:`<div class="activity-actions"><span>${l.explanation} Now match it with Pie B (${l.to} pieces).</span><button id="check-lesson">Check My Serving</button><button id="lesson-replay">Replay Lesson</button></div>`}
+    <p class="activity-feedback" role="status">${lessonMessage}</p>`;
+   card.querySelector('#lesson-select').onchange=e=>startLesson(Number(e.target.value));
+   if(phase==='predict'){
+    card.querySelector('#prediction').onchange=e=>{prediction=e.target.value;};
+    card.querySelector('#test-prediction').onclick=async()=>{
+     if(prediction===''){lessonMessage='Choose a prediction first; the demonstration stays hidden.';render();return;}
+     const token=epoch;learningBusy=true;render();
+     await api.act({pair:'A',type:l.action},true);
+     if(token!==epoch||mode!=='learn')return;
+     learningBusy=false;phase='build';const right=Number(prediction)===l.prediction;
+     lessonMessage=(right?'✓ Prediction matched. ':'Try again next time: the amount stays fixed when both numbers change together. ')+`Build Pie B before checking. Prediction: ${prediction}.`;
+     api.setFeedback(right?'correct':'incorrect');render();
+    };
+   }else{
+    card.querySelector('#lesson-replay').onclick=()=>startLesson(lessonIndex);
+    card.querySelector('#check-lesson').onclick=()=>{const f=api.getState().B,expected=convert(l.from,l.to),right=compare(f,expected)===0;
+     if(right){phase='done';completed.set(lessonIndex,{predictionCorrect:Number(prediction)===l.prediction,assisted:lessonAssisted});lessonMessage=`✓ Same amount: ${l.from.n}/${l.from.d} = ${f.n}/${f.d}. ${lessonAssisted?'Completed with reference help.':'Completed without reference help.'} ${completed.size}/3 lesson checks completed.`;}
+     else lessonMessage=`Not Yet: ${f.n}/${f.d} is ${compare(f,expected)<0?'less':'more'} than the target. Count how many smaller pieces cover each original piece.`;
+     api.setFeedback(right?'correct':'incorrect');render();};
+   }
+  }else{
+   const t=currentTask(session),first=session.results.filter(r=>r.firstTry).length,helped=session.results.filter(r=>r.assisted).length;
+   card.innerHTML=session.complete?`<div class="activity-head"><h2>Orders Complete</h2><button id="restart-orders">New Round</button><button data-reference>Reference</button></div><p>10 orders completed · ${first} first try without help · ${helped} helped · ${session.results.filter(r=>r.attempts>1).length} retried.</p><p class="activity-feedback">Practice evidence, not proof of ruler-reading mastery. Explain why both numbers change together.</p>`:
+   `<div class="activity-head"><h2>Order ${session.index+1} Of 10</h2><span>Match ${t.from.n}/${t.from.d} using Pie B's ${t.to} equal pieces.</span><button data-reference>Reference</button></div><div class="activity-actions"><span>Choose the ${term('numerator')} in Pie B or its bar.</span><button id="submit-order" ${session.solved?'disabled':''}>Check Order</button><button id="hint-order" ${session.solved?'disabled':''}>Hint</button><button id="next-order" ${session.solved?'':'disabled'}>Next Order</button><span>${session.results.length}/10 filled</span></div><p class="activity-feedback ${challengeTone}" role="status">${challengeMessage||'Build your serving, then check it. There is no timer.'}</p>`;
+   if(session.complete){card.querySelector('#restart-orders').onclick=()=>{session=createSession();challengeMessage='';challengeTone='';challengeScene();render();};return;}
+   card.querySelector('#submit-order').onclick=()=>{session=submit(session);challengeTone=session.solved?'correct':'incorrect';challengeMessage=(session.solved?'✓ Correct: ':'Not Yet: ')+session.feedback;api.setFeedback(challengeTone);render();};
+   card.querySelector('#hint-order').onclick=()=>{session=useHint(session);challengeMessage='Hint · '+session.feedback;challengeTone='';render();};
+   card.querySelector('#next-order').onclick=()=>{session=advance(session);challengeMessage='';challengeTone='';if(!session.complete)challengeScene();render();};
+  }
+ }
+ document.body.dataset.mode='free';render();
+ return{
+  getMode:()=>mode,
+  beforeAction(action){if(mode==='free')return true;if(learningBusy){api.feedback('The demonstration is moving. Change mode or Reset to stop it.');return false;}if(action.pair==='A'){api.feedback('Pie A is the reference. Build your answer with Pie B.');return false;}if(['cut','regroup'].includes(action.type)){api.feedback('This task keeps Pie B’s denominator fixed. Choose its numerator.');return false;}if(mode==='challenge'&&(session.solved||session.complete)){api.feedback('This order is already checked. Choose Next Order or Reset.');return false;}return true;},
+  onState(state){if(mode==='challenge'){session=selectSlices(session,state.B.n);challengeMessage='';challengeTone='';api.setFeedback(null);render();}},
+  reset(){if(mode==='learn')startLesson(lessonIndex);else if(mode==='challenge'){++epoch;session=createSession();challengeMessage='';challengeTone='';challengeScene();render();}},
+ };
+}
