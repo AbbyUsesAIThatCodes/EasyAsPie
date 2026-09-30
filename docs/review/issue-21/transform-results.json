@@ -1,5 +1,5 @@
 {
-  "build": "0.3.0_Unassigned_pr-22_build-001_20260930T033257Z_ge3c0846d2599_web",
+  "build": "0.3.1_Unassigned_pr-22_build-002_20260930T035728Z_g8b0ae6f9018b_web",
   "browser": "154.0.8037.92",
   "checks": [
     "Animated 1/2 → 2/4 → 4/8 → 8/16; 12/16 → 6/8 → 3/4; partner preserved during rapid actions.",

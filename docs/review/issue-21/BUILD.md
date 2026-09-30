@@ -1,22 +1,22 @@
 # EasyAsPie Build
 
-**0.3.0_Unassigned_pr-22_build-001_20260930T033257Z_ge3c0846d2599_web**
+**0.3.1_Unassigned_pr-22_build-002_20260930T035728Z_g8b0ae6f9018b_web**
 
 Status: Build succeeded
 
-Version: 0.3.0
+Version: 0.3.1
 
 Codename: Unassigned (awaiting the owner’s choice)
 
-UTC Build Time: 2026-09-30T03:32:57.734Z
+UTC Build Time: 2026-09-30T03:57:28.295Z
 
-Source: e3c0846d25998babb027dd6cecd3e66ec3ebf7ab (clean)
+Source: 8b0ae6f9018bcc51b99bef0b818c638c39220cd7 (clean)
 
-Source Fingerprint: 136bda7ad311e7615efe5b9ac06e34277c50abf7ad06a83d26c2fa50e1da4cc0
+Source Fingerprint: 855064ed0bd06801b236910d16ffded010687dac19e54f288956f67a7f7fb7fa
 
-PR Head: e3c0846d25998babb027dd6cecd3e66ec3ebf7ab
+PR Head: 8b0ae6f9018bcc51b99bef0b818c638c39220cd7
 
-Scope / Ordinal: pr-22 / 1
+Scope / Ordinal: pr-22 / 2
 
 Target: web
 

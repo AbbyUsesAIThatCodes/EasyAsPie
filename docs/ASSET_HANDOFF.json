@@ -1,7 +1,7 @@
 {
   "repository": "AbbyUsesAIThatCodes/EasyAsPie",
-  "sourceRevision": "e3c0846d25998babb027dd6cecd3e66ec3ebf7ab",
-  "build": "0.3.0_Unassigned_pr-22_build-001_20260930T033257Z_ge3c0846d2599_web",
+  "sourceRevision": "8b0ae6f9018bcc51b99bef0b818c638c39220cd7",
+  "build": "0.3.1_Unassigned_pr-22_build-002_20260930T035728Z_g8b0ae6f9018b_web",
   "sharedCatalogChanged": false,
   "hashNormalization": "LF, matching Git text blobs",
   "proceduralSources": [
@@ -15,7 +15,7 @@
     },
     {
       "path": "src/pies.js",
-      "sha256": "7ce39f7cac98e81f2417b96de687b6e7768625e692e9071dd0e171af540b9008"
+      "sha256": "7f3006c4c1bdc7097ee6cb0f5713ddf26c6472ffc3adeb4d87cd7563864fe4c8"
     },
     {
       "path": "src/slice-motion.js",
@@ -26,5 +26,7 @@
     "three": "0.186.1"
   },
   "attribution": "Original EasyAsPie procedural geometry, textures and animation. Preserve upstream source and Three.js notices. Comic Sans is requested from the device; no font file is redistributed.",
-  "exportStatus": "Source handoff only; no standalone GLB export claimed. Parent consolidates shared assets."
+  "exportStatus": "Source handoff only; no standalone GLB export claimed. Parent consolidates shared assets.",
+  "supersedesSourceRevision": "e3c0846d25998babb027dd6cecd3e66ec3ebf7ab",
+  "changeNote": "Narrower radial berry-center clearance retains coverage at sixteenths; core wedge solids and fraction math unchanged."
 }

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-09-30T03:39:30.098Z",
+  "checkedAt": "2026-09-30T04:02:57.895Z",
   "previews": [
     {
       "port": 4189,
@@ -13,12 +13,12 @@
     },
     {
       "port": 4187,
-      "build": "0.3.0_Unassigned_pr-22_build-001_20260930T033257Z_ge3c0846d2599_web",
+      "build": "0.3.1_Unassigned_pr-22_build-002_20260930T035728Z_g8b0ae6f9018b_web",
       "loaded": true
     }
   ],
   "video": {
-    "duration": 46.36,
+    "duration": 46.28,
     "width": 1366,
     "height": 768,
     "playedThrough": true

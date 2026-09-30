@@ -1,8 +1,17 @@
 # Integrated Bakery Review
 
-**0.3.0_Unassigned_pr-22_build-001_20260930T033257Z_ge3c0846d2599_web**
+**0.3.1_Unassigned_pr-22_build-002_20260930T035728Z_g8b0ae6f9018b_web**
 
-This is the summative production build of **PR19 → PR20 → PR22**. [Download The Playable ZIP](0.3.0_Unassigned_pr-22_build-001_20260930T033257Z_ge3c0846d2599_web.zip), extract it and run Start Review.cmd (Node.js 22.12+). The isolated Jess_PC preview is **http://127.0.0.1:4187**. No deployment is needed. Teacher visual acceptance remains pending.
+This is the summative production build of **PR19 → PR20 → PR22**. [Download The Playable ZIP](0.3.1_Unassigned_pr-22_build-002_20260930T035728Z_g8b0ae6f9018b_web.zip), extract it and run Start Review.cmd (Node.js 22.12+). The isolated Jess_PC preview is **http://127.0.0.1:4187**. No deployment is needed. Teacher visual acceptance remains pending. ZIP SHA-256: `7aff803208b951398ce41aba08ba9c214d876a155c29d0b29668b5496acf5fce`.
+
+## Build 002 Corrections
+
+This package supersedes [build 001 and its original evidence](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/blob/4449fb37d92e7a09b0c1f4ac51e1682e82b41210/docs/review/issue-21/README.md). The earlier ZIP retains its original identity and is not the recommended assessment build.
+
+- The original prediction is captured before the demonstration; its selector is disabled during motion. A forced late change from 0 to 2 during 1/2 → 2/4 still receives incorrect feedback for 0, and its saved completion predictionCorrect remains false. [Committed Prediction Evidence](committed-prediction.png).
+- A previously started unfinished Challenge order tracks later Learn/reference exposure across Free Play. Both indirect routes mark assistance while preserving the prior selected response. Help viewed before starting an order is not counted retroactively. These cases are recorded in the mode-results report.
+- Narrower berry-center clearance at radial cuts retains 82 of 104 seeded berries at sixteenths, versus 101 at halves. This restores convincing topping coverage without changing pastry/filling wedge solids, picking or fraction math. Countable cream radial lines intentionally remain.
+- The laptop activity panel is narrower and the explanation moves to the existing top note. The drawer title remains fully visible at 1366 × 768 and 1280 × 720; the central drawer front is still partially covered by the floating panel. No 3D viewport space was removed.
 
 ## What To Review
 
@@ -12,13 +21,13 @@ Learn has three prediction/demo/build lessons. Challenge has ten untimed exact o
 
 ## Evidence From This Exact Build
 
-- [Actual Integrated Gameplay Video](integrated-gameplay.webm), 46.36 seconds, recorded from the running production game. The browser decoded and played the complete video; the capture script took 51.964 seconds wall time.
+- [Actual Integrated Gameplay Video](integrated-gameplay.webm), 46.28 seconds, recorded from the running production game and played through in Chrome. The capture session lasted 52.038 seconds; chapter markers use capture wall time, not exact encoded-video positions.
 - [1366 × 768 Free Play](1366x768-free.png), [1280 × 720 Free Play](1280x720-normal-open.png), [Physical Cut](physical-cut.png), [Sixteenths](1280x720-sixteenths-open.png).
 - [Guided Lesson](1366x768-learn.png), [Challenge Feedback](1366x768-challenge.png), [Ten-Order Summary](orders-complete.png), [Nested Tooltip](nested-tooltip.png).
 - [1280 × 720 Learn](1280x720-learn.png), [390 × 844 Learn](390x844-learn.png), [390 × 844 Challenge](390x844-challenge.png).
 - [Selection Results](browser-results.json), [Transformation Results](transform-results.json), [Mode Results And Video Chapters](mode-results.json), [Build Manifest](build.json), [Build Report](BUILD.md), [Live-Site Comparison](pages-verification.json), [Delivery/Video Playback Check](delivery-results.json).
 
-All 24 automated tests passed, including exact fractions, independent pairs, closed equal-volume solids, build allocation and existing session semantics. Production build and manifest/artifact/UI/report checks passed. The clean source is e3c0846d25998babb027dd6cecd3e66ec3ebf7ab; PR22 ordinal 1 was durably reserved before building. The existing codename is still explicitly Unassigned; 0.3.0 identifies the new integrated feature milestone. Earlier review builds are not renamed.
+All 24 automated tests passed, including exact fractions, independent pairs, closed equal-volume solids, build allocation and existing session semantics. Production build and manifest/artifact/UI/report checks passed. The clean source is 8b0ae6f9018bcc51b99bef0b818c638c39220cd7; PR22 ordinal 2 was durably reserved before building. The existing codename is still explicitly Unassigned; 0.3.1 identifies this bounded correction to the integrated feature milestone. Earlier review builds are not renamed.
 
 The preserved selection harness completed **577 activations, 378 hover/focus checks and 240 boundary clicks**, covering all 34 fraction states in both pairs by pie/bar pointer and keyboard. It also checked real Tab order, drawer focus recovery, resize, full-screen and reduced motion. Its traversal bound derives from the actual controls.
 
@@ -32,7 +41,7 @@ The mode harness completed all three lessons, wrong/missing predictions, wrong/c
 | --- | --- | --- | --- |
 | 1 | [PR19](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/pull/19) / #18 | Full 3D visual foundation and movable camera | [Build 006](../issue-18/jess-pc/README.md), localhost:4189 |
 | 2 | [PR20](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/pull/20) / #12 | Physical Cut/Regroup and safe exact transitions | [Build 002](../issue-12/README.md), localhost:4188 |
-| 3 | [PR22](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/pull/22) / #21 | Three modes, reference and summative 0.3.0 review | This build, localhost:4187 |
+| 3 | [PR22](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/pull/22) / #21 | Three modes, reference and summative 0.3.1 review | This build, localhost:4187 |
 
 After accepting and merging each predecessor, retarget the successor to main and inspect its diff before merging. Do not merge the final draft alone. The teacher's overnight permission allowed this provisional stack; it did not approve the graphics or authorize a merge. #13 and tracking #7 remain open for classroom/teacher acceptance.
 
