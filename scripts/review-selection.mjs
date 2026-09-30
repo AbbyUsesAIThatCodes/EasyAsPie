@@ -20,7 +20,7 @@ const server = createServer(async (req, res) => {
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 const url = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({ headless: true, executablePath: process.env.CHROMIUM_PATH || undefined,
-  args: ['--no-sandbox', '--disable-dev-shm-usage', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+  args: process.env.SOFTWARE_RENDERER === '1' ? ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] : [] });
 const messages = [], checks = [];
 const started = Date.now();
 const page = await browser.newPage({ viewport: { width: 1366, height: 768 } });
@@ -261,4 +261,4 @@ try {
   assert.deepEqual(messages, [], 'No unexpected browser or WebGL errors/warnings.');
   await writeFile(`${output}/browser-results.json`, JSON.stringify({ build: manifest.id, browser: browser.version(), gpu, activations, previews, boundaryClicks, checks, messages }, null, 2) + '\n');
   console.log(`BROWSER SELECTION REVIEW PASSED ${manifest.id}\n${output}`);
-} finally { await browser.close(); server.close(); }
+} catch (error) { await page.screenshot({path: `${output}/failure.png`}); throw error; } finally { await browser.close(); server.close(); }
