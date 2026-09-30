@@ -1,0 +1,34 @@
+{
+  "build": "0.2.0_Unassigned_local-6dfe781ae3_build-008_20260929T014425Z_g41d49df49301_web",
+  "source": "bakery-full-capture.mp4",
+  "output": "bakery-review.mp4",
+  "sourceDuration": 128,
+  "ranges": [
+    [
+      0,
+      2
+    ],
+    [
+      16,
+      34
+    ],
+    [
+      44,
+      55
+    ],
+    [
+      66,
+      73
+    ],
+    [
+      84,
+      94
+    ],
+    [
+      120,
+      128
+    ]
+  ],
+  "duration": 56,
+  "note": "Editorial cuts omit waits and portions of transitions. Included footage retains its original speed; frames are not synthesized or interpolated. Use the full recording to judge complete transitions and timing. Ranges apply to this recorded take only."
+}

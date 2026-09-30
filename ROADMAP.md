@@ -9,12 +9,13 @@
 | 1 | [#9 — Exact Free Play State](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/9) | Tested independent A/B fractions and exact serving/Cut/Regroup actions; existing playable retained |
 | 2 | [#10 — Bakery Scene And Drawer](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/10) | Two blueberry pies and matching bars in a warm kitchen; clearly labeled visual preview |
 | 3 | [#11 — Linked Selection](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/11) | Pointer/keyboard serving selection in either representation, Clear/Decrease/Increase, and matching focus feedback |
-| 4 | [#12 — Cut And Regroup](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/12) | Synchronized subdivision animation, exact amount preservation, and explained blocked actions |
+| 3A | [#18 — Full 3D Bakery](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/18) | Shared modeled environment, closed pie wedges, lit materials, spatial drawer, and screenshots/video for teacher visual review |
+| 4 | [#12 — Cut And Regroup](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/12) | Physical 3D slicing/regrouping, exact amount preservation, explained blocked actions, and screenshots/video before merge |
 | 5 | [#13 — Classroom Free Play Review](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/13) | Integrated visual/accessibility checks, accurate teacher notes, and evidence covering #7 |
 
 Each PR closes its own issue on merge. Only the final PR also closes #7, once the full checklist is satisfied. Preserve a concise `docs/IMPLEMENTATION_STATUS.md` handoff from #9 onward, and update later issue descriptions when teacher review changes the plan. Learn and Challenge content are separate future work; the sequence establishes their shared interaction foundation.
 
-Steps 01 and 02 are merged via PRs #15 and #16. Step 03 implements linked pointer/keyboard serving selection for review. After its PR is merged, begin #12 from updated main; consult [Implementation Status](docs/IMPLEMENTATION_STATUS.md) and the teacher’s review decisions first.
+Steps 01–03 are merged via PRs #15–#17. The teacher found the Step 03 rendering too flat and inserted **Step 03A / #18** before #12. Its mechanics remain the foundation; merging #17 did not approve its visuals. Review the new [screenshots and video](docs/review/issue-18/README.md) before merging #18. After visual approval and merge, begin #12 from current main.
 
 ## Initial Review History
 

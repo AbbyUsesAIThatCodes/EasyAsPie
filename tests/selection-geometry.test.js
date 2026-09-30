@@ -36,7 +36,7 @@ test('serving updates retain solid wedges and independently update all 34 visual
       wedges.forEach((wedge, i) => {
         assert.equal(wedge.children[0].geometry, geometry[i]);
         assert.equal(wedge.userData.selected, i < n);
-        assert.equal(wedge.children[1].material.color.getHexString(), i < n ? '3b185f' : '565166');
+        assert.equal(wedge.children[1].material.color.getHexString(), i < n ? '3b185f' : '43334e');
       });
       assert.deepEqual(other.userData.serving, { n: 1, d });
     }
@@ -45,7 +45,7 @@ test('serving updates retain solid wedges and independently update all 34 visual
     const hit = pie.getObjectByName('serving-hit-target');
     for (let k = 1; k <= d; k++) {
       const angle = Math.PI + (k - 0.5) * 2 * Math.PI / d;
-      const ray = new THREE.Raycaster(new THREE.Vector3(pie.position.x + Math.sin(angle), 4, Math.cos(angle)), new THREE.Vector3(0, -1, 0));
+      const ray = new THREE.Raycaster(new THREE.Vector3(pie.position.x + Math.sin(angle), 4, pie.position.z + Math.cos(angle)), new THREE.Vector3(0, -1, 0));
       const hits = ray.intersectObject(hit);
       assert.ok(hits.length);
       const point = pie.worldToLocal(hits[0].point.clone());
