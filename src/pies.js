@@ -20,10 +20,10 @@ export function makePie(serving, recipeName, side) {
     base.name = 'pastry-solid';
     const filling = new THREE.MeshPhysicalMaterial({ color: '#3b185f', roughness: 0.27, clearcoat: 0.65, clearcoatRoughness: 0.25 }); filling.name = 'serving-filling';
     const jelly = mesh(wedge, solidSector(1.49, 1.49, 0.27, start, step), filling, 0, 0.595); jelly.name = 'filling-solid';
-    const rimMat = material('#ffffff', 0.4, { vertexColors: true });
+    const rimMat = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.29, clearcoat: 0.38, clearcoatRoughness: 0.24, vertexColors: true });
     mesh(wedge, pastryRim(start, step), rimMat);
     mesh(wedge, pastryWall(start, step), material('#ffffff', 0.55, { vertexColors: true }));
-    const fruit = new THREE.MeshPhysicalMaterial({ color: '#44347e', roughness: 0.3, clearcoat: 0.85, clearcoatRoughness: 0.22 }); fruit.name = 'serving-fruit';
+    const fruit = new THREE.MeshPhysicalMaterial({ color: '#312078', roughness: 0.23, clearcoat: 1, clearcoatRoughness: 0.14 }); fruit.name = 'serving-fruit';
     const berries = [], crowns = [], crumbs = [], fillingFruit = [];
     // Fixed seeded positions/sizes. Vary shape, orientation, bloom and ripeness,
     // and leave a small lane at each cut so sixteenths remain countable.
@@ -67,7 +67,7 @@ function perimeter(start, angle, radius, height) {
 }
 export function setPieServing(pie, serving) {
   const previous = pie.getObjectByName('selected-serving'); if (previous) { pie.remove(previous); dispose(previous); }
-  const colors = { 'serving-filling': ['#43334e', '#3b185f'], 'serving-fruit': ['#68667a', '#44347e'] };
+  const colors = { 'serving-filling': ['#43334e', '#3b185f'], 'serving-fruit': ['#43405f', '#312078'] };
   pie.children.filter(o => o.userData.slice).forEach(wedge => {
     wedge.userData.selected = wedge.userData.slice <= serving.n;
     wedge.traverse(o => { if (colors[o.material?.name]) o.material.color.set(colors[o.material.name][Number(wedge.userData.selected)]); });
@@ -98,7 +98,7 @@ function pieceOutline(k, d) {
 export function createBakery(canvas, { onLayout = () => {}, modelReview = false } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); renderer.shadowMap.enabled = true;
-  renderer.shadowMap.autoUpdate = false; renderer.shadowMap.type = THREE.PCFShadowMap;
+  renderer.shadowMap.autoUpdate = false; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.98;
   const scene = new THREE.Scene(); scene.background = new THREE.Color('#eee2c5');
   // Small original studio reflection map: broad window highlights without the
@@ -110,24 +110,24 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   ctx.fillStyle = '#ffffff'; ctx.fillRect(30, 22, 45, 42); ctx.fillStyle = '#d2e1ff'; ctx.fillRect(168, 33, 30, 26);
   const reflection = new THREE.CanvasTexture(envCanvas); reflection.colorSpace = THREE.SRGBColorSpace;
   const pmrem = new THREE.PMREMGenerator(renderer), env = pmrem.fromEquirectangular(reflection);
-  scene.environment = env.texture; scene.environmentIntensity = 0.45; reflection.dispose(); pmrem.dispose();
+  scene.environment = env.texture; scene.environmentIntensity = 0.75; reflection.dispose(); pmrem.dispose();
   const camera = new THREE.OrthographicCamera(-6, 6, 3, -3, 0.1, 80);
-  scene.add(new THREE.HemisphereLight('#fff3db', '#75999c', 1.05));
-  const sun = new THREE.DirectionalLight('#ffe0a1', 3.6); sun.position.set(-4.5, 7, 4.5); sun.castShadow = true;
-  sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -9, right: 9, top: 7, bottom: -7, near: 0.5, far: 25 });
+  scene.add(new THREE.HemisphereLight('#fff3db', '#75999c', 0.8));
+  const sun = new THREE.DirectionalLight('#ffe0a1', 3.3); sun.position.set(-4.5, 7, 4.5); sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -9, right: 9, top: 7, bottom: -7, near: 0.5, far: 25 });
   sun.shadow.bias = -0.00012; sun.shadow.normalBias = 0.018; sun.shadow.radius = 3; scene.add(sun);
   const fill = new THREE.DirectionalLight('#d4e7ff', 1.2); fill.position.set(5, 4, -1); scene.add(fill);
   const { drawer } = makeRoom(scene);
   const raycaster = new THREE.Raycaster(), reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let pies = [], bars = [], disposed = false, emphasized = null, topView = false;
   let drawerOpen = false, drawerValue = 0, viewValue = 0, animation = null, frame = 0;
-  let width = 1, height = 1;
+  let width = 1, height = 1, yaw = 0, tilt = 0;
   const project = (x, y, z) => { const p = new THREE.Vector3(x, y, z).project(camera); return { x: (p.x + 1) * width / 2, y: (1 - p.y) * height / 2 }; };
   const setCamera = () => {
-    const angle = THREE.MathUtils.lerp(modelReview ? 0.50 : 0.68, Math.PI / 2 - 0.001, viewValue);
+    const angle = THREE.MathUtils.clamp(THREE.MathUtils.lerp(modelReview ? 0.50 : 0.68, Math.PI / 2 - 0.001, viewValue) + tilt, 0.42, Math.PI / 2 - 0.001);
     const targetZ = THREE.MathUtils.lerp(0.25, 0.40, viewValue), targetY = 0.10;
-    camera.position.set(0, targetY + 16 * Math.sin(angle), targetZ + 16 * Math.cos(angle)); camera.lookAt(0, targetY, targetZ);
-    const span = Math.max(modelReview ? 11.2 : 12.0, width / height * THREE.MathUtils.lerp(6.1, 7.4, viewValue));
+    camera.position.set(16 * Math.cos(angle) * Math.sin(yaw), targetY + 16 * Math.sin(angle), targetZ + 16 * Math.cos(angle) * Math.cos(yaw)); camera.lookAt(0, targetY, targetZ);
+    const span = Math.max(12, width / height * THREE.MathUtils.lerp(6.1, 7.4, viewValue));
     const halfHeight = span / (width / height) / 2;
     Object.assign(camera, { left: -span / 2, right: span / 2, top: halfHeight, bottom: -halfHeight }); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
   };
@@ -135,8 +135,9 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
     const labels = ['A', 'B'].map((pair, side) => ({ pair, ...project(side ? PIE_X : -PIE_X, 0.02, 1.20) }));
     const barRects = ['A', 'B'].map((pair, side) => {
       const x = side ? PIE_X : -PIE_X, z = BAR_Z + drawer.position.z;
-      const a = project(x - BAR_LENGTH / 2, BAR_Y + 0.047, z - BAR_DEPTH / 2), b = project(x + BAR_LENGTH / 2, BAR_Y + 0.047, z + BAR_DEPTH / 2);
-      return { pair, x: a.x, y: a.y, width: b.x - a.x, height: b.y - a.y };
+      const a = project(x - BAR_LENGTH / 2, BAR_Y + 0.047, z - BAR_DEPTH / 2), b = project(x + BAR_LENGTH / 2, BAR_Y + 0.047, z - BAR_DEPTH / 2), c = project(x - BAR_LENGTH / 2, BAR_Y + 0.047, z + BAR_DEPTH / 2);
+      const w = b.x - a.x, h = c.y - a.y;
+      return { pair, x: a.x, y: a.y, width: w, height: h, shearX: (c.x-a.x)/h, shearY: (b.y-a.y)/w };
     });
     onLayout({ labels, bars: barRects, drawer: project(0, -0.69, 1.96 + drawer.position.z), moving: Boolean(animation), drawerValue, viewValue });
   };
@@ -194,13 +195,19 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
     },
     emphasize(piece) {
       if (emphasized?.pair === piece?.pair && emphasized?.k === piece?.k) return;
-      pies.forEach(pie => { const outline = pie.getObjectByName('piece-emphasis'); if (outline) { pie.remove(outline); dispose(outline); } });
+      pies.forEach(pie => { const outline = pie.getObjectByName('piece-emphasis'); if (outline) { pie.remove(outline); dispose(outline); }
+        pie.traverse(o => { if (o.material?.name === 'serving-fruit') { o.material.emissive.set('#6e37e7'); o.material.emissiveIntensity = 0; } });
+      });
       emphasized = piece;
-      if (piece && !modelReview) { const pie = pies[piece.pair === 'A' ? 0 : 1]; pie.add(pieceOutline(piece.k, pie.userData.serving.d)); }
+      if (piece && !modelReview) { const pie = pies[piece.pair === 'A' ? 0 : 1]; pie.add(pieceOutline(piece.k, pie.userData.serving.d));
+        pie.children.find(o => o.userData.slice === piece.k)?.traverse(o => { if (o.material?.name === 'serving-fruit') o.material.emissiveIntensity = 0.3; });
+      }
       render();
     },
     setDrawer(open) { drawerOpen = open; transition(); },
-    setTopView(top) { topView = top; transition(); },
+    setTopView(top) { topView = top; yaw = 0; tilt = 0; transition(); },
+    orbit(dx, dy = 0) { yaw = THREE.MathUtils.clamp(yaw + dx, -0.22, 0.22); tilt = THREE.MathUtils.clamp(tilt + dy, -0.16, 0.18); setCamera(); render(); },
+    resetCamera() { yaw = 0; tilt = 0; topView = false; transition(); },
     dispose() { disposed = true; cancelAnimationFrame(frame); observer.disconnect(); reduced.removeEventListener('change', motionChange); canvas.removeEventListener('webglcontextlost', contextLost); dispose(scene); env.dispose(); renderer.dispose(); },
   };
 }

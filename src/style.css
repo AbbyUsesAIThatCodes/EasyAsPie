@@ -1,4 +1,4 @@
-:root { font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; color: #382540; background: #eee2c5; font-synthesis: none; }
+:root { font-family: 'Comic Sans MS', 'Comic Sans', cursive; color: #382540; background: #eee2c5; font-synthesis: none; }
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; }
 button, a { -webkit-tap-highlight-color: transparent; }
@@ -76,3 +76,43 @@ footer { padding: 8px 2%; display: flex; align-items: center; gap: 14px; justify
 @media (max-width: 1000px) { .header { gap: 8px; padding-inline: 2%; } .modes button { min-width: 83px; font-size: 14px; padding-inline: 10px; } .view-controls { gap: 5px; } .view-controls button { padding-inline: 8px; } .footer-note { display: none; } }
 @media (max-width: 700px) { #app { min-height: 780px; } .header { grid-template-columns: 1fr auto; } .brand { font-size: 30px; } .modes { grid-row: 2; grid-column: 1 / -1; justify-self: center; } .view-controls { grid-column: 2; grid-row: 1; } .preview-note { flex-direction: column; align-items: center; gap: 3px; text-align: center; } .preview-note p > span { display: block; margin: 3px 0 0; } .pie-label { width: 170px; } .pie-label .fraction { font-size: 27px; } .serving-controls { gap: 3px; flex-wrap: wrap; } .serving-controls button { font-size: 10px; padding: 4px; } .legend { white-space: normal; width: 95%; } .drawer-front h2 { font-size: 13px; } .drawer-front button { min-width: 0; padding: 7px; font-size: 11px; } .pie-choice:focus-visible { white-space: normal; width: 150px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+/* The bakery fills the viewport; controls float above its physical objects. */
+#app { min-height: 600px; background: transparent; }
+main { position: absolute; inset: 0; }
+.bakery { height: 100%; }
+.header { position: absolute; z-index: 10; top: 12px; left: 2%; right: 2%; padding: 0; border: 0; pointer-events: none; }
+.header > * { pointer-events: auto; }
+.brand { filter: drop-shadow(0 3px 3px #3c23452e); }
+.brand small { background: #fff0dcd9; border-radius: 10px; padding: 4px; }
+.modes { box-shadow: 0 5px 16px #44305e28, inset 0 2px 1px #fff; }
+.preview-note { position: absolute; z-index: 6; top: 88px; left: 50%; transform: translateX(-50%); width: max-content; max-width: 94%; padding: 7px 15px; border-radius: 12px; background: #fff5e9e8; box-shadow: 0 3px 10px #44305e18; }
+.legend { z-index: 5; top: auto; bottom: 46px; opacity: 0.94; }
+.pie-label { border: 1px solid #e5bb87; background: linear-gradient(130deg,#fff8e9f7,#fff0d8ed); box-shadow: 0 6px 17px #50371b30, inset 0 2px #fff; }
+.pie-label .fraction { color: #512472; }
+.serving-controls button { border-radius: 10px; }
+.view-controls button { box-shadow: 0 4px 10px #44305e28; }
+footer { position: absolute; bottom: 0; width: 100%; z-index: 12; background: #fff4e9eb; padding: 6px 2%; }
+#scene { touch-action: none; }
+#piece-hint { top: 128px; z-index: 8; }
+@media (max-width: 700px) {
+  #app { min-height: 600px; }
+  .header { top: 8px; gap: 10px; }
+  .brand { font-size: 27px; }
+  .brand small { font-size: 8px; }
+  .modes button { min-width: 88px; font-size: 14px; padding: 7px 10px; }
+  .view-controls { flex-wrap: wrap; justify-content: end; max-width: 170px; }
+  .view-controls button { font-size: 10px; padding: 6px 8px; }
+  .preview-note { top: 138px; font-size: 10px; }
+  .preview-note p { font-size: 10px; }
+  .pie-label { width: 46%; padding: 5px 3px; }
+  .pie-label .fraction { font-size: 25px; padding-left: 5px; }
+  .pie-label h2 { font-size: 13px; }
+  .pie-label .count { font-size: 9px; }
+  .serving-controls button { font-size: 10px; padding: 5px; }
+  .legend { bottom: 68px; font-size: 9px; }
+  .bar-pair figcaption { font-size: 10px; padding: 2px 9px; }
+  #piece-hint { top: 205px; font-size: 10px; }
+  .build-identity code { font-size: 9px; }
+}
+.bakery:has(.drawer.open) .legend { display: none; }

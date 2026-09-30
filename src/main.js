@@ -18,7 +18,7 @@ const pieceButtons = (pair, kind) => Array.from({ length: state[pair].d }, (_, i
   `<button type="button" class="${kind === 'bar' ? 'bar-segment' : 'pie-choice'}" data-pair="${pair}" data-piece="${i + 1}" tabindex="${i === 0 ? 0 : -1}" aria-label="${pieceName(pair, i + 1)}">${kind === 'bar' ? '<span class="selection-mark" aria-hidden="true">●</span>' : `Pie ${pair} · Piece ${i + 1} of ${state[pair].d} · Select`}</button>`).join('');
 function pieLabel(pair) {
   return `<section class="pie-label" id="label-${pair}" aria-labelledby="title-${pair}"><h2 id="title-${pair}">Pie ${pair}</h2><strong class="fraction"></strong><span class="count" id="count-${pair}"></span>
-    <div class="serving-controls" role="group" aria-label="Pie ${pair} Serving Controls" aria-describedby="count-${pair}">${['clear', 'decrease', 'increase'].map(type => `<button type="button" data-action="${type}" data-pair="${pair}" aria-label="${type[0].toUpperCase() + type.slice(1)} Pie ${pair} Serving">${type === 'clear' ? 'Clear' : type === 'decrease' ? '− Decrease' : '+ Increase'}</button>`).join('')}</div></section>`;
+    <div class="serving-controls" role="group" aria-label="Pie ${pair} Serving Controls" aria-describedby="count-${pair}">${['clear', 'decrease', 'increase'].map(type => `<button type="button" data-action="${type}" data-pair="${pair}" aria-label="${type[0].toUpperCase() + type.slice(1)} Pie ${pair} Serving">${type === 'clear' ? 'Clear' : type === 'decrease' ? '−' : '+'}</button>`).join('')}</div></section>`;
 }
 function bar(pair) {
   return `<figure class="bar-pair"><figcaption>Pie ${pair} <span>·</span> <strong id="bar-fraction-${pair}"></strong></figcaption>
@@ -29,7 +29,7 @@ document.querySelector('#app').innerHTML = `
   <header class="header">
     <a class="brand" href="./" aria-label="EasyAsPie Home"><span>EasyAs<span class="brand-pie">Pie</span></span><small>The Fraction Bakery</small></a>
     <nav class="modes" aria-label="Game Modes"><button type="button" class="active" aria-pressed="true" id="free-play">Free Play</button><button type="button" disabled>Learn <small>Coming Later</small></button><button type="button" disabled>Challenge <small>Coming Later</small></button></nav>
-    <div class="view-controls"><button id="view" type="button" aria-pressed="false">Top View</button><button id="fullscreen" type="button">Full Screen ↗</button></div>
+    <div class="view-controls"><button id="orbit-left" type="button" aria-label="Orbit Camera Left">↶</button><button id="orbit-right" type="button" aria-label="Orbit Camera Right">↷</button><button id="view" type="button" aria-pressed="false">Top View</button><button id="fullscreen" type="button">Full Screen ↗</button></div>
   </header>
   <main>
     <div class="preview-note"><h1>${modelReview ? 'Model Review · Separated Solids' : fixtureName ? `${fixtureName} Test Fixture` : 'Free Play Preview'}</h1><p>${modelReview ? 'Static geometry inspection. Serving amounts are unchanged.' : 'Select a piece to serve it and all pieces before it.'} <span>Cut And Regroup — Coming Later</span></p></div>
@@ -108,12 +108,12 @@ function placeControls({ labels, bars, drawer, moving, drawerValue, viewValue })
   el('fraction-bars').setAttribute('aria-hidden', String(!barsReady));
   for (const p of labels) {
     const label = el(`label-${p.pair}`), choices = el(`pie-${p.pair}`);
-    label.style.left = `${p.x}px`; label.style.top = `${p.y}px`;
+    label.style.left = `${p.x}px`; label.style.top = `${innerWidth < 700 ? Math.max(215, p.y - 205) : p.y}px`;
     choices.style.left = `${p.x}px`; choices.style.top = `${p.y - 29}px`;
   }
   for (const r of bars) {
     const figure = el(`bar-${r.pair}`).parentElement;
-    Object.assign(figure.style, { left: `${r.x}px`, top: `${r.y}px`, width: `${r.width}px` });
+    Object.assign(figure.style, { left: `${r.x}px`, top: `${r.y}px`, width: `${r.width}px`, transformOrigin: '0 0', transform: `matrix(1,${r.shearY},${r.shearX},1,0,0)` });
     el(`bar-${r.pair}`).style.height = `${r.height}px`;
   }
   document.querySelector('.drawer-front').style.top = `${drawer.y - 18}px`;
@@ -157,6 +157,7 @@ el('scene').addEventListener('pointermove', event => {
 el('scene').addEventListener('pointerleave', () => hover(null));
 el('scene').addEventListener('pointercancel', () => hover(null));
 el('scene').addEventListener('click', event => {
+  if (dragged) return;
   const piece = bakery?.pick(event.clientX, event.clientY);
   if (piece) {
     // Prevent an old bar/keyboard focus from re-emphasizing an unrelated piece.
@@ -165,6 +166,17 @@ el('scene').addEventListener('click', event => {
     act({ ...piece, type: 'select' });
   }
 });
+let dragStart = null, dragged = false;
+el('scene').addEventListener('pointerdown', event => { dragStart = { x: event.clientX, y: event.clientY }; dragged = false; });
+el('scene').addEventListener('pointermove', event => {
+  if (!dragStart || !event.buttons) return;
+  const dx = event.clientX - dragStart.x, dy = event.clientY - dragStart.y;
+  if (dragged || Math.hypot(dx, dy) > 6) { dragged = true; hover(null); bakery?.orbit(-dx * 0.003, dy * 0.003); dragStart = { x: event.clientX, y: event.clientY }; }
+});
+window.addEventListener('pointerup', () => { dragStart = null; });
+el('scene').addEventListener('pointercancel', () => { dragStart = null; dragged = false; });
+el('orbit-left').addEventListener('click', () => bakery?.orbit(-0.08));
+el('orbit-right').addEventListener('click', () => bakery?.orbit(0.08));
 function setDrawer(open) {
   if (!open && el('fraction-bars').contains(document.activeElement)) el('drawer-toggle').focus();
   hoverPiece = null;

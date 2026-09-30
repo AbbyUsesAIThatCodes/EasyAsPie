@@ -4,7 +4,7 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { readFile, mkdir, writeFile, copyFile, rm } from 'node:fs/promises';
-import { resolve, extname } from 'node:path';
+import { resolve, extname, sep } from 'node:path';
 import { execFileSync } from 'node:child_process';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const root = resolve('dist'), output = resolve(process.env.REVIEW_OUTPUT || 'docs/review/issue-18');
@@ -12,7 +12,7 @@ const manifest = JSON.parse(await readFile(`${root}/build.json`, 'utf8'));
 await mkdir(output, { recursive: true });
 const server = createServer(async (req, res) => {
   const pathname = new URL(req.url, 'http://localhost').pathname, path = resolve(root, '.' + (pathname === '/' ? '/index.html' : pathname));
-  if (!path.startsWith(root + '/')) { res.writeHead(403).end(); return; }
+  if (!path.startsWith(root + sep)) { res.writeHead(403).end(); return; }
   try { res.setHeader('Content-Type', { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json' }[extname(path)] || 'application/octet-stream'); res.end(await readFile(path)); }
   catch { res.writeHead(404).end(); }
 });
