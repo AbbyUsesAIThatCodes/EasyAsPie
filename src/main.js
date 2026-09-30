@@ -162,7 +162,7 @@ function placeControls({ labels, bars, drawer, moving, drawerValue, viewValue })
   el('fraction-bars').setAttribute('aria-hidden', String(!barsReady));
   for (const p of labels) {
     const label = el(`label-${p.pair}`), choices = el(`pie-${p.pair}`);
-    label.style.left = `${p.x}px`; label.style.top = `${innerWidth < 700 ? Math.max(215, p.y - 235) : p.y - (document.body.dataset.mode==='free'?43:20)}px`;
+    label.style.left = `${p.x}px`; label.style.top = `${innerWidth < 700 ? Math.max(215, p.y - 235) : p.y - (document.body.dataset.mode==='free'?55:20)}px`;
     choices.style.left = `${p.x}px`; choices.style.top = `${p.y - (innerWidth < 700 ? 29 : 70)}px`;
   }
   for (const r of bars) {

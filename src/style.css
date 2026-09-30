@@ -189,3 +189,5 @@ body:not([data-mode="free"]) .flavor-control { display:none; }
  .vocabulary-bar { left:50%; transform:translateX(-50%); bottom:131px; width:max-content; max-width:94%; }
  .flavor-control { font-size:9px; }
 }
+
+body[data-mode="free"] .serving-controls { display:inline-flex; margin-right:6px; }
