@@ -1,13 +1,16 @@
+import { barPosition } from './bakery-geometry.js';
 import * as THREE from 'three';
 import {sliceMotion} from './slice-motion.js';
 import { TAU, RADIUS, PIE_X, PIE_Z, HIT_Y, BAR_LENGTH, BAR_DEPTH, BAR_Y, BAR_Z, DRAWER_TRAVEL, material, mesh, instances, point, noise, solidSector, pastryRim, pastryWall, berryGeometry, calyxGeometry, dispose } from './bakery-geometry.js';
 import { makeRoom, makeBar, setBarServing } from './bakery-room.js';
 
 // Retained for the historical first-playable modules. Current Free Play is blueberry.
-export const RECIPES = Object.freeze({ blueberry: { name: 'Blueberry', filling: '#44366c', fruit: '#474677', accent: '#9695c3' }, cherry: { name: 'Cherry', filling: '#8f233c', fruit: '#b63549', accent: '#f2918d' }, apple: { name: 'Apple', filling: '#b76928', fruit: '#ecc16b', accent: '#ffdda0' } });
+export const RECIPES = Object.freeze({ blueberry: { name: 'Blueberry', filling: '#3b185f', fruit: '#312078', accent: '#9695c3' }, cherry: { name: 'Cherry', filling: '#8f233c', fruit: '#b63549', accent: '#f2918d' }, strawberry: { name: 'Strawberry', filling: '#a82639', fruit: '#d82c43', accent: '#ffe0bd' }, apple: { name: 'Apple', filling: '#b76928', fruit: '#ecc16b', accent: '#ffdda0' } });
 
 export function makePie(serving, recipeName, side) {
   const group = new THREE.Group(); group.position.set(side ? PIE_X : -PIE_X, 0, PIE_Z);
+  const recipe = RECIPES[recipeName] || RECIPES.blueberry, strawberry = recipeName === 'strawberry';
+  group.userData.recipe = Object.hasOwn(RECIPES, recipeName) ? recipeName : 'blueberry';
   const china = material('#fff4df', 0.22);
   const profile = [[0, 0.04], [1.48, 0.04], [1.67, 0.065], [1.87, 0.16], [1.93, 0.20], [1.94, 0.24], [1.88, 0.26], [1.7, 0.19], [1.49, 0.14], [0, 0.14]].map(p => new THREE.Vector2(...p));
   mesh(group, new THREE.LatheGeometry(profile, 96), china);
@@ -19,13 +22,13 @@ export function makePie(serving, recipeName, side) {
     // Equal core solids define the mathematics; surface decoration never changes it.
     const base = mesh(wedge, solidSector(1.52, RADIUS, 0.31, start, step), material('#cf8c40', 0.6), 0, 0.305);
     base.name = 'pastry-solid';
-    const filling = new THREE.MeshPhysicalMaterial({ color: '#3b185f', roughness: 0.27, clearcoat: 0.65, clearcoatRoughness: 0.25 }); filling.name = 'serving-filling';
+    const filling = new THREE.MeshPhysicalMaterial({ color: recipe.filling, roughness: 0.27, clearcoat: 0.65, clearcoatRoughness: 0.25 }); filling.name = 'serving-filling';
     const jelly = mesh(wedge, solidSector(1.49, 1.49, 0.27, start, step), filling, 0, 0.595); jelly.name = 'filling-solid';
     const rimMat = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.29, clearcoat: 0.38, clearcoatRoughness: 0.24, vertexColors: true });
     mesh(wedge, pastryRim(start, step), rimMat);
     mesh(wedge, pastryWall(start, step), material('#ffffff', 0.55, { vertexColors: true }));
-    const fruit = new THREE.MeshPhysicalMaterial({ color: '#312078', roughness: 0.23, clearcoat: 1, clearcoatRoughness: 0.14 }); fruit.name = 'serving-fruit';
-    const berries = [], crowns = [], crumbs = [], fillingFruit = [];
+    const fruit = new THREE.MeshPhysicalMaterial({ color: recipe.fruit, roughness: 0.23, clearcoat: 1, clearcoatRoughness: 0.14 }); fruit.name = 'serving-fruit';
+    const berries = [], crowns = [], crumbs = [], fillingFruit = [], seeds = [];
     // Fixed seeded positions/sizes. Vary shape, orientation, bloom and ripeness,
     // and leave a small lane at each cut so sixteenths remain countable.
     for (let k = 0; k < 104; k++) {
@@ -38,17 +41,21 @@ export function makePie(serving, recipeName, side) {
       // overlaid radial cuts readable without changing any core wedge solid.
       if (edgeDistance < s * 0.20 + 0.008) continue;
       const p = point(r, a, 0.716 + s * 0.49), sy = s * (0.72 + noise(k + 7) * 0.32);
-      const tint = new THREE.Color('#d4caed').lerp(new THREE.Color('#7b86bf'), noise(k) * 0.65);
-      berries.push({ p, sx: s, sy, sz: s * (0.88 + noise(k + 14) * 0.25), ry: a, rz: (noise(k + 9) - 0.5) * 0.22, color: tint });
-      crowns.push({ p: p.clone().add(new THREE.Vector3(0, sy * 0.845, 0)), s: s * 0.51, ry: a });
+      const tint = new THREE.Color(strawberry ? '#fff3df' : recipe.accent).lerp(new THREE.Color(strawberry ? '#ffaba3' : '#a9a2bf'), noise(k) * 0.45);
+      berries.push({ p, sx: s, sy: strawberry ? sy * 1.15 : sy, sz: s * (0.88 + noise(k + 14) * 0.25), ry: a, rz: (noise(k + 9) - 0.5) * 0.22, color: tint });
+      crowns.push({ p: p.clone().add(new THREE.Vector3(0, sy * (strawberry ? 1.04 : 0.845), 0)), s: s * (strawberry ? .85 : .51), ry: a });
+      if (strawberry) for (let j=0;j<8;j++) { const t=j*2.39996, y=.12+(j%3)*.22, rr=Math.sqrt(1-y*y)*(.76+.24*y); seeds.push({p:p.clone().add(new THREE.Vector3(Math.sin(t)*s*rr,y*sy*1.15,Math.cos(t)*s*rr)),sx:s*.065,sy:s*.10,sz:s*.065}); }
     }
-    instances(wedge, berryGeometry(), fruit, berries);
-    instances(wedge, calyxGeometry(), material('#293044', 0.65, { side: THREE.DoubleSide }), crowns);
+    const fruitGeometry = berryGeometry();
+    if (strawberry) { const p=fruitGeometry.attributes.position; for(let i=0;i<p.count;i++){const y=p.getY(i),t=.76+.24*y;p.setXYZ(i,p.getX(i)*t,y,p.getZ(i)*t);} fruitGeometry.computeVertexNormals(); }
+    instances(wedge, fruitGeometry, fruit, berries);
+    if(strawberry) instances(wedge,new THREE.SphereGeometry(1,5,4),material('#ffe3a0'),seeds);
+    instances(wedge, calyxGeometry(), material(strawberry ? '#39783f' : '#293044', 0.65, { side: THREE.DoubleSide }), crowns);
     // Visible fruit fragments in BOTH radial faces, not painted-on cut lines.
     for (const a of [start, start + step]) for (let k = 1; k <= 9; k++) {
       fillingFruit.push({ p: point(k * 0.145, a, 0.50 + noise(k) * 0.14), sx: 0.048, sy: 0.058, sz: 0.048 });
     }
-    instances(wedge, new THREE.SphereGeometry(1, 8, 6), material('#53428c', 0.35), fillingFruit);
+    instances(wedge, new THREE.SphereGeometry(1, 8, 6), material(recipe.fruit, 0.35), fillingFruit);
     for (let k = 0; k < 120; k++) {
       const a = Math.PI + (k + 0.5) / 120 * TAU;
       if (a < start || a >= start + step) continue;
@@ -71,7 +78,9 @@ function perimeter(start, angle, radius, height) {
 }
 export function setPieServing(pie, serving) {
   const previous = pie.getObjectByName('selected-serving'); if (previous) { pie.remove(previous); dispose(previous); }
-  const colors = { 'serving-filling': ['#43334e', '#3b185f'], 'serving-fruit': ['#43405f', '#312078'] };
+  const recipe = RECIPES[pie.userData.recipe] || RECIPES.blueberry;
+  const muted = c => new THREE.Color(c).lerp(new THREE.Color('#70646c'), .32);
+  const colors = { 'serving-filling': [pie.userData.recipe==='blueberry'?'#43334e':muted(recipe.filling), recipe.filling], 'serving-fruit': [pie.userData.recipe==='blueberry'?'#43405f':muted(recipe.fruit), recipe.fruit] };
   pie.children.filter(o => o.userData.slice).forEach(wedge => {
     wedge.userData.selected = wedge.userData.slice <= serving.n;
     wedge.traverse(o => { if (colors[o.material?.name]) o.material.color.set(colors[o.material.name][Number(wedge.userData.selected)]); });
@@ -123,6 +132,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   const fill = new THREE.DirectionalLight('#d4e7ff', 1.2); fill.position.set(5, 4, -1); scene.add(fill);
   const { drawer } = makeRoom(scene);
   const raycaster = new THREE.Raycaster(), reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let exampleVisible = true, recipes = ['blueberry','blueberry'];
   let pies = [], bars = [], disposed = false, emphasized = null, topView = false;
   let drawerOpen = false, drawerValue = 0, viewValue = 0, animation = null, frame = 0;
   let width = 1, height = 1, yaw = 0, tilt = 0, finishSlices = null;
@@ -149,7 +159,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   const layout = () => {
     const labels = ['A', 'B'].map((pair, side) => ({ pair, ...project(side ? PIE_X : -PIE_X, 0.02, 1.20) }));
     const barRects = ['A', 'B'].map((pair, side) => {
-      const x = side ? PIE_X : -PIE_X, z = BAR_Z + drawer.position.z;
+      const x = barPosition(side).x, z = barPosition(side).z + drawer.position.z;
       const a = project(x - BAR_LENGTH / 2, BAR_Y + 0.047, z - BAR_DEPTH / 2), b = project(x + BAR_LENGTH / 2, BAR_Y + 0.047, z - BAR_DEPTH / 2), c = project(x - BAR_LENGTH / 2, BAR_Y + 0.047, z + BAR_DEPTH / 2);
       const w = b.x - a.x, h = c.y - a.y;
       return { pair, x: a.x, y: a.y, width: w, height: h, shearX: (c.x-a.x)/h, shearY: (b.y-a.y)/w };
@@ -184,12 +194,13 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   canvas.addEventListener('webglcontextlost', contextLost);
   const motionChange = () => { if (reduced.matches) { finishSlices?.(); transition(); } }; reduced.addEventListener('change', motionChange);
   return {
-    update(left, right, recipe = 'blueberry') {
+    update(left, right, recipe = recipes) {
+      recipes = Array.isArray(recipe) ? recipe : [recipe,recipe];
       let rebuild = false;
       [left, right].forEach((serving, side) => {
-        if (pies[side]?.userData.serving.d !== serving.d) {
+        if (pies[side]?.userData.serving.d !== serving.d || pies[side]?.userData.recipe !== recipes[side]) {
           if (pies[side]) { scene.remove(pies[side]); dispose(pies[side]); drawer.remove(bars[side]); dispose(bars[side]); }
-          pies[side] = makePie(serving, recipe, side); bars[side] = makeBar(serving, side); scene.add(pies[side]); drawer.add(bars[side]); rebuild = true;
+          pies[side] = makePie(serving, recipes[side], side); bars[side] = makeBar(serving, side); pies[side].visible = side === 1 || exampleVisible; scene.add(pies[side]); drawer.add(bars[side]); rebuild = true;
           if (modelReview) {
             const wedge = pies[side].children.find(o => o.userData.slice === Math.ceil(serving.d * 0.7));
             const a = wedge.userData.start + wedge.userData.angle / 2;
@@ -222,12 +233,13 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       if (disposed || modelReview || canvas.dataset.slicing === 'true') return null;
       const rect = canvas.getBoundingClientRect();
       raycaster.setFromCamera(new THREE.Vector2((clientX - rect.left) / rect.width * 2 - 1, -(clientY - rect.top) / rect.height * 2 + 1), camera);
-      const hits = raycaster.intersectObjects(pies.map(p => p.getObjectByName('serving-hit-target')), false);
+      const hits = raycaster.intersectObjects(pies.filter(p=>p.visible).map(p => p.getObjectByName('serving-hit-target')), false);
       if (!hits.length) return null;
       const pie = hits[0].object.parent, local = pie.worldToLocal(hits[0].point.clone());
       return { pair: pies.indexOf(pie) === 0 ? 'A' : 'B', k: pieceAtPoint(local.x, local.z, pie.userData.serving.d) };
     },
     emphasize(piece) {
+      if (piece?.pair === 'A' && !exampleVisible) piece = null;
       if (piece && (!Number.isInteger(piece.k) || piece.k < 1 || piece.k > pies[piece.pair === 'A' ? 0 : 1]?.userData.serving.d || canvas.dataset.slicing === 'true')) piece = null;
       if (emphasized?.pair === piece?.pair && emphasized?.k === piece?.k) return;
       pies.forEach(pie => { const outline = pie.getObjectByName('piece-emphasis'); if (outline) { pie.remove(outline); dispose(outline); }
@@ -240,6 +252,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       paintFeedback(); render();
     },
     setFeedback(pair, tone) { feedbackTones[pair === 'A' ? 0 : 1] = tone; paintFeedback(); render(); },
+    setExampleVisible(visible) { exampleVisible=visible; if(pies[0])pies[0].visible=visible; this.emphasize(null); render(true); },
     setDrawer(open) { drawerOpen = open; transition(); },
     setTopView(top) { topView = top; yaw = 0; tilt = 0; transition(); },
     orbit(dx, dy = 0) { yaw = THREE.MathUtils.clamp(yaw + dx, -0.22, 0.22); tilt = THREE.MathUtils.clamp(tilt + dy, -0.16, 0.18); setCamera(); render(); },

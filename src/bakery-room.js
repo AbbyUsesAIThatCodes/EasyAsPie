@@ -1,3 +1,4 @@
+import { barPosition } from './bakery-geometry.js';
 import * as THREE from 'three';
 import { box, mesh, material, noise, BAR_LENGTH, BAR_DEPTH, BAR_Y, BAR_Z, PIE_X } from './bakery-geometry.js';
 
@@ -61,7 +62,7 @@ export function makeRoom(scene) {
   return { drawer };
 }
 export function makeBar(serving, side) {
-  const group = new THREE.Group(); group.position.set(side ? PIE_X : -PIE_X, BAR_Y, BAR_Z);
+  const group = new THREE.Group(); group.position.set(barPosition(side).x, BAR_Y, barPosition(side).z);
   const step = BAR_LENGTH / serving.d;
   box(group, BAR_LENGTH + 0.10, 0.08, BAR_DEPTH + 0.09, material('#34213f'), 0, -0.05, 0, 0.035);
   for (let i = 0; i < serving.d; i++) {
