@@ -191,3 +191,25 @@ body:not([data-mode="free"]) .flavor-control { display:none; }
 }
 
 body[data-mode="free"] .serving-controls { display:inline-flex; margin-right:6px; }
+
+/* The native target follows the actual brass handle in every camera view. */
+#drawer-toggle { position:fixed !important; transform:translate(-50%,-50%) !important; min-width:44px !important; height:36px; padding:0 !important; z-index:11; background:transparent; border:2px solid transparent; box-shadow:none; }
+#drawer-toggle:hover:enabled { background:#ddffab30; border-color:#72a743; }
+#drawer-toggle:focus-visible { outline:3px solid #396e19; outline-offset:3px; background:#edffce33; }
+#drawer-toggle:disabled { visibility:hidden; }
+#drawer-cue { position:fixed; z-index:12; transform:translate(-50%,-50%); display:flex; align-items:center; gap:5px; color:#67b936; filter:drop-shadow(0 2px 1px #173d17); pointer-events:none; font-size:25px; }
+.cue-arrow { font-size:46px; line-height:1; animation:handle-nudge .9s ease-in-out infinite alternate; }
+.cue-sparkle { animation:handle-sparkle 1.1s ease-in-out infinite alternate; }
+@keyframes handle-nudge { from{transform:translateY(-5px);} to{transform:translateY(4px);} }
+@keyframes handle-sparkle { from{opacity:.5;transform:scale(.8);} to{opacity:1;transform:scale(1.15);} }
+#submit-order:enabled,#next-order:enabled { background:#d9f4bf; border-color:#76a952; color:#294920; box-shadow:0 0 0 2px #d2eeae77; }
+#submit-order:hover:enabled,#next-order:hover:enabled { background:#c8eca4; }
+@media(min-width:700px){
+ body:not([data-mode="free"]) .learning-card { left:2%; transform:none; width:38%; max-width:550px; }
+ body:not([data-mode="free"]) .drawer-front h2 { margin-left:auto; }
+}
+.scene-unavailable #drawer-toggle { left:50% !important; top:84% !important; background:#fff4df; border-color:#7b603e; }
+.scene-unavailable #drawer-toggle .sr-only { position:static; width:auto; height:auto; clip-path:none; }
+@media(prefers-reduced-motion:reduce){.cue-arrow,.cue-sparkle{animation:none !important;}}
+
+@media(min-width:700px){body[data-mode="free"] .action-feedback { left:2%; transform:none; max-width:35%; width:max-content; }}

@@ -132,6 +132,8 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   const fill = new THREE.DirectionalLight('#d4e7ff', 1.2); fill.position.set(5, 4, -1); scene.add(fill);
   const { drawer } = makeRoom(scene);
   const raycaster = new THREE.Raycaster(), reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let sceneMode='free';
+  const barX = () => sceneMode==='learn' && width>=700 ? 2.2 : 0;
   let exampleVisible = true, recipes = ['blueberry','blueberry'];
   let pies = [], bars = [], disposed = false, emphasized = null, topView = false;
   let drawerOpen = false, drawerValue = 0, viewValue = 0, animation = null, frame = 0;
@@ -152,19 +154,20 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
     const angle = THREE.MathUtils.clamp(THREE.MathUtils.lerp(modelReview ? 0.50 : 0.68, Math.PI / 2 - 0.001, viewValue) + tilt, 0.42, Math.PI / 2 - 0.001);
     const targetZ = THREE.MathUtils.lerp(0.25, 0.40, viewValue), targetY = 0.10;
     camera.position.set(16 * Math.cos(angle) * Math.sin(yaw), targetY + 16 * Math.sin(angle), targetZ + 16 * Math.cos(angle) * Math.cos(yaw)); camera.lookAt(0, targetY, targetZ);
-    const span = Math.max(12, width / height * THREE.MathUtils.lerp(6.1, 7.4, viewValue));
+    const span = Math.max(12, width / height * THREE.MathUtils.lerp(6.1, 8.5, viewValue));
     const halfHeight = span / (width / height) / 2;
     Object.assign(camera, { left: -span / 2, right: span / 2, top: halfHeight, bottom: -halfHeight }); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
   };
   const layout = () => {
     const labels = ['A', 'B'].map((pair, side) => ({ pair, ...project(side ? PIE_X : -PIE_X, 0.02, 1.20) }));
     const barRects = ['A', 'B'].map((pair, side) => {
-      const x = barPosition(side).x, z = barPosition(side).z + drawer.position.z;
+      const x = barPosition(side).x + barX(), z = barPosition(side).z + drawer.position.z;
       const a = project(x - BAR_LENGTH / 2, BAR_Y + 0.047, z - BAR_DEPTH / 2), b = project(x + BAR_LENGTH / 2, BAR_Y + 0.047, z - BAR_DEPTH / 2), c = project(x - BAR_LENGTH / 2, BAR_Y + 0.047, z + BAR_DEPTH / 2);
       const w = b.x - a.x, h = c.y - a.y;
       return { pair, x: a.x, y: a.y, width: w, height: h, shearX: (c.x-a.x)/h, shearY: (b.y-a.y)/w };
     });
-    onLayout({ labels, bars: barRects, drawer: project(0, -0.69, 1.96 + drawer.position.z), moving: Boolean(animation), drawerValue, viewValue });
+    const hp=project(0,-.77,2.17+drawer.position.z),hl=project(-.9,-.77,2.17+drawer.position.z),hr=project(.9,-.77,2.17+drawer.position.z);
+    onLayout({ handle:{...hp,width:Math.abs(hr.x-hl.x)}, labels, bars: barRects, drawer: project(0, -0.69, 1.96 + drawer.position.z), moving: Boolean(animation), drawerValue, viewValue });
   };
   const render = (shadows = false) => {
     if (disposed) return; if (shadows) renderer.shadowMap.needsUpdate = true;
@@ -187,7 +190,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   };
   const resize = () => {
     const rect = canvas.getBoundingClientRect(); if (!rect.width || !rect.height) return;
-    width = rect.width; height = rect.height; renderer.setSize(width, height, false); setCamera(); render(true);
+    width = rect.width; height = rect.height; bars.forEach(b=>b.position.x=barX()); renderer.setSize(width, height, false); setCamera(); render(true);
   };
   const observer = new ResizeObserver(resize); observer.observe(canvas);
   const contextLost = event => { event.preventDefault(); canvas.dispatchEvent(new CustomEvent('scene-error')); };
@@ -252,6 +255,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       paintFeedback(); render();
     },
     setFeedback(pair, tone) { feedbackTones[pair === 'A' ? 0 : 1] = tone; paintFeedback(); render(); },
+    setMode(mode) { sceneMode=mode; bars.forEach(b=>b.position.x=barX());render(); },
     setExampleVisible(visible) { exampleVisible=visible; if(pies[0])pies[0].visible=visible; this.emphasize(null); render(true); },
     setDrawer(open) { drawerOpen = open; transition(); },
     setTopView(top) { topView = top; yaw = 0; tilt = 0; transition(); },
