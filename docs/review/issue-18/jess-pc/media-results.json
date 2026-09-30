@@ -1,0 +1,76 @@
+{
+  "build": "0.2.0_Unassigned_pr-19_build-006_20260930T025713Z_ge72fbf9c9c35_web",
+  "browser": "154.0.8037.92",
+  "gpu": {
+    "renderer": "ANGLE (Intel, Intel(R) Iris(R) Xe Graphics (0x0000A7A1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "error": 0
+  },
+  "chapters": [
+    {
+      "second": 0.519,
+      "name": "Default Scene And Full Build Identity"
+    },
+    {
+      "second": 5.223,
+      "name": "Physical Drawer And Matching Bars"
+    },
+    {
+      "second": 6.286,
+      "name": "Bar To Pie Selection"
+    },
+    {
+      "second": 7.354,
+      "name": "Keyboard Pie To Bar Selection"
+    },
+    {
+      "second": 9.005,
+      "name": "Top View"
+    },
+    {
+      "second": 10.064,
+      "name": "Direct Pie Pointer Selection"
+    },
+    {
+      "second": 11.704,
+      "name": "Angled View"
+    },
+    {
+      "second": 12.795,
+      "name": "Camera Orbit With Projected Bar Controls"
+    },
+    {
+      "second": 14.538,
+      "name": "Closing Drawer And Live Shadows"
+    },
+    {
+      "second": 15.628,
+      "name": "Reduced Motion Immediate Drawer"
+    }
+  ],
+  "mobile": {
+    "width": 390,
+    "scroll": 390,
+    "labels": [
+      {
+        "top": 238.421875,
+        "bottom": 322.234375
+      },
+      {
+        "top": 238.421875,
+        "bottom": 322.234375
+      }
+    ],
+    "bars": [
+      {
+        "top": 482.765625,
+        "bottom": 504.765625
+      },
+      {
+        "top": 482.765625,
+        "bottom": 504.765625
+      }
+    ]
+  },
+  "messages": [],
+  "wallDurationSeconds": 40.227
+}
