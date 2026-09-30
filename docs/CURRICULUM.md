@@ -51,3 +51,16 @@ For #11, the current linked Activity 1.3 index was consulted on September 28, 20
 ## Full 3D Bakery Review
 
 For #18, the current Activity 1.3 README was consulted on September 28, 2026 (America/New_York; README blob `f50edf179855ec412445df342d81cd22338aa253`). It still leaves preferred editions and matching teacher coverage unresolved. This visual pass retains the existing audit-local G10/G12 connection and prerequisite G11 limit: equal pie volumes and equal-length unitless bars support fraction exploration. It introduces no new lesson, assessment, verified standards mapping, or ruler-mastery claim. No restricted PLTW content was copied into this public repository.
+
+## Overnight Physical Slicing And Modes Review
+
+On September 30, 2026 UTC, the current Activity 1.3 index was checked again and the complete curricular-goals DOCX at commit `1713a3bd537035f2ce09dfc7fe05ce6bf6b70cc3`, blob `1a427c6548d848f7ce75fc21468bb699e93942bb`, was materialized privately on Jess_PC and read in full. It remains outside this public repository. Source-edition/coverage uncertainty and the missing official glossary remain explicit. No student data or restricted PDF was copied here.
+
+| Local Activity | Existing Audit Connection | Student Evidence And Limit |
+| --- | --- | --- |
+| Independent serving selection and physical Cut/Regroup | G10 equal subdivisions; G12 equivalence | Observe a fixed whole and serving while both counts change; the pie/bar is a prerequisite analogy. |
+| Three prediction/demo/build lessons | G10/G12 | Predict doubling/halving, observe a real model change, then construct the matching amount. Completion alone does not prove an explanation. |
+| Ten existing exact orders | G12; G11 prerequisite fraction notation | Submit a matching numerator with wrong-answer feedback, hints, reference help and retries distinguished. No ruler-position or measurement-mastery claim. |
+| Local fraction reference | Supporting vocabulary | Definitions distinguish whole, numerator, denominator, equivalence and regrouping; these are locally written, not a recovered official glossary. |
+
+The three-mode extension is the teacher's explicitly authorized bounded issue21. Classroom transfer and accessibility signoff remain in #13. No new curriculum IDs or standards alignment were invented.

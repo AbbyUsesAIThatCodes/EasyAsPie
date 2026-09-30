@@ -2,59 +2,42 @@
 
 **Same amount. Different slices. Delicious fractions.**
 
-A 3D fraction game for Design And Modeling, **1.3 — Measuring Matters**. Compare two equal-sized pies and discover why 1/2, 2/4, 4/8, and 8/16 describe the same amount.
+A full-viewport 3D fraction bakery for Design And Modeling, **1.3 — Measuring Matters**. Two equal blueberry pies and equal-length unitless bars connect the same exact fraction state.
 
-## Current Free Play Preview
+## Integrated 0.3.0 Review
 
-The **0.2.0 Free Play preview** now connects both blueberry pies to their matching fraction bars. It starts at **A = 1/2**, **B = 2/4**. Select a slice or bar segment to select that piece and all earlier pieces from the common back-center origin. Each pair has **Clear**, **Decrease**, and **Increase**; editing A leaves B unchanged. Pie, bar, fraction, selected-count label, and announcement update together.
+The provisional overnight stack is **PR19 → PR20 → PR22**. Review the [integrated playable build and evidence](docs/review/issue-21/README.md). The teacher will test and merge manually; visual acceptance is still pending. The [overnight authorization](docs/OVERNIGHT_REVIEW.md) permits this bounded stack while preserving the earlier Step03A-before-Cut/Regroup order.
 
-**Cut And Regroup** remain visibly **Coming Later** for #12. **Learn** and **Challenge** are labeled **Coming Later** and disabled. The original Examples/Challenge modes are historical first-playable work, not completed redesigned lessons.
+- **Free Play:** select a contiguous serving in either pie or bar, clear/increase/decrease it, then physically Cut or Regroup while preserving the amount. A and B stay independent. Cut stops at sixteenths; Regroup refuses an odd numerator or a denominator below two, with an explanation.
+- **Learn:** three prediction → real 3D demonstration → matching-serving lessons. Each has specific feedback, replay and a completion check.
+- **Challenge:** ten untimed orders using the existing exact fraction tasks. Wrong answers cannot advance; hints, reference use and learning detours count as assistance. The summary distinguishes helped work, retries and first tries without help.
 
-The pies, porcelain plates, wooden counter, cabinetry, moving drawer and paired bars share one lit 3D scene. Equal closed pastry/filling wedges carry baked rims, irregular glossy berries, and selected-serving outlines. The drawer moves in depth with live shadows; its native controls follow the 3D bars. Bars have no ruler units or ticks. This local instructional supplement supports fraction equivalence before ruler work; it does not independently assess physical measurement.
+The pies have closed pastry/filling solids, glossy varied berry meshes, warm lighting and live shadows. A real wooden drawer carries the physical bars. Drag the scene or use the orbit buttons to move the shared orthographic camera. Comic Sans controls float above the scene. Purple serving outlines and dashed hover/focus marks remain distinct; assessment red/green also includes explicit text.
 
-## Design And Curriculum
+Bold vocabulary has nested hover/focus-safe explanations and opens a reference. Definitions are locally written; no official glossary or standards crosswalk is claimed. This model supports fraction equivalence before ruler work; it does not independently assess measurement mastery.
 
-The [September 28 Design Discussion](docs/DESIGN-DISCUSSION-2026-09-28.md) records the current direction for future work, including paired pie/bar interactions, and preserves the full proposal. Its later decisions take precedence over earlier design notes; the implementation status distinguishes this preview from later interactive work.
+## Run And Review
 
-The [Free Play Implementation Plan](docs/FREE_PLAY_IMPLEMENTATION_PLAN.md) preserves the teacher's chosen [paired-bar mockup](docs/mockups/paired-fraction-bars.png) and divides [issue #7](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/7) into sequential, one-PR handoffs. The teacher inserted **#18 — Full 3D Bakery** after #11 and before #12 following the initial visual review. Start each new issue only after the previous PR is reviewed and merged; the plan does not claim the redesign is already implemented.
+Install Node.js 22.12 or later, then run `npm ci`, `npm run dev`. For production use `npm test`, `npm run build`, `npm run check:build`, then `npm run preview`. The exact production artifact is also copied to `artifacts/FULL-BUILD-ID/`; its manifest, report, console and visible footer share one fixed build identity. The existing codename remains **Unassigned**, pending the owner's choice.
 
-- [Design Brief](docs/DESIGN.md)
-- [Curriculum Mapping And Source Review](docs/CURRICULUM.md)
-- [Small-Step Roadmap And Review Order](ROADMAP.md)
-- [Implementation Status And Next Handoff](docs/IMPLEMENTATION_STATUS.md)
-- [Design And Modeling Course Repository](https://github.com/AbbyUsesAIThatCodes/DesignAndModeling26-27)
+Each review ZIP includes Start Review.cmd and a small localhost-only Node server. No deployment is required. The final integrated preview on Jess_PC uses port 4187; PR20 uses 4188, and PR19 uses 4189. These task-owned previews are separate from live Pages.
 
-Changes arrive in small PRs targeting `main`. Merge only after the teacher's review.
+Tab reaches the scene's native pie controls, serving controls and drawer. Arrow keys, Home and End explore pieces; Enter or Space selects. Clear chooses zero. Escape in a bar closes the drawer and restores toggle focus. Escape also closes the reference. Closed/traveling bars are inert. Reduced motion commits slicing, drawer and view changes immediately. Reset affects the active mode; reload starts a fresh session. No student identity or performance data is stored or transmitted.
 
-## Run Locally
+Review fixtures: `?preview=halves`, `quarters`, `eighths`, `sixteenths` or `empty-whole`. The normal start is A = 1/2, B = 2/4. `?preview=quarters&review=solids` is an explicitly labeled static geometry inspection, separate from actual cutting gameplay.
 
-Install Node.js 22.12 or later, then run:
+With Playwright installed separately, run `scripts/review-selection.mjs`, `scripts/review-transforms.mjs` and `scripts/review-modes.mjs` against the production `dist/`. Set PLAYWRIGHT_MODULE, CHROMIUM_PATH and REVIEW_OUTPUT as needed. These launch isolated browsers/ephemeral localhost ports; they do not build or deploy. RECORD_MODES=1 records the integrated playthrough when Playwright's FFmpeg is available.
 
-```sh
-npm ci
-npm run dev
-```
+## Curriculum And Review History
 
-Open the local URL shown by Vite. `npm test` checks the mathematics, session behavior, and build allocation; `npm run build` produces a self-contained static `dist/` folder and an immutable `artifacts/FULL-BUILD-ID/` copy. `npm run check:build` verifies that identity across the output. `npm run preview` serves that build. Dependencies are bundled; no third-party requests are needed at play time. PRs verify and upload review builds. The Check And Deploy workflow publishes main after a merge.
+- [Teacher Notes And Exact Answer Keys](docs/TEACHER.md)
+- [Curriculum Mapping And Source Limits](docs/CURRICULUM.md)
+- [Implementation Status](docs/IMPLEMENTATION_STATUS.md), [Build Identity](docs/BUILD_IDENTITY.md), [Roadmap](ROADMAP.md)
+- [Approved Concept B](docs/mockups/paired-fraction-bars.png), [PR19 Review](docs/review/issue-18/jess-pc/README.md), [PR20 Review](docs/review/issue-12/README.md)
+- [Graphics Handoff](docs/ASSET_HANDOFF.md), [Design Discussion](docs/DESIGN-DISCUSSION-2026-09-28.md)
 
-The scene uses original procedural Three.js meshes with equal geometry for each recipe; no external artwork or fonts are required. Relative build paths support the `/EasyAsPie/` project URL. See [Three.js](https://threejs.org/docs/) and [Vite Build Documentation](https://vite.dev/guide/build).
-
-## Review And Teach
-
-Click either pie or its matching bar to select a contiguous serving; **Clear** selects zero. A solid pie outline and bar dots mark the selected serving. A separate dashed outline and piece caption follow hover or focus without changing the fraction.
-
-Tab visits each pie, serving controls, the persistent drawer toggle, then each open bar. Within a pie or bar, arrow keys, Home, and End explore individual pieces; Enter or Space selects. Boundary controls use `aria-disabled` and ignore activation while retaining keyboard focus. **Escape** in the drawer closes it and returns focus to **Show Fraction Bars**; hidden controls are inert. **Top View / Angled View**, supported **Full Screen**, and drawer changes preserve both servings. Reduced motion removes drawer and camera transitions. The complete footer build ID is selectable text.
-
-Built-artifact review fixtures are available at `?preview=halves`, `?preview=quarters`, `?preview=eighths`, `?preview=sixteenths` (A = 3/16, B = 8/16), and `?preview=empty-whole` (A = 0/16, B = 16/16). They are labeled starting fixtures with the same live serving controls; no denominator picker is introduced. Omit the query for normal Free Play.
-
-[Teacher Notes](docs/TEACHER.md) explain current controls. [Issue 18 Review](docs/review/issue-18/README.md) contains the current screenshots, short gameplay video, selection checks, exact build identity and limitations. Teacher visual approval is pending; review the media before merging. [Issue 11 Review](docs/review/issue-11/README.md) preserves the interaction foundation’s historical evidence. With Playwright installed separately, run `node scripts/review-selection.mjs` against `dist/`; `PLAYWRIGHT_MODULE`, `CHROMIUM_PATH`, and `REVIEW_OUTPUT` can point to existing installations and a separate output directory. It does not build or deploy. For static cut-face inspection, use `?preview=quarters&review=solids`; it is visibly labeled Model Review and does not implement slicing. `node scripts/review-bakery.mjs` captures the current video and geometry close-up from the production artifact (Playwright and FFmpeg required).
-
-The [Step 02 screenshots and original harness](docs/review/issue-10/README.md) remain historical evidence for the read-only preview.
+Real touch hardware, classroom projector and screen-reader signoff remain pending under #13. The procedural scene is not a claim of pixel equivalence with Concept B. Earlier artifacts retain their original build identities.
 
 ## GitHub Pages
 
-The repository's Pages source should be **GitHub Actions** (already selected by the teacher). Merge the deployment PR into `main`, then watch **Actions → Check And Deploy**. A successful `verify` job produces the reviewed artifact; `deploy` publishes that same artifact. The deployment job exposes the live URL. No separate Jekyll/static workflow or branch publication is needed.
-
-Expected play URL after the first successful deployment: **https://abbyusesaithatcodes.github.io/EasyAsPie/**. If a deployment fails, inspect that job's error before changing settings. A manual run on `main` can retry the workflow. A deployment-only retry preserves the existing build ID.
-
-See [Build Identity](docs/BUILD_IDENTITY.md) for the version, codename status, per-PR counters, and exact location inventory. [Actions](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/actions) holds current review builds. The [served manifest](https://abbyusesaithatcodes.github.io/EasyAsPie/build.json) identifies the deployed build once publishing succeeds.
+The existing Check And Deploy workflow verifies PRs targeting main, and publishes pushes to main. Draft branches do not deploy. Tonight's review commits skip CI to conserve allowance/storage and include locally verified artifacts instead. No workflow, Pages setting, live-site or billing change is part of this stack. The [served manifest](https://abbyusesaithatcodes.github.io/EasyAsPie/build.json) identifies the live build separately.

@@ -15,6 +15,7 @@ button:disabled { cursor: default; color: #776878; box-shadow: none; }
 .modes { display: flex; padding: 4px; gap: 4px; border: 1px solid #c7b69e; background: #fff0dd; border-radius: 40px; }
 .modes button { min-width: 108px; border: 0; border-radius: 28px; background: transparent; box-shadow: none; padding: 8px 17px; font-size: 16px; }
 .modes .active { background: linear-gradient(#7f51cb, #5930aa); color: #fff9f1; box-shadow: inset 0 1px 1px #ac8ee2, 0 2px 3px #44245e25; }
+.modes button.active:hover:enabled { background:linear-gradient(#7545c2,#512797); color:#fff9f1; }
 .modes button small { display: block; font-size: 9px; font-weight: 400; margin-top: 2px; }
 .view-controls { justify-self: end; display: flex; gap: 8px; }
 .view-controls button { padding: 9px 11px; font-size: 12px; }
@@ -129,7 +130,7 @@ footer { position: absolute; bottom: 0; width: 100%; z-index: 12; background: #f
 }
 
 /* Compact floating activities leave the physical pies and drawer playable. */
-.learning-card { position:absolute; z-index:9; left:50%; bottom:34px; transform:translateX(-50%); width:min(970px,94%); padding:9px 15px; border:1px solid #ddb686; border-radius:17px; background:linear-gradient(135deg,#fff9edfa,#fff0d9fa); box-shadow:0 8px 26px #39244338,inset 0 2px white; font-size:11px; }
+.learning-card { position:absolute; z-index:9; left:50%; bottom:34px; transform:translateX(-50%); width:min(970px,94%); padding:5px 15px; border:1px solid #ddb686; border-radius:17px; background:linear-gradient(135deg,#fff9edfa,#fff0d9fa); box-shadow:0 8px 26px #39244338,inset 0 2px white; font-size:11px; }
 .learning-card[hidden],.vocabulary-bar[hidden] { display:none; }
 .activity-head,.activity-actions { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:7px 13px; }
 .activity-head { margin-bottom:5px; }
@@ -153,6 +154,9 @@ dialog { color:#322239; border:1px solid #bc97cb; border-radius:20px; padding:22
 dialog::backdrop { background:#22143399; backdrop-filter:blur(3px); }
 .reference-head { display:flex; align-items:center; justify-content:space-between; gap:15px; position:sticky; top:-22px; background:#fff8ec; z-index:2; }
 .reference-head h2 { margin:5px 0; color:#623589; }
+@media(min-width:701px) {
+ body:not([data-mode="free"]) .drawer-front button { position:fixed; top:135px; left:50%; transform:translateX(-50%); min-width:160px; padding:7px; font-size:11px; }
+}
 dialog h3 { color:#623589; margin-bottom:5px; }
 dialog p { font-size:14px; line-height:1.7; margin-top:0; }
 @media(max-width:700px) {

@@ -12,7 +12,7 @@ const page=await context.newPage(),errors=[],checks=[],chapters=[],start=Date.no
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 const settle=()=>page.waitForFunction(()=>document.querySelector('#app').getAttribute('aria-busy')!=='true'&&document.querySelector('#scene')?.dataset.moving==='false');
 const values=()=>page.locator('.fraction').allTextContents();
-const select=async(pair,n)=>{if(n===0)await page.locator(`[data-action="clear"][data-pair="${pair}"]`).click();else{await page.locator(`#pie-${pair} [data-piece="${n}"]`).focus();await page.keyboard.press('Enter');}};
+const select=async(pair,n)=>{if(n===0){const clear=page.locator(`[data-action="clear"][data-pair="${pair}"]`);if(await clear.getAttribute('aria-disabled')!=='true')await clear.click();}else{await page.locator(`#pie-${pair} [data-piece="${n}"]`).focus();await page.keyboard.press('Enter');}};
 const chapter=async name=>{chapters.push({second:(Date.now()-start)/1000,name});if(process.env.RECORD_MODES==='1')await page.waitForTimeout(800);};
 const layout=async()=>{const r=await page.evaluate(()=>{const bounds=id=>{const r=document.getElementById(id).getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right};};return{width:innerWidth,height:innerHeight,scroll:document.documentElement.scrollWidth,card:bounds('learning-card'),label:bounds('label-B'),bar:bounds('bar-B'),build:bounds('build-identity')};});assert.equal(r.width,r.scroll);assert.ok(r.card.left>=0&&r.card.right<=r.width);assert.ok(r.card.top>r.label.bottom&&r.card.bottom<r.build.top);if(await page.locator('#drawer-toggle').getAttribute('aria-expanded')==='true')assert.ok(r.card.top>=r.bar.bottom-1,JSON.stringify(r));return r;};
 try{
@@ -41,7 +41,7 @@ try{
  await page.locator('#learn').click();await page.locator('#prediction').selectOption('6');await page.locator('#test-prediction').click();await page.locator('#reset').click();await page.waitForTimeout(1600);assert.deepEqual(await values(),['3/8','0/16']);assert.equal(await page.locator('#prediction').inputValue(),'');checks.push('Round restart, mode-aware Reset and Reset during demonstration.');
  await page.emulateMedia({reducedMotion:'reduce'});
  for(const size of [{width:1280,height:720},{width:390,height:844}]){
-  await page.setViewportSize(size);await page.locator('#challenge').click();await settle();await layout();await page.screenshot({path:out+`/${size.width}x${size.height}-challenge.png`});
+  await page.setViewportSize(size);await page.locator('#challenge').click();await settle();await layout();await page.locator('#drawer-toggle').click();await settle();await page.locator('#drawer-toggle').click();await settle();await page.screenshot({path:out+`/${size.width}x${size.height}-challenge.png`});
   await page.locator('#learn').click();await settle();await layout();await page.screenshot({path:out+`/${size.width}x${size.height}-learn.png`});
  }
  await page.setViewportSize({width:1366,height:768});await page.locator('#free-play').click();await settle();await page.screenshot({path:out+'/1366x768-free.png'});

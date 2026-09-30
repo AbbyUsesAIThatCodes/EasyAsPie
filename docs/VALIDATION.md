@@ -1,3 +1,7 @@
+# Current Validation
+
+The integrated overnight evidence is in [issue21 review](review/issue-21/README.md), with independent [PR19](review/issue-18/jess-pc/README.md) and [PR20](review/issue-12/README.md) artifacts preserved. Use those exact identities and reports for current claims. The preserved selection matrix, transformation matrix and three-mode playthrough exercise the real production browser. Hardware/teacher signoff remains pending.
+
 # First Playable Validation
 
 This section preserves the initial 0.1.0 review evidence. Current build identity and deployment records are described in [Build Identity](BUILD_IDENTITY.md).

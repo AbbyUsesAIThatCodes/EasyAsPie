@@ -152,7 +152,7 @@ function placeControls({ labels, bars, drawer, moving, drawerValue, viewValue })
   for (const p of labels) {
     const label = el(`label-${p.pair}`), choices = el(`pie-${p.pair}`);
     label.style.left = `${p.x}px`; label.style.top = `${innerWidth < 700 ? Math.max(215, p.y - 235) : p.y - 20}px`;
-    choices.style.left = `${p.x}px`; choices.style.top = `${p.y - 29}px`;
+    choices.style.left = `${p.x}px`; choices.style.top = `${p.y - (innerWidth < 700 ? 29 : 70)}px`;
   }
   for (const r of bars) {
     const figure = el(`bar-${r.pair}`).parentElement;

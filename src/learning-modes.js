@@ -15,6 +15,7 @@ export const LESSONS=Object.freeze([
  {title:'From Pie To Bar',from:{n:3,d:8},to:16,action:'cut',prediction:6,prompt:'Predict how many sixteenths match three eighths.',explanation:'3/8 = 6/16: each eighth becomes two sixteenths, in the pie and its bar.'}
 ]);
 export function createLearningModes(api){
+ const freeHeading=document.querySelector('.preview-note h1').textContent.replace('Free Play Preview','Free Play');
  let mode='free',free=api.getState(),lessonIndex=0,phase='predict',prediction='',lessonMessage='',lessonAssisted=false,learningBusy=false;
  let session=createSession(),challengeMessage='',challengeTone='',epoch=0;
  const completed=new Map();
@@ -30,14 +31,14 @@ export function createLearningModes(api){
  function challengeScene(){const t=currentTask(session);setScene(t.from,{n:session.selected,d:t.to});}
  function changeMode(next){if(next===mode)return;if(mode==='free')free=api.getState();if(mode==='challenge'&&next==='learn')session=markAssisted(session);++epoch;learningBusy=false;mode=next;document.body.dataset.mode=mode;
   document.querySelectorAll('[data-mode]').forEach(b=>{b.classList.toggle('active',b.dataset.mode===mode);b.setAttribute('aria-pressed',String(b.dataset.mode===mode));});
-  if(mode==='free')api.loadState(free);else if(mode==='learn')startLesson(lessonIndex);else challengeScene();
+  if(mode==='free'){api.loadState(free);api.setFeedback(null);document.querySelector('.preview-note p').textContent='Select a piece to serve it and all earlier pieces. Cut and regroup keep the amount.';}else if(mode==='learn')startLesson(lessonIndex);else challengeScene();
   api.feedback(mode==='free'?'Explore freely. Cut and regroup preserve the amount.':mode==='learn'?'Predict, test, then build the matching serving.':'Build Pie B to match the order. Submit when ready.');render();
  }
  document.querySelector('.modes').innerHTML='<button id="free-play" data-mode="free" class="active" aria-pressed="true">Free Play</button><button id="learn" data-mode="learn" aria-pressed="false">Learn</button><button id="challenge" data-mode="challenge" aria-pressed="false">Challenge</button>';
  document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>changeMode(b.dataset.mode));
  function render(){
   card.hidden=mode==='free';vocab.hidden=mode!=='free';
-  document.querySelector('.preview-note h1').textContent=mode==='free'?'Free Play':mode==='learn'?'Learn Together':'Bakery Orders';
+  document.querySelector('.preview-note h1').textContent=mode==='free'?freeHeading:mode==='learn'?'Learn Together':'Bakery Orders';
   if(mode==='free')return;
   if(mode==='learn'){
    const l=LESSONS[lessonIndex];
@@ -77,7 +78,7 @@ export function createLearningModes(api){
  return{
   getMode:()=>mode,
   beforeAction(action){if(mode==='free')return true;if(learningBusy){api.feedback('The demonstration is moving. Change mode or Reset to stop it.');return false;}if(action.pair==='A'){api.feedback('Pie A is the reference. Build your answer with Pie B.');return false;}if(['cut','regroup'].includes(action.type)){api.feedback('This task keeps Pie B’s denominator fixed. Choose its numerator.');return false;}if(mode==='challenge'&&(session.solved||session.complete)){api.feedback('This order is already checked. Choose Next Order or Reset.');return false;}return true;},
-  onState(state){if(mode==='challenge'){session=selectSlices(session,state.B.n);challengeMessage='';challengeTone='';api.setFeedback(null);render();}},
+  onState(state){if(mode==='challenge'){session=selectSlices(session,state.B.n);challengeMessage='';challengeTone='';api.setFeedback(null);render();}else if(mode==='learn'&&!learningBusy&&phase!=='predict'){phase='build';lessonMessage='Serving changed. Check whether the new amount matches.';api.setFeedback(null);render();}},
   reset(){if(mode==='learn')startLesson(lessonIndex);else if(mode==='challenge'){++epoch;session=createSession();challengeMessage='';challengeTone='';challengeScene();render();}},
  };
 }
