@@ -4,7 +4,11 @@
 
 A full-viewport 3D fraction bakery for Design And Modeling, **1.3 — Measuring Matters**. Two equal blueberry pies and equal-length unitless bars connect the same exact fraction state.
 
-## Integrated 0.3.1 Review
+## Current 0.4.0 Draft Review
+
+The authorized follow-up starts with [PR28 / issue25](docs/review/issue-25/README.md): aligned near/far bars, mode-specific pie names, independent strawberry and existing flavors, and a written Challenge target with the example hidden. Further handle guidance and local progress/report increments follow as drafts. Current main has the earlier integrated source through PR24.
+
+## Preserved 0.3.1 Review
 
 The provisional overnight stack is **PR19 → PR20 → PR22**. Review the [integrated playable build and evidence](docs/review/issue-21/README.md). The teacher will test and merge manually; visual acceptance is still pending. The [overnight authorization](docs/OVERNIGHT_REVIEW.md) permits this bounded stack while preserving the earlier Step03A-before-Cut/Regroup order.
 

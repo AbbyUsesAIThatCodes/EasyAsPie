@@ -74,7 +74,7 @@ async function verify() {
     assert.equal(a.barFraction, `${n}/${d}`);
     assert.equal(a.barSelected, n);
     assert.equal(a.pieSelected, n);
-    assert.ok(a.scene.includes(`Pie ${pair}: ${n} of ${d} equal pieces selected`));
+    assert.ok(a.scene.includes(`Test Pie ${pair==='A'?1:2}: ${n} of ${d} equal pieces selected`));
     for (const action of ['clear', 'decrease', 'increase']) assert.equal(a.disabled[action], String(action === 'increase' ? n === d : n === 0));
   }
 }
@@ -124,7 +124,7 @@ async function pointSelect(pair, k, portion = 0.5, top = true) {
   await page.mouse.click(x, y);
   pairValues[pair].n = k; activations++;
   await verify();
-  assert.ok((await page.locator('#announcement').textContent()).startsWith(`Pie ${pair}: ${k} of`));
+  assert.ok((await page.locator('#announcement').textContent()).startsWith(`Test Pie ${pair==='A'?1:2}: ${k} of`));
 }
 async function keyboardSelect(pair, k, kind) {
   const group = page.locator(`#${kind}-${pair}`);

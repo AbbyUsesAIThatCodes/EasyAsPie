@@ -173,3 +173,21 @@ dialog p { font-size:14px; line-height:1.7; margin-top:0; }
  .vocabulary-bar > .term:last-of-type > .term-tip { left:auto; right:0; transform:none; }
 }
 
+
+/* Parallel bars share a centered whole; labels sit beside, never across a cut. */
+.bar-pair figcaption { bottom:auto; top:50%; left:auto; right:calc(100% + 9px); transform:translateY(-50%); border-radius:8px; padding:3px 8px; }
+.bar-pair figcaption .pie-name { color:inherit; padding:0; }
+.flavor-control { display:inline-flex; align-items:center; gap:5px; font-size:10px; margin-top:4px; }
+.flavor-control select { font:inherit; color:inherit; background:#fff9ee; border:1px solid #c4a783; border-radius:6px; padding:2px; }
+body:not([data-mode="free"]) .flavor-control { display:none; }
+.vocabulary-bar { left:2%; transform:none; max-width:220px; width:220px; bottom:96px; }
+.scene-unavailable .bar-pair { top:72% !important; width:42% !important; left:35% !important; }
+.scene-unavailable .bar-pair + .bar-pair { top:80% !important; left:35% !important; }
+@media(max-width:700px) {
+ .bar-pair figcaption { font-size:8px; right:calc(100% + 4px); padding:2px 4px; }
+ .bar-pair figcaption span:not(.pie-name) { display:none; }
+ .vocabulary-bar { left:50%; transform:translateX(-50%); bottom:131px; width:max-content; max-width:94%; }
+ .flavor-control { font-size:9px; }
+}
+
+body[data-mode="free"] .serving-controls { display:inline-flex; margin-right:6px; }
