@@ -1,0 +1,45 @@
+{
+  "build": "0.3.0_Unassigned_pr-22_build-001_20260930T033257Z_ge3c0846d2599_web",
+  "browser": "154.0.8037.92",
+  "checks": [
+    "Hover-safe nested vocabulary, mouse/keyboard reference opening, Escape and Close.",
+    "Three prediction/demo/build lessons; missing and wrong predictions, wrong and correct servings, independent completion count.",
+    "Free Play snapshot restored; leaving a moving demonstration cannot overwrite the next mode.",
+    "All 10 orders including zero and whole; wrong answers blocked, reference/lesson detours counted as assistance, no double scoring, 7 unassisted first tries / 3 helped / 1 retried.",
+    "Round restart, mode-aware Reset and Reset during demonstration."
+  ],
+  "chapters": [
+    {
+      "second": 1.69,
+      "name": "Integrated 3D Bakery"
+    },
+    {
+      "second": 4.766,
+      "name": "Physical Slicing And Two-Way Selection"
+    },
+    {
+      "second": 8.238,
+      "name": "Guided Lesson 1"
+    },
+    {
+      "second": 11.094,
+      "name": "Guided Lesson 2"
+    },
+    {
+      "second": 13.967,
+      "name": "Guided Lesson 3"
+    },
+    {
+      "second": 18.387,
+      "name": "Wrong Answer, Hint And Correct Answer"
+    },
+    {
+      "second": 22.731,
+      "name": "Ten Orders With Honest Assistance Counts"
+    }
+  ],
+  "errors": [],
+  "wallDurationSeconds": 51.964,
+  "encodedVideoDurationSeconds": 46.36,
+  "chapterTiming": "Wall-clock capture timestamps; encoded playback is 46.36 seconds."
+}

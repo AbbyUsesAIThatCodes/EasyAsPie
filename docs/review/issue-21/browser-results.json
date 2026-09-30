@@ -1,0 +1,519 @@
+{
+  "build": "0.3.0_Unassigned_pr-22_build-001_20260930T033257Z_ge3c0846d2599_web",
+  "browser": "154.0.8037.92",
+  "gpu": {
+    "renderer": "ANGLE (Intel, Intel(R) Iris(R) Xe Graphics (0x0000A7A1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "error": 0
+  },
+  "activations": 577,
+  "previews": 378,
+  "boundaryClicks": 240,
+  "checks": [
+    {
+      "check": "Real Tab order, closed-region exclusion, Escape restores toggle focus",
+      "result": "passed"
+    },
+    {
+      "check": "halves: both pairs, every count via pie/bar pointer and keyboard, controls and cut boundaries",
+      "result": "passed"
+    },
+    {
+      "check": "quarters: both pairs, every count via pie/bar pointer and keyboard, controls and cut boundaries",
+      "result": "passed"
+    },
+    {
+      "check": "eighths: both pairs, every count via pie/bar pointer and keyboard, controls and cut boundaries",
+      "result": "passed"
+    },
+    {
+      "check": "sixteenths: both pairs, every count via pie/bar pointer and keyboard, controls and cut boundaries",
+      "result": "passed"
+    },
+    {
+      "check": "1366x768 normal closed",
+      "layout": {
+        "width": 1366,
+        "height": 768,
+        "scrollWidth": 1366,
+        "scrollHeight": 768,
+        "scene": {
+          "x": 0,
+          "y": 0,
+          "width": 1366,
+          "height": 768,
+          "bottom": 768
+        },
+        "build": {
+          "x": 933.46875,
+          "y": 745.5,
+          "width": 405.21875,
+          "height": 16.5,
+          "bottom": 762
+        },
+        "A": {
+          "x": 142.28125,
+          "y": 464.4375,
+          "width": 500.859375,
+          "height": 34.34375,
+          "bottom": 498.78125
+        },
+        "B": {
+          "x": 722.828125,
+          "y": 464.4375,
+          "width": 500.859375,
+          "height": 34.34375,
+          "bottom": 498.78125
+        },
+        "toggle": {
+          "x": 1110.859375,
+          "y": 558.3125,
+          "width": 180,
+          "height": 37,
+          "bottom": 595.3125
+        },
+        "labelA": {
+          "x": 241.71875,
+          "y": 439.078125,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 569.671875
+        },
+        "labelB": {
+          "x": 822.265625,
+          "y": 439.078125,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 569.671875
+        },
+        "open": false
+      }
+    },
+    {
+      "check": "1366x768 normal open",
+      "layout": {
+        "width": 1366,
+        "height": 768,
+        "scrollWidth": 1366,
+        "scrollHeight": 768,
+        "scene": {
+          "x": 0,
+          "y": 0,
+          "width": 1366,
+          "height": 768,
+          "bottom": 768
+        },
+        "build": {
+          "x": 933.46875,
+          "y": 745.5,
+          "width": 405.21875,
+          "height": 16.5,
+          "bottom": 762
+        },
+        "A": {
+          "x": 142.28125,
+          "y": 596.859375,
+          "width": 500.859375,
+          "height": 34.34375,
+          "bottom": 631.203125
+        },
+        "B": {
+          "x": 722.828125,
+          "y": 596.859375,
+          "width": 500.859375,
+          "height": 34.34375,
+          "bottom": 631.203125
+        },
+        "toggle": {
+          "x": 1110.859375,
+          "y": 690.734375,
+          "width": 180,
+          "height": 37,
+          "bottom": 727.734375
+        },
+        "labelA": {
+          "x": 241.71875,
+          "y": 439.078125,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 569.671875
+        },
+        "labelB": {
+          "x": 822.265625,
+          "y": 439.078125,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 569.671875
+        },
+        "open": true
+      }
+    },
+    {
+      "check": "1366x768 sixteenths closed",
+      "layout": {
+        "width": 1366,
+        "height": 768,
+        "scrollWidth": 1366,
+        "scrollHeight": 768,
+        "scene": {
+          "x": 0,
+          "y": 0,
+          "width": 1366,
+          "height": 768,
+          "bottom": 768
+        },
+        "build": {
+          "x": 933.46875,
+          "y": 745.5,
+          "width": 405.21875,
+          "height": 16.5,
+          "bottom": 762
+        },
+        "A": {
+          "x": 142.28125,
+          "y": 464.4375,
+          "width": 500.859375,
+          "height": 34.34375,
+          "bottom": 498.78125
+        },
+        "B": {
+          "x": 722.828125,
+          "y": 464.4375,
+          "width": 500.859375,
+          "height": 34.34375,
+          "bottom": 498.78125
+        },
+        "toggle": {
+          "x": 1110.859375,
+          "y": 558.3125,
+          "width": 180,
+          "height": 37,
+          "bottom": 595.3125
+        },
+        "labelA": {
+          "x": 241.71875,
+          "y": 439.078125,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 569.671875
+        },
+        "labelB": {
+          "x": 822.265625,
+          "y": 439.078125,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 569.671875
+        },
+        "open": false
+      }
+    },
+    {
+      "check": "1366x768 sixteenths open",
+      "layout": {
+        "width": 1366,
+        "height": 768,
+        "scrollWidth": 1366,
+        "scrollHeight": 768,
+        "scene": {
+          "x": 0,
+          "y": 0,
+          "width": 1366,
+          "height": 768,
+          "bottom": 768
+        },
+        "build": {
+          "x": 933.46875,
+          "y": 745.5,
+          "width": 405.21875,
+          "height": 16.5,
+          "bottom": 762
+        },
+        "A": {
+          "x": 142.28125,
+          "y": 596.859375,
+          "width": 500.859375,
+          "height": 34.34375,
+          "bottom": 631.203125
+        },
+        "B": {
+          "x": 722.828125,
+          "y": 596.859375,
+          "width": 500.859375,
+          "height": 34.34375,
+          "bottom": 631.203125
+        },
+        "toggle": {
+          "x": 1110.859375,
+          "y": 690.734375,
+          "width": 180,
+          "height": 37,
+          "bottom": 727.734375
+        },
+        "labelA": {
+          "x": 241.71875,
+          "y": 439.078125,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 569.671875
+        },
+        "labelB": {
+          "x": 822.265625,
+          "y": 439.078125,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 569.671875
+        },
+        "open": true
+      }
+    },
+    {
+      "check": "1280x720 normal closed",
+      "layout": {
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720,
+        "scene": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "bottom": 720
+        },
+        "build": {
+          "x": 849.1875,
+          "y": 697.5,
+          "width": 405.21875,
+          "height": 16.5,
+          "bottom": 714
+        },
+        "A": {
+          "x": 133.328125,
+          "y": 435.375,
+          "width": 469.328125,
+          "height": 32.1875,
+          "bottom": 467.5625
+        },
+        "B": {
+          "x": 677.328125,
+          "y": 435.375,
+          "width": 469.328125,
+          "height": 32.1875,
+          "bottom": 467.5625
+        },
+        "toggle": {
+          "x": 1029.578125,
+          "y": 522.203125,
+          "width": 180,
+          "height": 37,
+          "bottom": 559.203125
+        },
+        "labelA": {
+          "x": 217,
+          "y": 410.34375,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 540.9375
+        },
+        "labelB": {
+          "x": 761,
+          "y": 410.34375,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 540.9375
+        },
+        "open": false
+      }
+    },
+    {
+      "check": "1280x720 normal open",
+      "layout": {
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720,
+        "scene": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "bottom": 720
+        },
+        "build": {
+          "x": 849.1875,
+          "y": 697.5,
+          "width": 405.21875,
+          "height": 16.5,
+          "bottom": 714
+        },
+        "A": {
+          "x": 133.328125,
+          "y": 559.453125,
+          "width": 469.328125,
+          "height": 32.1875,
+          "bottom": 591.640625
+        },
+        "B": {
+          "x": 677.328125,
+          "y": 559.453125,
+          "width": 469.328125,
+          "height": 32.1875,
+          "bottom": 591.640625
+        },
+        "toggle": {
+          "x": 1029.578125,
+          "y": 646.296875,
+          "width": 180,
+          "height": 37,
+          "bottom": 683.296875
+        },
+        "labelA": {
+          "x": 217,
+          "y": 410.34375,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 540.9375
+        },
+        "labelB": {
+          "x": 761,
+          "y": 410.34375,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 540.9375
+        },
+        "open": true
+      }
+    },
+    {
+      "check": "1280x720 sixteenths closed",
+      "layout": {
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720,
+        "scene": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "bottom": 720
+        },
+        "build": {
+          "x": 849.1875,
+          "y": 697.5,
+          "width": 405.21875,
+          "height": 16.5,
+          "bottom": 714
+        },
+        "A": {
+          "x": 133.328125,
+          "y": 435.375,
+          "width": 469.328125,
+          "height": 32.1875,
+          "bottom": 467.5625
+        },
+        "B": {
+          "x": 677.328125,
+          "y": 435.375,
+          "width": 469.328125,
+          "height": 32.1875,
+          "bottom": 467.5625
+        },
+        "toggle": {
+          "x": 1029.578125,
+          "y": 522.203125,
+          "width": 180,
+          "height": 37,
+          "bottom": 559.203125
+        },
+        "labelA": {
+          "x": 217,
+          "y": 410.34375,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 540.9375
+        },
+        "labelB": {
+          "x": 761,
+          "y": 410.34375,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 540.9375
+        },
+        "open": false
+      }
+    },
+    {
+      "check": "1280x720 sixteenths open",
+      "layout": {
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720,
+        "scene": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "bottom": 720
+        },
+        "build": {
+          "x": 849.1875,
+          "y": 697.5,
+          "width": 405.21875,
+          "height": 16.5,
+          "bottom": 714
+        },
+        "A": {
+          "x": 133.328125,
+          "y": 559.453125,
+          "width": 469.328125,
+          "height": 32.1875,
+          "bottom": 591.640625
+        },
+        "B": {
+          "x": 677.328125,
+          "y": 559.453125,
+          "width": 469.328125,
+          "height": 32.1875,
+          "bottom": 591.640625
+        },
+        "toggle": {
+          "x": 1029.578125,
+          "y": 646.296875,
+          "width": 180,
+          "height": 37,
+          "bottom": 683.296875
+        },
+        "labelA": {
+          "x": 217,
+          "y": 410.34375,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 540.9375
+        },
+        "labelB": {
+          "x": 761,
+          "y": 410.34375,
+          "width": 302,
+          "height": 130.59375,
+          "bottom": 540.9375
+        },
+        "open": true
+      }
+    },
+    {
+      "check": "Full Screen enter/exit, camera and viewport resize preserve servings",
+      "result": "passed"
+    },
+    {
+      "check": "Repeated/interrupted input, arrow boundaries, focus-only navigation, reduced motion",
+      "result": "passed"
+    }
+  ],
+  "messages": [
+    {
+      "type": "warning",
+      "message": "THREE.WebGLProgram: Program Info Log: (210,81-129): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision\n(209,37-61): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision\n(210,82-106): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision\n(209,37-61): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision\n(210,82-106): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision"
+    }
+  ]
+}
