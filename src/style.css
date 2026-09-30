@@ -157,6 +157,9 @@ dialog::backdrop { background:#22143399; backdrop-filter:blur(3px); }
 @media(min-width:701px) {
  body:not([data-mode="free"]) .drawer-front button { position:fixed; top:135px; left:50%; transform:translateX(-50%); min-width:160px; padding:7px; font-size:11px; }
 }
+@media(min-width:1100px) {
+ .learning-card { width:min(970px,calc(100% - 480px)); }
+}
 dialog h3 { color:#623589; margin-bottom:5px; }
 dialog p { font-size:14px; line-height:1.7; margin-top:0; }
 @media(max-width:700px) {

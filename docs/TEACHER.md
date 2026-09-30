@@ -6,7 +6,7 @@ The current provisional build combines PR19's 3D bakery, PR20's physical slicing
 
 In **Free Play**, each pie/bar pair has its own exact serving. Selecting piece k serves the first k pieces from the back-center origin, moving down the left in Top View. Clear chooses zero. Cut doubles numerator and denominator and shows a knife passing through the solid pie. Regroup halves both numbers when representable. The whole and amount stay fixed; an odd numerator cannot be halved into whole larger pieces. Refusals explain why. Servings cannot change mid-animation; Reset cancels it safely.
 
-In **Learn**, predict before revealing the physical change, then build an equivalent serving in Pie B. Pie A stays the reference. The three local lessons are:
+In **Learn**, commit a prediction before revealing the physical change, then build an equivalent serving in Pie B. The prediction selector is disabled during motion; feedback and the completion record evaluate the original committed answer. Pie A stays the reference. The three local lessons are:
 
 | Lesson | Prediction | Matching Pie B | Explanation |
 | --- | --- | --- | --- |
@@ -14,7 +14,7 @@ In **Learn**, predict before revealing the physical change, then build an equiva
 | Same Serving, Fewer Pieces | 12/16 → 6/8: numerator 6 | 3/4 | Combine pairs; divide both numbers. |
 | From Pie To Bar | 3/8 → 6/16: numerator 6 | 6/16 | One eighth becomes two sixteenths in both representations. |
 
-In **Challenge**, match ten orders using Pie B's fixed denominator. The ten answer keys in the historical table below are reused unchanged. Incorrect answers cannot advance. A hint, reference use or detour to Learn marks an unfinished order as helped. First-try-without-help, helped and retried counts are separate; helped/retried can overlap. Repeated correct submission cannot inflate results. Reset starts a fresh round. There is no timer, identity collection, persistent storage or score transmission.
+In **Challenge**, match ten orders using Pie B's fixed denominator. The ten answer keys in the historical table below are reused unchanged. Incorrect answers cannot advance. A hint, reference use or detour to Learn marks a previously started unfinished order as helped, including a route through Free Play. Prior selected responses survive these visits. Help viewed before starting an order is not counted retroactively. First-try-without-help, helped and retried counts are separate; helped/retried can overlap. Repeated correct submission cannot inflate results. Reset starts a fresh round. There is no timer, identity collection, persistent storage or score transmission.
 
 The solid purple border marks a serving; dots mark selected bar pieces. A dashed outline and shader glow show the same hovered/focused piece without selecting. Red/green assessment feedback is supplemented by explicit Correct/Not Yet text and a fraction explanation. Changing the answer clears stale feedback. A completed round remains practice evidence, not measurement mastery.
 

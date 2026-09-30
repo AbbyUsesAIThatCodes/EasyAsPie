@@ -33,7 +33,10 @@ export function makePie(serving, recipeName, side) {
       if (a < start || a >= start + step) continue;
       const s = 0.098 + noise(k + 11) * 0.079;
       const edgeDistance = Math.min(Math.abs(Math.sin(a - start)), Math.abs(Math.sin(start + step - a))) * r;
-      if (edgeDistance < s * 0.60 + 0.01) continue;
+      // Keep seeded toppings when adding cuts; wide exclusion lanes stripped
+      // most berries from sixteenths. Narrow center clearance leaves the
+      // overlaid radial cuts readable without changing any core wedge solid.
+      if (edgeDistance < s * 0.20 + 0.008) continue;
       const p = point(r, a, 0.716 + s * 0.49), sy = s * (0.72 + noise(k + 7) * 0.32);
       const tint = new THREE.Color('#d4caed').lerp(new THREE.Color('#7b86bf'), noise(k) * 0.65);
       berries.push({ p, sx: s, sy, sz: s * (0.88 + noise(k + 14) * 0.25), ry: a, rz: (noise(k + 9) - 0.5) * 0.22, color: tint });

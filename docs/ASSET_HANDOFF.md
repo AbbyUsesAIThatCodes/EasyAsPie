@@ -14,3 +14,5 @@ No changes were made to EdugamesGraphicsStorage or its shared catalogs.
 Comic Sans is requested from the device's installed font collection. No font file is redistributed. Existing historical images/videos are retained under their original identities. This manifest is a handoff, not a claim that shared storage has been updated.
 
 The existing shared catalog was inspected on September 30: its current pack is Levers: Load, Effort, And Distance. Static lever apparatus does not replace equal dynamic pie sectors; no unrelated prop or binary was imported. DM curriculum is reused through the pinned provenance above. The parent should consolidate this original bakery pack after review and preserve source/third-party notices (Three.js), source revision and hashes. No standalone GLB or texture export is claimed in this task.
+
+PR22 correction: the original seeded berry layout uses narrower center-clearance lanes at radial cuts, retaining 82 of 104 seeds at sixteenths (101 at halves). Core pastry/filling geometry and fraction math are unchanged. The replacement source/build and LF-normalized file hashes are in ASSET_HANDOFF.json.
