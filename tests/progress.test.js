@@ -19,6 +19,22 @@ test('malformed, unsupported and inconsistent saved work is rejected without cha
  }
  assert.throws(()=>decodeProgress('{'));assert.equal(decodeProgress(text).state.flavors.A,'strawberry');
 });
+test('completed Learn restores only its correct serving; unfinished responses and other modes stay valid',()=>{
+ for(const [index,A,B,committed] of [[0,{n:2,d:4},{n:4,d:8},'0'],[1,{n:6,d:8},{n:3,d:4},'6'],[2,{n:6,d:16},{n:6,d:16},'6']]){
+  const state=snapshot();state.mode='learn';state.scene=createFreePlay({A,B});
+  state.learn={index,phase:'done',prediction:committed,committed,assisted:false,completed:[[index,{predictionCorrect:index!==0,assisted:false}]]};
+  const valid=encodeProgress(state,identity);assert.deepEqual(decodeProgress(valid).state,state);
+  for(let n=0;n<=B.d;n++)if(n!==B.n){
+   const bad=JSON.parse(valid);bad.state.scene.B.n=n;const text=JSON.stringify(bad);
+   assert.throws(()=>decodeProgress(text),/Completed lesson serving disagrees with its target/);
+   assert.equal(JSON.stringify(bad),text);
+  }
+  state.learn.phase='build';state.scene=createFreePlay({A,B:{n:0,d:B.d}});
+  assert.deepEqual(decodeProgress(encodeProgress(state,identity)).state,state);
+  state.learn.phase='done';state.mode='free';state.scene=state.free;
+  assert.deepEqual(decodeProgress(encodeProgress(state,identity)).state,state);
+ }
+});
 test('history replay retains retries and help, rejects forged first-try flags and impossible advancement',()=>{
  let s=createSession('original-build');s=submit(selectSlices(s,0));s=markAssisted(s,'free-play');s=useHint(s);s=submit(selectSlices(s,answerFor(s).n));s=advance(s);s=selectSlices(s,1);
  assert.deepEqual(restoreSession(s),s);

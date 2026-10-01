@@ -35,6 +35,7 @@ export function validateSnapshot(raw){
  else{
   const lesson=LESSONS[l.index],demonstrated=convert(lesson.from,lesson.from.d*(lesson.action==='cut'?2:.5));
   check(scene.B.d===lesson.to&&same(scene.A,['predict','demonstrating'].includes(l.phase)?lesson.from:demonstrated),'Lesson scene disagrees with its phase.');
+  if(l.phase==='done')check(same(scene.B,convert(lesson.from,lesson.to)),'Completed lesson serving disagrees with its target.');
  }
  const drawer=raw.drawer;check(drawer&&boolean(drawer.open)&&boolean(drawer.opened)&&Number.isSafeInteger(drawer.quietUntil)&&drawer.quietUntil>=0,'Invalid drawer record.');
  check(!drawer.opened||drawer.open,'Unclosed discovery must have an open drawer.');

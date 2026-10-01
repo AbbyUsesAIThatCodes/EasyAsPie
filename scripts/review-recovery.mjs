@@ -24,6 +24,17 @@ try{
  checks.push('Refresh preserves independent servings/flavors and the quiet deadline; refresh during Free Play slicing restores its last committed exact state without late writes.');
  await page.locator('#learn').click();await page.locator('#prediction').selectOption('0');await page.locator('#test-prediction').click();await page.locator('#prediction').evaluate(e=>{e.value='2';e.dispatchEvent(new Event('change',{bubbles:true}));});await page.reload();await settle();assert.deepEqual(await values(),['2/4','0/8']);assert.match(await page.locator('.activity-feedback').textContent(),/prediction: 0/i);await select(4);await page.locator('#check-lesson').click();assert.equal(await page.locator('#learning-card').getAttribute('data-prediction-correct'),'false');await page.reload();await settle();assert.equal(await page.locator('#learning-card').getAttribute('data-prediction-correct'),'false');
  checks.push('Reload during a demonstration restores the original committed prediction 0 despite a forced late value 2; completed prediction credit stays false.');
+ const completedLesson=await data();assert.equal(completedLesson.state.learn.phase,'done');
+ completedLesson.state.scene.B.n=0;const corruptLesson=JSON.stringify(completedLesson);
+ const corruptContext=await browser.newContext({viewport:{width:1366,height:768}});
+ await corruptContext.addInitScript(({key,text})=>localStorage.setItem(key,text),{key,text:corruptLesson});
+ const corruptPage=await corruptContext.newPage();watch(corruptPage);await corruptPage.goto(url);
+ await corruptPage.waitForFunction(()=>document.getElementById('save-status').textContent.includes('Could Not Be Restored'));
+ assert.equal(await corruptPage.locator('body').getAttribute('data-mode'),'free');
+ await corruptPage.locator('[data-action="increase"][data-pair="B"]').click();await corruptPage.waitForTimeout(200);
+ assert.equal(await corruptPage.evaluate(key=>localStorage.getItem(key),key),corruptLesson);
+ await corruptPage.screenshot({path:out+'/rejected-learn-completion.png'});await corruptContext.close();
+ checks.push('A corrupt completed Learn record with 0/8 instead of the required 4/8 is rejected before restore; the browser shows its notice, stays playable and retains the original stored bytes. Valid completion and its incorrect committed prediction remain restorable.');
  await page.locator('#challenge').click();await select(1);await page.locator('#submit-order').click();await page.locator('#hint-order').click();await page.locator('#free-play').click();await page.locator('.vocabulary-bar [data-reference]').click();await page.keyboard.press('Escape');await page.locator('#challenge').click();await page.waitForTimeout(150);await page.reload();await settle();assert.deepEqual(await values(),['1/2','1/4']);let session=(await data()).state.challenge.session;assert.equal(session.attempts,1);assert.equal(session.assisted,true);assert.deepEqual(session.history.filter(e=>e.kind==='help').map(e=>e.source),['hint','free-play','reference']);
  const browserState=await context.storageState();await context.close();context=await browser.newContext({viewport:{width:1366,height:768},storageState:browserState});page=await context.newPage();watch(page);await page.goto(url);await settle();assert.deepEqual(await values(),['1/2','1/4']);assert.equal((await data()).state.challenge.session.attempts,1);
  checks.push('Challenge response/retry/help history survives refresh and a fresh browser context using the saved browser storage, without granting false first-try credit.');
