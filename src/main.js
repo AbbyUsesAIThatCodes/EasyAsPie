@@ -13,7 +13,7 @@ const fixture = params.get('preview');
 const modelReview = params.get('review') === 'solids';
 let state = fixture ? previewState(fixture) : createFreePlay();
 let busy = false, actionEpoch = 0, modeController = null;
-let storageReady=false,storageBlocked=false,saveTimer=null;
+let storageReady=false,storageBlocked=false,saveTimer=null,lastStoredText=null;
 const canPersist=!fixture&&!modelReview;
 const fixtureName = Object.hasOwn(fixtureNames, fixture) ? fixtureNames[fixture] : null;
 const pairs = ['A', 'B'];
@@ -300,13 +300,13 @@ modeController = createLearningModes({ identity:__BUILD_IDENTITY__,changed,setMo
 function progressSnapshot(){return {...modeController.snapshot(),flavors,drawer:{open:el('drawer-toggle').getAttribute('aria-expanded')==='true',opened:drawerCue.opened&&el('drawer-toggle').getAttribute('aria-expanded')==='true',quietUntil:drawerCue.quietUntil}};}
 function saveProgress(){
  clearTimeout(saveTimer);if(!storageReady||storageBlocked||!canPersist)return;
- try{localStorage.setItem(STORAGE_KEY,encodeProgress(progressSnapshot(),__BUILD_IDENTITY__));el('save-status').textContent='Saved Only In This Browser';}
+ try{const existing=localStorage.getItem(STORAGE_KEY);if(existing!==lastStoredText){storageBlocked=true;try{if(existing)decodeProgress(existing);el('save-status').textContent='Saved Work Changed Elsewhere — Reload To Restore';}catch{el('save-status').textContent='Saved Work Could Not Be Restored — Clear To Start Fresh';}return;}const encoded=encodeProgress(progressSnapshot(),__BUILD_IDENTITY__);localStorage.setItem(STORAGE_KEY,encoded);lastStoredText=encoded;el('save-status').textContent='Saved Only In This Browser';}
  catch(error){el('save-status').textContent='Could Not Save — Keep This Page Open';console.warn('Local progress could not be saved:',error.message);}
 }
 function changed(){if(storageReady&&!storageBlocked&&canPersist){clearTimeout(saveTimer);saveTimer=setTimeout(saveProgress,100);}}
 if(canPersist){
  try{
-  const text=localStorage.getItem(STORAGE_KEY);
+  const text=localStorage.getItem(STORAGE_KEY);lastStoredText=text;
   if(text){
    const saved=decodeProgress(text).state;flavors=saved.flavors;for(const pair of pairs)document.querySelector('[data-flavor="'+pair+'"]').value=flavors[pair];
    modeController.restore(saved);drawerCue=createDrawerCue(saved.drawer);setDrawer(saved.drawer.open,null);

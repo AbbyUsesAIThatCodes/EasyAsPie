@@ -30,8 +30,8 @@ export function createLearningModes(api){
  document.addEventListener('click',event=>{const t=event.target.closest('[data-term],[data-reference]');if(!t)return;event.stopPropagation();if(!dialog.open)showReference(t.dataset.term);else dialog.querySelector('#reference-'+t.dataset.term)?.scrollIntoView({block:'nearest'});});
  document.addEventListener('keydown',event=>{if(event.target.matches('.term')&&['Enter',' '].includes(event.key)){event.preventDefault();if(!dialog.open)showReference(event.target.dataset.term);}});
  const setScene=(A,B)=>{api.loadState(createFreePlay({A,B}));api.setFeedback(null);};
- function startLesson(index){++epoch;lessonIndex=index;phase='predict';prediction='';committedPrediction=null;lessonMessage='Make a prediction before testing it.';lessonAssisted=false;learningBusy=false;const l=LESSONS[index];setScene(l.from,{n:0,d:l.to});render();}
- function challengeScene(){const t=currentTask(session);setScene(t.from,{n:session.selected,d:t.to});}
+ function startLesson(index){++epoch;lessonIndex=index;phase='predict';prediction='';committedPrediction=null;lessonMessage='Make a prediction before testing it.';lessonAssisted=false;learningBusy=false;const l=LESSONS[index];api.feedback(l.prompt);setScene(l.from,{n:0,d:l.to});render();}
+ function challengeScene(){const t=currentTask(session);setScene(t.from,{n:session.selected,d:t.to});api.feedback(session.complete?'All orders completed. Download your report or choose New Round.':`Match ${t.from.n}/${t.from.d} using ${t.to} equal pieces. Choose Check Order when ready.`);}
  function changeMode(next){if(next===mode)return;if(mode==='free')free=api.getState();if(challengeStarted&&['learn','free'].includes(next))session=markAssisted(session,next==='free'?'free-play':'learn');if(next==='challenge')challengeStarted=true;++epoch;learningBusy=false;mode=next;document.body.dataset.mode=mode;api.setMode(mode);
   document.querySelectorAll('[data-mode]').forEach(b=>{b.classList.toggle('active',b.dataset.mode===mode);b.setAttribute('aria-pressed',String(b.dataset.mode===mode));});
   if(mode==='free'){api.loadState(free);api.setFeedback(null);document.querySelector('.preview-note p').textContent=FREE_INSTRUCTION;}else if(mode==='learn')startLesson(lessonIndex);else challengeScene();
@@ -97,7 +97,7 @@ export function createLearningModes(api){
    }
    api.loadState(scene);
    if(mode==='free')document.querySelector('.preview-note p').textContent=FREE_INSTRUCTION;
-   else if(mode==='challenge'){challengeMessage=session.feedback||'Restored your serving. Choose Check Order when ready.';challengeTone=session.solved?'correct':'';api.feedback('Restored order. Match the written target with the Customer Pie.');}
+   else if(mode==='challenge'){challengeMessage=session.feedback||'Restored your serving. Choose Check Order when ready.';challengeTone=session.solved?'correct':'';api.feedback(session.complete?'Restored completed round. Download your report or choose New Round.':'Restored order. Match the written target with the Customer Pie.');}
    else {lessonMessage=phase==='predict'?'Restored your prediction. Test it when ready.':`Restored committed prediction: ${committedPrediction}. ${Number(committedPrediction)===LESSONS[lessonIndex].prediction?'Prediction matched.':'Prediction did not match.'} Check Your Pie to complete the lesson.`;api.feedback('Restored this lesson and its original committed response.');}
    api.setFeedback(mode==='challenge'&&session.solved?'correct':null);render();
   },
