@@ -1,0 +1,26 @@
+{
+  "workflowBlob": "b788c8fcd3785583da9f6c3edd0a7773aa0a91f4",
+  "unchanged": true,
+  "after": {
+    "id": "0.3.1_Unassigned_main_build-008_20260930T121539Z_g6bd108c35f65_web",
+    "version": "0.3.1",
+    "codename": null,
+    "codenameSlug": "Unassigned",
+    "scope": "main",
+    "pr": null,
+    "ordinal": 8,
+    "builtAt": "2026-09-30T12:15:39.466Z",
+    "sha": "6bd108c35f6591efbe51334fb42b64fcd3cb107f",
+    "dirty": false,
+    "sourceFingerprint": "6bda82354aa5815bcce3d6890368887f7ddc8b371196ec2d050a57307bd32474",
+    "prHead": null,
+    "target": "web",
+    "reservation": "refs/tags/easyaspie-builds/main/000008"
+  },
+  "checkedAt": "2026-10-01T00:17:18.1758322Z",
+  "baseline": {
+    "id": "0.3.1_Unassigned_main_build-008_20260930T121539Z_g6bd108c35f65_web",
+    "sha": "6bd108c35f6591efbe51334fb42b64fcd3cb107f",
+    "sourceFingerprint": "6bda82354aa5815bcce3d6890368887f7ddc8b371196ec2d050a57307bd32474"
+  }
+}

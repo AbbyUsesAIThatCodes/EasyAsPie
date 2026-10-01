@@ -213,3 +213,15 @@ body[data-mode="free"] .serving-controls { display:inline-flex; margin-right:6px
 @media(prefers-reduced-motion:reduce){.cue-arrow,.cue-sparkle{animation:none !important;}}
 
 @media(min-width:700px){body[data-mode="free"] .action-feedback { left:2%; transform:none; max-width:35%; width:max-content; }}
+
+.local-progress { display:flex; align-items:center; gap:8px; max-width:48%; font-size:10px; }
+#scene { height:calc(100% - var(--footer-height, 40px)); }
+.local-progress button { padding:3px 7px; font-size:10px; white-space:nowrap; }
+@media(max-width:700px){
+ footer{flex-direction:column;align-items:stretch;gap:3px;padding:4px 2%;}
+ .local-progress{max-width:100%;justify-content:space-between;}
+ .build-identity{justify-content:start;gap:4px;}
+ .learning-card{bottom:102px;}
+ .vocabulary-bar{bottom:155px;}
+ .action-feedback{bottom:105px;}
+}

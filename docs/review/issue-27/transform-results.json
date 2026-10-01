@@ -1,0 +1,13 @@
+{
+  "build": "0.4.0_Unassigned_pr-30_build-002_20261001T001152Z_g1f4dda81be6e_web",
+  "browser": "154.0.8037.92",
+  "checks": [
+    "Animated 1/2 → 2/4 → 4/8 → 8/16; 12/16 → 6/8 → 3/4; partner preserved during rapid actions.",
+    "Reset cancels motion without a late stale-state write.",
+    "Regroup 8/16 → 4/8 clears stationary old-piece-16 pointer hover and clamps old-piece-16 keyboard focus to piece 8; activation during motion does not change the amount.",
+    "136 accepted transformations and 68 refusals across all 34 states in both pairs, with immediate reduced motion."
+  ],
+  "transformations": 136,
+  "refusals": 68,
+  "errors": []
+}

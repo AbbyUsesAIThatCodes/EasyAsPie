@@ -1,0 +1,9 @@
+{
+  "build": "0.4.0_Unassigned_pr-30_build-002_20261001T001152Z_g1f4dda81be6e_web",
+  "checks": [
+    "The visible brass handle accepts real center-coordinate clicks in Free Play and Learn; native Enter/Space, Escape focus recovery and settled open-close quiet period work.",
+    "Camera/viewport changes preserve handle hit alignment; Challenge locks it and suppresses the cue; enabled Check Order/Next Order use the available-action highlight.",
+    "Reduced motion uses a static cue and immediate drawer motion; entering Challenge after only opening does not falsely complete the user cycle. Pure clock tests cover 600,000 ms and background/locked pauses."
+  ],
+  "errors": []
+}

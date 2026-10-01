@@ -1,25 +1,29 @@
 {
   "repository": "AbbyUsesAIThatCodes/EasyAsPie",
-  "sourceRevision": "8b0ae6f9018bcc51b99bef0b818c638c39220cd7",
-  "build": "0.3.1_Unassigned_pr-22_build-002_20260930T035728Z_g8b0ae6f9018b_web",
+  "sourceRevision": "1f4dda81be6e591bd961316512272956051f6071",
+  "build": "0.4.0_Unassigned_pr-30_build-002_20261001T001152Z_g1f4dda81be6e_web",
   "sharedCatalogChanged": false,
   "hashNormalization": "LF, matching Git text blobs",
   "proceduralSources": [
     {
       "path": "src/bakery-geometry.js",
-      "sha256": "754c71fe060d694a5a39b3f97fbe1537e56229f42be0a17accb7dac07c4c2eab"
+      "sha256": "6429e3f09dba82368e56c55a9597911e09b7e9d09a4059318666b53e926449fb"
     },
     {
       "path": "src/bakery-room.js",
-      "sha256": "1c5e07ff7cbbe7c7acbeac24d409830984bd03a41477ff9c9c5a17e0c5623b3d"
+      "sha256": "ee04619261fa2ac3fcb619d3e22416b6a13b20c2d27703886f6b0f7016c3c784"
     },
     {
       "path": "src/pies.js",
-      "sha256": "7f3006c4c1bdc7097ee6cb0f5713ddf26c6472ffc3adeb4d87cd7563864fe4c8"
+      "sha256": "21622079c41e3d094c66fe675f02eca8729a4a30d2fcb4fbd4bf41850cd480b8"
     },
     {
       "path": "src/slice-motion.js",
       "sha256": "bb849091fd637c74668b10bb84d76d7964cc0a43b43e7b115675f1bf4c3d9a6e"
+    },
+    {
+      "path": "src/drawer-cue.js",
+      "sha256": "1698932f35fc108162b3a7bae6a3dab97967d6cf35170e0734e9668ecc937f48"
     }
   ],
   "dependencies": {
@@ -27,6 +31,6 @@
   },
   "attribution": "Original EasyAsPie procedural geometry, textures and animation. Preserve upstream source and Three.js notices. Comic Sans is requested from the device; no font file is redistributed.",
   "exportStatus": "Source handoff only; no standalone GLB export claimed. Parent consolidates shared assets.",
-  "supersedesSourceRevision": "e3c0846d25998babb027dd6cecd3e66ec3ebf7ab",
-  "changeNote": "Narrower radial berry-center clearance retains coverage at sixteenths; core wedge solids and fraction math unchanged."
+  "supersedesSourceRevision": "8b0ae6f9018bcc51b99bef0b818c638c39220cd7",
+  "changeNote": "Original tapered strawberry/seeds/calyxes with identical fraction solids; parallel flat bars; projected handle and pure discovery/quiet-cycle controller. Parent consolidates shared assets."
 }

@@ -141,6 +141,7 @@ async function keyboardSelect(pair, k, kind) {
   pairValues[pair].n = k; activations++;
   await verify();
 }
+await page.addInitScript(()=>localStorage.removeItem('easyaspie.progress.v1'));
 try {
   // Real Tab order: header -> both pies -> serving controls -> toggle -> open bars.
   await start();

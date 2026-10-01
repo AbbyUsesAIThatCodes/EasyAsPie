@@ -1,0 +1,9 @@
+{
+  "build": "0.4.0_Unassigned_pr-30_build-002_20261001T001152Z_g1f4dda81be6e_web",
+  "checks": [
+    "Independent strawberry/apple selections retain exact amounts through Cut/Regroup; aligned equal-length parallel bars occupy separate near/far rows.",
+    "Mode names include keyboard controls; Challenge closes/locks drawer and hides reference rendering, labels, focus and picking while retaining its written target.",
+    "Free Play restores both test pies and independent flavors; reference course section removed."
+  ],
+  "errors": []
+}

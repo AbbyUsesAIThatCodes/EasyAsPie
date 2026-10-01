@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-10-01T00:17:04.153Z",
+  "previews": [
+    {
+      "port": 4190,
+      "build": "0.4.0_Unassigned_pr-28_build-001_20260930T232801Z_ga97e143c8502_web",
+      "loaded": true
+    },
+    {
+      "port": 4191,
+      "build": "0.4.0_Unassigned_pr-29_build-002_20260930T234150Z_g5645e9022b29_web",
+      "loaded": true
+    },
+    {
+      "port": 4192,
+      "build": "0.4.0_Unassigned_pr-30_build-002_20261001T001152Z_g1f4dda81be6e_web",
+      "loaded": true
+    }
+  ],
+  "video": {
+    "duration": 47.72,
+    "width": 1366,
+    "height": 768,
+    "playedThrough": true
+  }
+}

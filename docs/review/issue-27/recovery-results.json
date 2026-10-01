@@ -1,0 +1,14 @@
+{
+  "build": "0.4.0_Unassigned_pr-30_build-002_20261001T001152Z_g1f4dda81be6e_web",
+  "checks": [
+    "Refresh preserves independent servings/flavors and the quiet deadline; refresh during Free Play slicing restores its last committed exact state without late writes.",
+    "Reload during a demonstration restores the original committed prediction 0 despite a forced late value 2; completed prediction credit stays false.",
+    "Challenge response/retry/help history survives refresh and a fresh browser context using the saved browser storage, without granting false first-try credit.",
+    "All twenty distinct orders complete; the downloaded standalone report renders twenty rows with actual wrong/correct responses, retries, typed help and exact build/source identity. Completion survives reload.",
+    "Explicit Clear Saved Work starts a fresh session; unsupported saves remain byte-for-byte intact and are not overwritten by later play.",
+    "Compatible work changed elsewhere is retained rather than overwritten; vocabulary exposure marks the unfinished order helped and survives refresh.",
+    "Unavailable browser storage leaves the game playable with an explicit notice. No external HTTP runtime requests or student identity fields."
+  ],
+  "errors": [],
+  "external": []
+}

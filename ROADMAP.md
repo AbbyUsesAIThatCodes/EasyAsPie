@@ -1,6 +1,10 @@
 # EasyAsPie Roadmap
 
-## Current Free Play Rebuild
+## Current Follow-Up Review
+
+The user authorized three bounded successive drafts: [PR28 / #25](docs/review/issue-25/README.md), [PR29 / #26](docs/review/issue-26/README.md), then [PR30 / #27](docs/review/issue-27/README.md). The final PR30 artifact contains all three. Manual merge order is 28 → 29 → 30; explicitly retarget each successor to main after accepting/merging its predecessor. No task merged or deployed these changes. The teacher previously integrated the older stack through PR24; the following plan is preserved history, with #13 classroom signoff still pending.
+
+## Preserved Free Play Rebuild
 
 [Issue #7](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/7) is the tracking checklist for the paired pie/bar rebuild. Follow the [implementation plan and preserved mockup](docs/FREE_PLAY_IMPLEMENTATION_PLAN.md). Merge its planning/reference PR first, then complete these issues **one conversation and one PR at a time**, normally branching from current `main` after the preceding PR is merged. **Tonight's explicit exception:** [PR19 → PR20 → PR22](docs/OVERNIGHT_REVIEW.md) is a provisional review stack with no merges. Teacher Step03A acceptance remains pending; retarget each successor to main after its predecessor is accepted and merged.
 

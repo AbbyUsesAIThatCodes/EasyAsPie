@@ -10,6 +10,7 @@ const browser=await chromium.launch({headless:true,executablePath:process.env.CH
 page.on('pageerror',e=>errors.push(e.message));
 const settle=()=>page.waitForFunction(()=>document.querySelector('#app').getAttribute('aria-busy')!=='true'&&document.querySelector('#scene').dataset.moving==='false');
 const values=()=>page.locator('.fraction').allTextContents();
+await page.addInitScript(()=>localStorage.removeItem('easyaspie.progress.v1'));
 try{
  await page.goto(`http://127.0.0.1:${server.address().port}`);await settle();
  await page.waitForFunction(()=>!document.getElementById('drawer-cue').hidden);

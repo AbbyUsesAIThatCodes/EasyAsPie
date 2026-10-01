@@ -1,0 +1,10 @@
+{
+  "build": "0.4.1_Unassigned_pr-30_build-003_20261001T002857Z_gf2659f310169_web",
+  "source": "f2659f3101696d422b007366659c568e02238004",
+  "zipSha256": "39ec391b56c48b2e24a243964f7d18142e46cafa47fa6831bed6465852ea0b9e",
+  "bytes": 174135,
+  "port": 4193,
+  "issue": 27,
+  "pr": 30,
+  "preservedPriorBuild": "0.4.0_Unassigned_pr-30_build-002_20261001T001152Z_g1f4dda81be6e_web"
+}
