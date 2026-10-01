@@ -18,7 +18,7 @@ Local builds reserve exclusive numbered files under the Git common directory's `
 
 Each invocation creates an immutable manifest in `.build/ID.json`, builds into `artifacts/ID/`, and writes matching `build.json` and `BUILD.md` into that output. `dist/` is a convenient copy of the latest local output for preview; it preserves the same identity. Generated data is ignored by Git, avoiding timestamp-triggered rebuild loops.
 
-- **Latest Review Build:** see `docs/review/issue-21/README.md` for the final integrated overnight ZIP. PR19 and PR20 have independent exact packages in their review folders. Local production checks replace CI for this bounded session to conserve allowance/storage. Ordinary PR runs still report the same identity; PR builds do not deploy.
+- **Latest Review Build:** see `docs/review/issue-27/README.md` for the final integrated PR30 ZIP. PR28 and PR29 have independent exact packages in issue-25 and issue-26. Historical overnight builds remain preserved. Local production checks replace CI for this bounded session to conserve allowance/storage. Ordinary PR runs still report the same identity; PR builds do not deploy.
 - **Deployed Build:** after the first successful main deployment, inspect [the served manifest](https://abbyusesaithatcodes.github.io/EasyAsPie/build.json) and [build report](https://abbyusesaithatcodes.github.io/EasyAsPie/BUILD.md). Until that deployment succeeds, no live build is claimed.
 - **Local Current Build:** `dist/build.json` and `dist/BUILD.md`.
 - **Validation:** `npm run check:build` verifies the copied manifest, output name, bundled UI label, report, and relative asset URLs without rebuilding.
@@ -36,7 +36,7 @@ Each invocation creates an immutable manifest in `.build/ID.json`, builds into `
 | Delivered folder and download | `artifacts/ID/`; Actions artifact named ID | Manifest-derived path/name | Implemented |
 | Game label | `src/main.js`, `#build-identity` in the always-visible footer | Vite injects the same manifest; visible/copyable text | Implemented |
 | Build/test report | `BUILD.md`, Actions job summary; `check:build` output | Same immutable manifest | Implemented |
-| Screenshot/video review | `docs/review/issue-18/jess-pc/`, `docs/review/issue-12/`, `docs/review/issue-21/`: `build.json`, `BUILD.md`, media and visible footer | Same running artifact for screenshots/video; earlier test-build identity identified separately if reused | Implemented for each overnight review increment |
+| Screenshot/video review | `docs/review/issue-18/jess-pc/`, `docs/review/issue-12/`, `docs/review/issue-21/`: `build.json`, `BUILD.md`, media and visible footer | Same running artifact for screenshots/video; earlier test-build identity identified separately if reused | Implemented for each overnight and follow-up increment |
 | Current README/roadmap | `README.md`, `ROADMAP.md`, `docs/IMPLEMENTATION_STATUS.md`, `docs/VALIDATION.md` | Link to generated/current records; preserve old evidence | Implemented |
 | PR description/template | `.github/pull_request_template.md` | Link to exact check run and build ID | Implemented |
 | Agent instructions | `AGENTS.md` | Links to this contract | Implemented |

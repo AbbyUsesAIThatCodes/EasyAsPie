@@ -1,0 +1,49 @@
+{
+  "build": "0.4.0_Unassigned_pr-30_build-002_20261001T001152Z_g1f4dda81be6e_web",
+  "browser": "154.0.8037.92",
+  "checks": [
+    "Hover-safe nested vocabulary, mouse/keyboard reference opening, Escape and Close.",
+    "Three prediction/demo/build lessons; missing and wrong predictions, wrong and correct servings, independent completion count.",
+    "Free Play snapshot restored; leaving a moving demonstration cannot overwrite the next mode.",
+    "Committed prediction 0 remains incorrect after a forced change to 2 during the revealed 1/2 → 2/4 demonstration; the native selector is disabled and the saved completion result remains false.",
+    "All 20 orders including zero and whole; wrong answers blocked, reference/lesson detours counted as assistance, no double scoring, 17 unassisted first tries / 3 helped / 1 retried.",
+    "Challenge → Free Play → Reference → Challenge and Challenge → Free Play → Learn → Challenge both mark the existing unfinished order as helped and retain its prior selected response. Learn/reference use before starting Challenge does not mark the first order helped.",
+    "Round restart, mode-aware Reset and Reset during demonstration."
+  ],
+  "chapters": [
+    {
+      "second": 1.842,
+      "name": "Integrated 3D Bakery"
+    },
+    {
+      "second": 5.037,
+      "name": "Physical Slicing And Two-Way Selection"
+    },
+    {
+      "second": 9.049,
+      "name": "Guided Lesson 1"
+    },
+    {
+      "second": 11.94,
+      "name": "Guided Lesson 2"
+    },
+    {
+      "second": 14.779,
+      "name": "Guided Lesson 3"
+    },
+    {
+      "second": 20.633,
+      "name": "Wrong Answer, Hint And Correct Answer"
+    },
+    {
+      "second": 29.442,
+      "name": "Twenty Orders With Honest Assistance Counts"
+    },
+    {
+      "second": 34.227,
+      "name": "Activity Report And Refresh Recovery"
+    }
+  ],
+  "errors": [],
+  "wallDurationSeconds": 51.816
+}

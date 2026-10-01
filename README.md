@@ -2,11 +2,15 @@
 
 **Same amount. Different slices. Delicious fractions.**
 
-A full-viewport 3D fraction bakery for Design And Modeling, **1.3 — Measuring Matters**. Two equal blueberry pies and equal-length unitless bars connect the same exact fraction state.
+A full-viewport 3D fraction bakery for Design And Modeling, **1.3 — Measuring Matters**. Two equal-sized pies and equal-length unitless bars connect the same exact fraction state.
 
 ## Current 0.4.0 Draft Review
 
-The authorized follow-up starts with [PR28 / issue25](docs/review/issue-25/README.md): aligned near/far bars, mode-specific pie names, independent strawberry and existing flavors, and a written Challenge target with the example hidden. Further handle guidance and local progress/report increments follow as drafts. Current main has the earlier integrated source through PR24.
+Review the [integrated PR30 playable ZIP, screenshots, gameplay video and activity-report sample](docs/review/issue-27/README.md). The manual merge order is **PR28 → PR29 → PR30**, with issues #25, #26 and #27 respectively. Retarget each successor to main after its predecessor is accepted and merged. All remain drafts; current main is the earlier integrated source through PR24.
+
+- **PR28:** parallel near/far bars, accurate mode-specific names, independent strawberry and existing flavors, exact instruction copy, and a hidden Challenge example with a written target.
+- **PR29:** physical brass handle activation, keyboard equivalent, intermittent green discovery cue and ten-minute quiet cycle, available-action emphasis, and clearer Learn layout.
+- **PR30:** twenty distinct orders, validated browser-only recovery without expiry, explicit clearing, help/retry history and a downloadable activity report. This ZIP includes all three increments.
 
 ## Preserved 0.3.1 Review
 
@@ -24,13 +28,13 @@ Bold vocabulary has nested hover/focus-safe explanations and opens a reference. 
 
 Install Node.js 22.12 or later, then run `npm ci`, `npm run dev`. For production use `npm test`, `npm run build`, `npm run check:build`, then `npm run preview`. The exact production artifact is also copied to `artifacts/FULL-BUILD-ID/`; its manifest, report, console and visible footer share one fixed build identity. The existing codename remains **Unassigned**, pending the owner's choice.
 
-Each review ZIP includes Start Review.cmd and a small localhost-only Node server. No deployment is required. The final integrated preview on Jess_PC uses port 4187; PR20 uses 4188, and PR19 uses 4189. These task-owned previews are separate from live Pages.
+Each review ZIP includes Start Review.cmd and a small localhost-only Node server. No deployment is required. The current integrated preview on Jess_PC uses port 4192; PR29 uses 4191 and PR28 uses 4190. Historical previews use 4187–4189. These task-owned previews are separate from live Pages.
 
 Tab reaches the scene's native pie controls, serving controls and drawer. Arrow keys, Home and End explore pieces; Enter or Space selects. Clear chooses zero. Escape in a bar closes the drawer and restores toggle focus. Escape also closes the reference. Closed/traveling bars are inert. Reduced motion commits slicing, drawer and view changes immediately. Reset Mode affects the active mode. Work, independent flavors, committed predictions, submitted order responses and help history are saved only in this browser until Clear Saved Work is chosen; there is no automatic expiry, account or server upload. Reload restores validated committed work. Unsupported/corrupt saves are retained without overwriting until explicitly cleared. Completing Challenge enables a local HTML activity-report download with responses, retries, help and exact build identity.
 
 Review fixtures: `?preview=halves`, `quarters`, `eighths`, `sixteenths` or `empty-whole`. The normal start is A = 1/2, B = 2/4. `?preview=quarters&review=solids` is an explicitly labeled static geometry inspection, separate from actual cutting gameplay.
 
-With Playwright installed separately, run `scripts/review-selection.mjs`, `scripts/review-transforms.mjs` and `scripts/review-modes.mjs` against the production `dist/`. Set PLAYWRIGHT_MODULE, CHROMIUM_PATH and REVIEW_OUTPUT as needed. These launch isolated browsers/ephemeral localhost ports; they do not build or deploy. RECORD_MODES=1 records the integrated playthrough when Playwright's FFmpeg is available.
+With Playwright installed separately, run the selection, transforms, modes, presentation, handle and recovery scripts under `scripts/review-*.mjs` against the production `dist/`. Set PLAYWRIGHT_MODULE, CHROMIUM_PATH and REVIEW_OUTPUT as needed. These launch isolated browsers/ephemeral localhost ports; they do not build or deploy. RECORD_MODES=1 records the integrated playthrough when Playwright's FFmpeg is available.
 
 ## Curriculum And Review History
 

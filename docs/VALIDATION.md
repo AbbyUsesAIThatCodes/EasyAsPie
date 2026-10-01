@@ -1,6 +1,6 @@
 # Current Validation
 
-The integrated overnight evidence is in [issue21 review](review/issue-21/README.md), with independent [PR19](review/issue-18/jess-pc/README.md) and [PR20](review/issue-12/README.md) artifacts preserved. Use those exact identities and reports for current claims. The preserved selection matrix, transformation matrix and three-mode playthrough exercise the real production browser. Hardware/teacher signoff remains pending.
+The current [integrated PR30 evidence](review/issue-27/README.md) covers all three follow-up increments, including twenty-order report download and local recovery. [PR28](review/issue-25/README.md) and [PR29](review/issue-26/README.md) retain their independent exact artifacts. See [Implementation Status](IMPLEMENTATION_STATUS.md) for the current checked matrices and outstanding human review. The sections below preserve historical 0.1.0 behavior and do not describe current saving or modes.
 
 # First Playable Validation
 
