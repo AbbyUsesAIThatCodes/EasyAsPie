@@ -62,6 +62,11 @@ document.querySelector('#app').innerHTML = `
   <footer><div class="local-progress"><span id="save-status" role="status" title="Saved on this browser and device until you clear it. No account or upload.">Work Stays In This Browser</span><button id="clear-saved-work" type="button" aria-label="Clear Saved Work And Restart" title="Clear all saved pie work and restart">Clear Saved Work</button></div><div class="build-identity"><span>Build</span><code id="build-identity"></code></div></footer>`;
 
 el('build-identity').textContent = __BUILD_IDENTITY__.id;
+// Keep the physical handle above the local-save/build footer at every viewport size.
+const footer = document.querySelector('footer');
+const sizeFooter = () => document.documentElement.style.setProperty('--footer-height', `${footer.getBoundingClientRect().height}px`);
+sizeFooter();
+new ResizeObserver(sizeFooter).observe(footer);
 let bakery, focusPiece = null, hoverPiece = null;
 let drawerCue=createDrawerCue(),drawerIntent=null;
 const cue=document.createElement('div');cue.id='drawer-cue';cue.hidden=true;cue.setAttribute('aria-hidden','true');cue.innerHTML='<span class="cue-sparkle">✦</span><span class="cue-arrow">↓</span><span class="cue-sparkle">✧</span>';el('drawer').append(cue);
