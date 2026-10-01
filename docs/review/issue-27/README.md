@@ -1,5 +1,7 @@
 # Draft PR30 Review
 
+**Preserved Build 002:** the later [build 003 correction](correction-build003/README.md) rejects inconsistent completed-Learn saves. This build 002 ZIP, media and test reports retain their original identity.
+
 **0.4.0_Unassigned_pr-30_build-002_20261001T001152Z_g1f4dda81be6e_web**
 
 [Download The Playable ZIP](0.4.0_Unassigned_pr-30_build-002_20261001T001152Z_g1f4dda81be6e_web.zip). Extract and run Start Review.cmd with Node.js 22.12+; this serves only the bundled artifact on localhost:4192. No install or deployment is required. Source: `1f4dda81be6e591bd961316512272956051f6071`. Fixed UTC: `2026-10-01T00:11:52.639Z`. ZIP SHA-256: `760de4d91f9c540084015756748b3ddd46a2b516236bc641f7dfe74b97d3f447`.

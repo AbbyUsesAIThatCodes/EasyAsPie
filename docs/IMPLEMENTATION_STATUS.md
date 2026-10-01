@@ -1,5 +1,7 @@
 # Implementation Status
 
+Latest bounded correction: **0.4.1_Unassigned_pr-30_build-003_20261001T002857Z_gf2659f310169_web**, source `f2659f3101696d422b007366659c568e02238004`. [Build 003 package](review/issue-27/correction-build003/README.md) adds one completed-Learn serving guard; the regression failed before the fix, then all 34 tests, production checks, recovery and mode suites passed. Build 002 evidence and preview remain preserved. No art, interaction geometry, save schema or taskset changes; no new Library write. The comprehensive build 002 review below remains labeled with its original identity.
+
 The authorized three-draft follow-up is complete for teacher review: **PR28 → PR29 → PR30** (issues #25 → #26 → #27). Retarget successors to main after each predecessor is accepted and manually merged. No merges, auto-merges, deployments, workflow changes or shared graphics catalog changes were made.
 
 Current integrated review: **0.4.0_Unassigned_pr-30_build-002_20261001T001152Z_g1f4dda81be6e_web**. Clean source `1f4dda81be6e591bd961316512272956051f6071`, fixed UTC `2026-10-01T00:11:52.639Z`. [Playable ZIP and evidence](review/issue-27/README.md). PR28 and PR29 retain independently verified exact packages in issue-25 and issue-26. PR30 build 001 exposed a footer/handle collision; build 002 reserves footer space and passes actual handle clicks. No old build was relabeled.

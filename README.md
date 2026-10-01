@@ -4,7 +4,9 @@
 
 A full-viewport 3D fraction bakery for Design And Modeling, **1.3 — Measuring Matters**. Two equal-sized pies and equal-length unitless bars connect the same exact fraction state.
 
-## Current 0.4.0 Draft Review
+## Current 0.4.1 Draft Review
+
+[PR30 build 003](docs/review/issue-27/correction-build003/README.md) adds only the completed-Learn restore validation correction. Build 002 and its broader review evidence remain preserved below; the correction has separate affected-suite evidence and a localhost:4193 preview.
 
 Review the [integrated PR30 playable ZIP, screenshots, gameplay video and activity-report sample](docs/review/issue-27/README.md). The manual merge order is **PR28 → PR29 → PR30**, with issues #25, #26 and #27 respectively. Retarget each successor to main after its predecessor is accepted and merged. All remain drafts; current main is the earlier integrated source through PR24.
 
