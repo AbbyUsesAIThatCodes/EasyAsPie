@@ -1,5 +1,9 @@
 # Build Identity
 
+## Current Finishing Mechanics Checkpoint
+
+The PR #38 mechanics handoff is pinned in [the finishing review](review/issue-31-finishing/README.md), including its immutable manifest, UTC, source SHA, durable `easyaspie-builds/pr-38` reservation, visible footer, ZIP hash and validation. Build 007 remains separately preserved in the original issue-31 review. Later evidence-only commits do not relabel either artifact. No review build is deployed.
+
 ## Current Local Development Revision
 
 The approved beginner review retains release record **0.4.1 / Unassigned** while the preceding release awaits acceptance. This is unfinished local development, not a newly accepted release or invented codename. Every artifact has an explicit local scope, its own durable ordinal, fixed build UTC and exact source provenance. [Current review](review/issue-31/README.md) identifies the new artifact separately from PR30 and live Pages. No existing artifact is relabeled.

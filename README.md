@@ -1,5 +1,11 @@
 # EasyAsPie
 
+## Finishing Mechanics And Lesson Review
+
+The current mechanics checkpoint is [draft PR #38](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/pull/38) on `review/31-finishing-revision`. See [the identified playable build and evidence](docs/review/issue-31-finishing/README.md) and [remaining finishing scope](docs/FINISHING_REVIEW.md). Retracing now shrinks the selected arc; correct orders advance once when the next task's one or two plates arrive. Cabinet clearance, surface hover, outward knives, accessible input, saves and reports are covered by the review checks. Full room/fan and wallpaper polish remain deferred under the teacher's mechanics-first priority. Worksheets still wait for game acceptance.
+
+The build-007 section below remains preserved history.
+
 ## Beginner Construction — Local Development Review
 
 The approved October 3 revision (#31–#36) is on `review/31-beginner-pie-building`, based on corrected PR30 head `dae9277`. [Review contract](docs/BEGINNER_REVIEW_CONTRACT.md) · [Exact review build and evidence](docs/review/issue-31/README.md). PR28 → PR29 → PR30, main, live Pages and workflows remain untouched.

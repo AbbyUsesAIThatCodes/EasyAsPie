@@ -1,0 +1,10 @@
+{
+  "build": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web",
+  "source": "b3901d2b07bbc31380b1d1cb027b1aa3d087b6d1",
+  "zip": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web.zip",
+  "zipSha256": "3461b60ea6f7bb66c0f4a35690ed06c26b5f0b641caebb57ac3ef15a6851bd30",
+  "zipBytes": 13333137,
+  "preview": "http://127.0.0.1:4216/",
+  "branch": "review/31-finishing-revision",
+  "pr": 38
+}

@@ -1,0 +1,12 @@
+Package: 0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web.zip
+SHA-256: 3461b60ea6f7bb66c0f4a35690ed06c26b5f0b641caebb57ac3ef15a6851bd30
+Bytes: 13333137
+
+PASS: Every archive entry passed ZIP CRC verification.
+PASS: Every packaged production file matched the immutable artifact byte for byte.
+PASS: The extracted package's included server launched on localhost port 4219, serving the expected HTML and manifest.
+PASS: The persistent handoff preview on port 4216 served the identical manifest.
+PASS: The original preview on port 4201 still served its unchanged build-007 manifest.
+PASS: The 42.72-second WebM decoded successfully and independently played through to the end in Chromium.
+
+The temporary package-check server was stopped. No external deployment was performed.

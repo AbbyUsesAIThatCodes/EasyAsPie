@@ -1,0 +1,272 @@
+
+> easy-as-pie@0.4.1 test
+> node --test tests/*.test.js
+
+TAP version 13
+# Subtest: physical bars keep equal wholes and exact selected counts in all 34 states
+ok 1 - physical bars keep equal wholes and exact selected counts in all 34 states
+  ---
+  duration_ms: 46.8328
+  type: 'test'
+  ...
+# Subtest: concurrent CI builds and reruns reserve unique increasing PR ordinals
+ok 2 - concurrent CI builds and reruns reserve unique increasing PR ordinals
+  ---
+  duration_ms: 2.2471
+  type: 'test'
+  ...
+# Subtest: separate local build processes cannot reserve the same ordinal
+ok 3 - separate local build processes cannot reserve the same ordinal
+  ---
+  duration_ms: 152.1302
+  type: 'test'
+  ...
+# Subtest: every movable pastry/filling sector is closed, outward-facing and equal-volume
+ok 4 - every movable pastry/filling sector is closed, outward-facing and equal-volume
+  ---
+  duration_ms: 32.5411
+  type: 'test'
+  ...
+# Subtest: decorative pastry shells are closed and face outward
+ok 5 - decorative pastry shells are closed and face outward
+  ---
+  duration_ms: 52.5983
+  type: 'test'
+  ...
+# Subtest: new save is versioned, has no expiry, preserves all modes and anonymous exact history
+ok 6 - new save is versioned, has no expiry, preserves all modes and anonymous exact history
+  ---
+  duration_ms: 4.6824
+  type: 'test'
+  ...
+# Subtest: reject inconsistent, corrupt, wrong-grid and unsupported saves without altering caller data
+ok 7 - reject inconsistent, corrupt, wrong-grid and unsupported saves without altering caller data
+  ---
+  duration_ms: 0.9561
+  type: 'test'
+  ...
+# Subtest: current circular span shrinks, reverses and unwraps without accumulated visits
+ok 8 - current circular span shrinks, reverses and unwraps without accumulated visits
+  ---
+  duration_ms: 2.2191
+  type: 'test'
+  ...
+# Subtest: every grid: latched strokes, overlap, wrap, empty/full and split contiguous runs
+ok 9 - every grid: latched strokes, overlap, wrap, empty/full and split contiguous runs
+  ---
+  duration_ms: 1.1135
+  type: 'test'
+  ...
+# Subtest: all authored targets are exact; all 20 legacy conversions retained, then mixed extension
+ok 10 - all authored targets are exact; all 20 legacy conversions retained, then mixed extension
+  ---
+  duration_ms: 0.6719
+  type: 'test'
+  ...
+# Subtest: immutable committed responses, retries, help, no double-submit/advance and verified recovery
+ok 11 - immutable committed responses, retries, help, no double-submit/advance and verified recovery
+  ---
+  duration_ms: 1.3521
+  type: 'test'
+  ...
+# Subtest: all orders including zero and whole complete with recoverable exact evidence
+ok 12 - all orders including zero and whole complete with recoverable exact evidence
+  ---
+  duration_ms: 3.0792
+  type: 'test'
+  ...
+# Subtest: only a genuine settled user open/close grants at least ten minutes quiet
+ok 13 - only a genuine settled user open/close grants at least ten minutes quiet
+  ---
+  duration_ms: 0.7575
+  type: 'test'
+  ...
+# Subtest: locked and background time cannot run or catch up the decorative cue
+ok 14 - locked and background time cannot run or catch up the decorative cue
+  ---
+  duration_ms: 0.2327
+  type: 'test'
+  ...
+# Subtest: every flavor uses identical core solids and keeps its recipe through serving changes
+ok 15 - every flavor uses identical core solids and keeps its recipe through serving changes
+  ---
+  duration_ms: 274.9441
+  type: 'test'
+  ...
+# Subtest: all valid servings convert exactly and reversibly when representable
+ok 16 - all valid servings convert exactly and reversibly when representable
+  ---
+  duration_ms: 2.8626
+  type: 'test'
+  ...
+# Subtest: reject invalid counts and unsupported partitions, rather than rounding
+ok 17 - reject invalid counts and unsupported partitions, rather than rounding
+  ---
+  duration_ms: 0.4282
+  type: 'test'
+  ...
+# Subtest: authored tasks all have exact, in-range whole-slice answers
+ok 18 - authored tasks all have exact, in-range whole-slice answers
+  ---
+  duration_ms: 0.5131
+  type: 'test'
+  ...
+# Subtest: initial states preserve notation and do not retain mutable caller fractions
+ok 19 - initial states preserve notation and do not retain mutable caller fractions
+  ---
+  duration_ms: 2.8627
+  type: 'test'
+  ...
+# Subtest: A: every serving action is bounded and independent across all 34 ├ù 34 paired states
+ok 20 - A: every serving action is bounded and independent across all 34 ├ù 34 paired states
+  ---
+  duration_ms: 33.3316
+  type: 'test'
+  ...
+# Subtest: A: every Cut/Regroup preserves amount, round-trips, and leaves the other pair alone
+ok 21 - A: every Cut/Regroup preserves amount, round-trips, and leaves the other pair alone
+  ---
+  duration_ms: 11.1811
+  type: 'test'
+  ...
+# Subtest: A: invalid selections leave both fractions unchanged at every valid serving
+ok 22 - A: invalid selections leave both fractions unchanged at every valid serving
+  ---
+  duration_ms: 0.5465
+  type: 'test'
+  ...
+# Subtest: B: every serving action is bounded and independent across all 34 ├ù 34 paired states
+ok 23 - B: every serving action is bounded and independent across all 34 ├ù 34 paired states
+  ---
+  duration_ms: 24.1782
+  type: 'test'
+  ...
+# Subtest: B: every Cut/Regroup preserves amount, round-trips, and leaves the other pair alone
+ok 24 - B: every Cut/Regroup preserves amount, round-trips, and leaves the other pair alone
+  ---
+  duration_ms: 8.2822
+  type: 'test'
+  ...
+# Subtest: B: invalid selections leave both fractions unchanged at every valid serving
+ok 25 - B: invalid selections leave both fractions unchanged at every valid serving
+  ---
+  duration_ms: 0.4045
+  type: 'test'
+  ...
+# Subtest: malformed requests and presentation events never partially update either pair
+ok 26 - malformed requests and presentation events never partially update either pair
+  ---
+  duration_ms: 0.3159
+  type: 'test'
+  ...
+# Subtest: the agreed discovery sequences and repeated input keep exact independent servings
+ok 27 - the agreed discovery sequences and repeated input keep exact independent servings
+  ---
+  duration_ms: 0.4959
+  type: 'test'
+  ...
+# Subtest: all pie servings retain equal solid wedges, a common origin, and the same whole
+ok 28 - all pie servings retain equal solid wedges, a common origin, and the same whole
+  ---
+  duration_ms: 346.5297
+  type: 'test'
+  ...
+# Subtest: review fixtures use the same validated immutable state as the default preview
+ok 29 - review fixtures use the same validated immutable state as the default preview
+  ---
+  duration_ms: 0.728
+  type: 'test'
+  ...
+# Subtest: local progress has no time expiry; flavors, exact notation and cue quiet period survive round trip
+ok 30 - local progress has no time expiry; flavors, exact notation and cue quiet period survive round trip
+  ---
+  duration_ms: 1.6175
+  type: 'test'
+  ...
+# Subtest: malformed, unsupported and inconsistent saved work is rejected without changing its input
+ok 31 - malformed, unsupported and inconsistent saved work is rejected without changing its input
+  ---
+  duration_ms: 1.3475
+  type: 'test'
+  ...
+# Subtest: completed Learn restores only its correct serving; unfinished responses and other modes stay valid
+ok 32 - completed Learn restores only its correct serving; unfinished responses and other modes stay valid
+  ---
+  duration_ms: 3.3679
+  type: 'test'
+  ...
+# Subtest: history replay retains retries and help, rejects forged first-try flags and impossible advancement
+ok 33 - history replay retains retries and help, rejects forged first-try flags and impossible advancement
+  ---
+  duration_ms: 0.9458
+  type: 'test'
+  ...
+# Subtest: twenty distinct authored conversions cover both directions, factors two/four/eight, zero and whole
+ok 34 - twenty distinct authored conversions cover both directions, factors two/four/eight, zero and whole
+  ---
+  duration_ms: 0.4191
+  type: 'test'
+  ...
+# Subtest: download reports every response, retry/help source, original build and exact current build
+ok 35 - download reports every response, retry/help source, original build and exact current build
+  ---
+  duration_ms: 1.5415
+  type: 'test'
+  ...
+# Subtest: an edited unsubmitted response restores without stale feedback or invented credit
+ok 36 - an edited unsubmitted response restores without stale feedback or invented credit
+  ---
+  duration_ms: 0.1893
+  type: 'test'
+  ...
+# Subtest: all piece interiors and both sides of every cut follow the back-center origin
+ok 37 - all piece interiors and both sides of every cut follow the back-center origin
+  ---
+  duration_ms: 0.8569
+  type: 'test'
+  ...
+# Subtest: serving updates retain solid wedges and independently update all 34 visual states
+ok 38 - serving updates retain solid wedges and independently update all 34 visual states
+  ---
+  duration_ms: 215.2609
+  type: 'test'
+  ...
+# Subtest: serving knife handles point outward with blades between the handle and center at every boundary
+ok 39 - serving knife handles point outward with blades between the handle and center at every boundary
+  ---
+  duration_ms: 36.2038
+  type: 'test'
+  ...
+# Subtest: incoming plates clear the opening before spreading and settle on the counter with the task count
+ok 40 - incoming plates clear the opening before spreading and settle on the counter with the task count
+  ---
+  duration_ms: 0.836
+  type: 'test'
+  ...
+# Subtest: wrong answers cannot advance; solving twice cannot inflate results
+ok 41 - wrong answers cannot advance; solving twice cannot inflate results
+  ---
+  duration_ms: 3.7398
+  type: 'test'
+  ...
+# Subtest: hints and example visits are assistance; the next task resets assistance
+ok 42 - hints and example visits are assistance; the next task resets assistance
+  ---
+  duration_ms: 0.3097
+  type: 'test'
+  ...
+# Subtest: a full round terminates once and keeps each result, including zero and whole
+ok 43 - a full round terminates once and keeps each result, including zero and whole
+  ---
+  duration_ms: 0.3706
+  type: 'test'
+  ...
+1..43
+# tests 43
+# suites 0
+# pass 43
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 637.9119

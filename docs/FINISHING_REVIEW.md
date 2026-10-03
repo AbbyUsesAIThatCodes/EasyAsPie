@@ -21,7 +21,7 @@ October 3, 2026 teacher-authorized follow-up to #31–#36. Baseline `7c690b06f50
 - Every camera extent, drawer state, top/reset view, laptop and mobile sizes; closed room and ceiling fan with clear mathematical workspace.
 - Retain the existing exact task bank, save schema/history, legacy export, keyboard/touch controls, reduced motion and identified artifacts.
 
-Build and evidence links will be recorded here after verification. Teacher visual and classroom-device acceptance remain separate.
+[The identified mechanics checkpoint and verification evidence](review/issue-31-finishing/README.md) are the current review handoff. Full enclosure/fan and illustrated wallpaper remain deferred by the teacher's revised priority. Teacher lesson, visual and classroom-device acceptance remain separate.
 
 ## Current Mechanics Contract
 

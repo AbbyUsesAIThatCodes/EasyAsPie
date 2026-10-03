@@ -58,4 +58,6 @@ The following notes preserve the first-playable roadmap. For current work, use t
 Explain the learning or technical change, identify its prerequisite, include the checks actually run, and record limitations. Keep mathematics independent of artwork. Inspect the playable screen at laptop sizes. Do not merge on the teacher's behalf.
 # Build 007 Finishing Review
 
+The [mechanics and lesson checkpoint](docs/review/issue-31-finishing/README.md) is now verified in draft PR #38: reversible spans, surface hover, outward knives, cabinet/plate clearance, task-matched plate count, automatic advancement, and preserved saves/reports. Full kitchen enclosure, higher ceiling/fan, lemon-vine/bee wallpaper and all-camera scenery acceptance remain deferred under the teacher's mechanics-first priority. Teacher game/lesson acceptance still precedes worksheets.
+
 The teacher authorized eight focused corrections after reviewing build 007: cabinet clearance, enclosed kitchen/ceiling fan, surface-correct hover, outward knife handles, automatic arrival advance, task-matched plate count, reversible circular drag spans, and illustrated lemon-vine/bee borders. See [Finishing Review](docs/FINISHING_REVIEW.md) for the contract and verification record. Build 007 remains preserved; this work uses a separate review branch/worktree. No deployment or worksheet is authorized.
