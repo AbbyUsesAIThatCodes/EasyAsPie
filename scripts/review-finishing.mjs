@@ -37,6 +37,7 @@ try{
  const gridIndex=tasksFor('challenge').findIndex(t=>t.grid===8&&t.n>0&&t.n<t.d);await load('challenge',gridIndex);
  await move(3);let g=await geometry();assert.equal(g.hover.k,3);assert.equal(g.hover.outlineHeight,.19);await shot('empty-hover');await click(0,3);await move(3);g=await geometry();assert.equal(g.hover.k,3);assert.equal(g.hover.outlineHeight,1.02);await shot('occupied-hover');
  checks.push('Actual empty and occupied hover hit the requested unit, with outlines at plate height 0.19 and occupied pie height 1.02.');
+ await load('challenge',0);await page.emulateMedia({reducedMotion:'no-preference'});for(let i=0;i<20;i++){await click(0,1);assert.equal((await current()).plates[0].mask,i%2?0:1,'rapid repeated click during growth');}await page.emulateMedia({reducedMotion:'reduce'});checks.push('Twenty immediate repeated pointer clicks remain exact during grow/shrink animations.');
  for(const mode of ['learn','challenge'])for(const mixedNext of [false,true]){
   const tasks=tasksFor(mode),index=mixedNext?tasks.findIndex(t=>t.whole)-1:0;await load(mode,index);const t=tasks[index],n=t.n*t.grid/t.d;
   if(t.kind==='read')await page.locator('#written-answer').selectOption(`${t.n}/${t.d}`);else for(let k=1;k<=n;k++)await click(0,k);

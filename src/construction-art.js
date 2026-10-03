@@ -41,7 +41,7 @@ export function animateUnits(pie,before,after,{reduced,onFrame}){
  let frame,done=false;const start=performance.now(),puffs=new THREE.Group();pie.add(puffs);
  moving.forEach(w=>{w.visible=true;if(occupied(after,w.userData.slice))w.scale.set(.01,1,.01);else{const a=w.userData.start+w.userData.angle/2;for(let i=0;i<4;i++){const puff=mesh(puffs,new THREE.SphereGeometry(.06,6,4),material('#eadbba'),...point(.8+i*.16,a,.65).toArray());puff.userData.seed=i;}}});
  const finish=()=>{if(done)return;done=true;cancelAnimationFrame(frame);moving.forEach(w=>{w.scale.setScalar(1);w.visible=occupied(after,w.userData.slice);});pie.remove(puffs);dispose(puffs);onFrame();};
- const tick=now=>{const t=Math.min(1,(now-start)/380);for(const w of moving){const add=occupied(after,w.userData.slice);const s=add?(t<.65?1.12*Math.sin(t/.65*Math.PI/2):1+.12*Math.cos((t-.65)/.35*Math.PI/2)):1-t;w.scale.set(s,add?1+.09*Math.sin(t*TAU):s,s);}puffs.children.forEach(p=>{p.position.y+=.016;p.scale.setScalar(Math.sin(t*Math.PI)*1.6);});onFrame();if(t===1)finish();else frame=requestAnimationFrame(tick);};frame=requestAnimationFrame(tick);return finish;
+ const tick=now=>{const t=Math.max(0,Math.min(1,(now-start)/380));for(const w of moving){const add=occupied(after,w.userData.slice);const s=Math.max(.01,add?(t<.65?1.12*Math.sin(t/.65*Math.PI/2):1+.12*Math.cos((t-.65)/.35*Math.PI/2)):1-t);w.scale.set(s,add?1+.09*Math.sin(t*TAU):s,s);}puffs.children.forEach(p=>{p.position.y+=.016;p.scale.setScalar(Math.sin(t*Math.PI)*1.6);});onFrame();if(t===1)finish();else frame=requestAnimationFrame(tick);};frame=requestAnimationFrame(tick);return finish;
 }
 export function makeKnife(){
  const knife=new THREE.Group();
