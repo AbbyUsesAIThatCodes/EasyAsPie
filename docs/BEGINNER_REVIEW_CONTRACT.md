@@ -2,6 +2,10 @@
 
 October 3, 2026. Authorized by the teacher's “please proceed” approval and subsequent delegated checklist for #31–#36. This is an isolated local development review, with no main merge or deployment. No worksheet is in scope.
 
+## Later Finishing Corrections
+
+The teacher's later [Finishing Review](FINISHING_REVIEW.md) supersedes the original accumulated-drag and manual-advance choices below: current spans shrink on retracing, a gesture retains its starting surface height, only the next task's required plate count arrives, and the next question activates once at landing. The original contract below remains preserved as build-007 history.
+
 ## Baseline And Reconciliation
 
 Branch `review/31-beginner-pie-building` starts at PR30 head `dae927792e5a722d5d5a6f378ba100de72aa880f`, including its completed-Learn restore correction. PR28 → PR29 → PR30 remain unchanged drafts; historical artifacts remain under their original identities. Compatible exact fractions, Free Play Cut/Regroup, flavors, vocabulary, input access, build allocator and reporting are reused. New tasks supersede numerator-prediction entry, prefix-only assessment selection, hidden Challenge comparison objects, drawer-bound bars and drawer locking. The empty drawer remains openable; its future surprise is not implemented.

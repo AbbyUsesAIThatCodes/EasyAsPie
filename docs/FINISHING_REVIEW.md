@@ -23,6 +23,12 @@ October 3, 2026 teacher-authorized follow-up to #31–#36. Baseline `7c690b06f50
 
 Build and evidence links will be recorded here after verification. Teacher visual and classroom-device acceptance remain separate.
 
+## Current Mechanics Contract
+
+A pointer drag starts on the actual empty/occupied surface and keeps that height until release, so transitions between tall slices and empty guides cannot break or reverse its angle tracking. Ordinary hover follows the actual surface; preview and committed masks use the same current contiguous span. Outside movement pauses; returning anywhere within the last end unit resumes with the correct sub-unit angle. Keyboard arrows specify direction. Growth never reaches a singular scale, preserving rapid repeated input.
+
+Next-order plate count and grid come from the next task. Incoming plates travel through the fully open cabinet, lower below the doors before spreading, and trigger exactly one advance at their settled counter position. The last task completes without supplying an unused next order. Skip and reduced motion settle immediately; mode change, hidden tab and reload preserve the committed answer and resume serving without a duplicate submission. The new save schema and task identities remain compatible with build 007.
+
 ## Paused WIP Checkpoint For Computer Switch
 
 ### Resumed Mechanics Priority

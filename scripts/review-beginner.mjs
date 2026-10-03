@@ -12,7 +12,7 @@ page.on('pageerror',e=>errors.push(e.stack));page.on('console',m=>{if(m.type()==
 const settle=()=>page.waitForFunction(()=>document.querySelector('#app')?.getAttribute('aria-busy')!=='true'&&document.querySelector('#scene')?.dataset.moving==='false');
 const snap=()=>page.evaluate(()=>window.__review.snapshot());const current=async()=>{const s=await snap();return s[s.mode];};
 const point=(side,k,r)=>page.evaluate(([side,k,r])=>window.__review.point(side,k,r),[side,k,r]);
-const unit=async(side,k)=>{const p=await point(side,k);await page.mouse.click(p.x,p.y);};
+const unit=async(side,k)=>{let p;const locate=async()=>{for(const radius of [1.1,1.45,1.60,.7]){const candidate=await point(side,k,radius),hit=await page.evaluate(p=>window.__review.pick(p.x,p.y),candidate);if(hit?.pair===(side?'B':'A')&&hit.k===k)return candidate;}};p=await locate();if(!p&&await page.locator('#view').getAttribute('aria-pressed')!=='true'){await page.locator('#view').click();await settle();p=await locate();}assert.ok(p,`Visible hit point for plate ${side}, unit ${k}`);await page.mouse.click(p.x,p.y);};
 const stroke=async(side,units)=>{const p=await point(side,units[0]);await page.mouse.move(p.x,p.y);await page.mouse.down();for(const k of units.slice(1)){const q=await point(side,k);await page.mouse.move(q.x,q.y,{steps:4});}await page.mouse.up();};
 const solve=async t=>{if(t.kind==='read'){await page.locator('#written-answer').selectOption(`${t.n}/${t.d}`);}else{const masks=t.whole?[full(t.grid),full(t.n*t.grid/t.d)]:[full(t.n*t.grid/t.d),0];for(let side=0;side<(t.whole?2:1);side++){const c=await current();for(let k=1;k<=t.grid;k++)if(!!(c.plates[side].mask&(1<<(k-1)))!==!!(masks[side]&(1<<(k-1))))await unit(side,k);}}await page.locator('#submit-order').click();await settle();assert.ok((await current()).history.some(e=>e.kind==='answer'&&e.id===t.id&&e.correct),t.id);assert.equal((await current()).history.filter(e=>e.kind==='advance'&&e.id===t.id).length,1);};
 const shot=name=>page.screenshot({path:out+'/'+name+'.png',fullPage:true});
@@ -52,7 +52,7 @@ try{
   }await page.locator('#label-'+pair+' summary').click();
  }
  await page.locator('[data-flavor="A"]').selectOption('strawberry');await page.reload();await settle();assert.equal((await snap()).flavors.A,'strawberry');assert.equal((await snap()).drawerOpen,true);
- checks.push('Both Free Play pies, every 0..d amount at 2/4/8/16 through native keyboard controls, exact Cut/Regroup paths, flavors and open drawer survive reload.');
+ checks.push('Both Free Play pies, every 0..d amount at 2/4/8/16 through native keyboard controls, exact Cut/Regroup paths, flavors and open drawer survive reload.');await page.locator('#reset-view').click();await settle();
  for(const size of [{width:1366,height:768},{width:1280,height:720},{width:390,height:844}]){
   await page.setViewportSize(size);await page.locator('#challenge').click();await settle();await shot(`${size.width}x${size.height}-challenge`);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth),size.width);
   await page.locator('[data-reference]').click();await page.locator('.reference-content').evaluate(e=>e.scrollTop=e.scrollHeight);const head=await page.locator('#close-reference').boundingBox();assert.ok(head.y>=0&&head.y+head.height<=size.height);await shot(`${size.width}-reference`);await page.keyboard.press('Escape');assert.equal(await page.locator('#fraction-reference').evaluate(e=>e.open),false);

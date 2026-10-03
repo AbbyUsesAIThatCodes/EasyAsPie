@@ -16,6 +16,7 @@ test('current circular span shrinks, reverses and unwraps without accumulated vi
  s=pauseStroke(s);const held=s;s=extendStroke(s,6);assert.equal(s,held);s=extendStroke(s,2);s=extendStroke(s,3);assert.equal(s.units,7);
  const a=beginStroke(plate(4),1);assert.equal(extendStroke(a,3,{pointer:true}),a,'ambiguous diametric pointer jump ignored');
  assert.equal(extendStroke(a,3,{direction:-1}).units,13,'explicit keyboard direction is retained');
+ const step=Math.PI/4;let resumed=pauseStroke(extendStroke(beginStroke(plate(8),7),8));resumed=extendStroke(resumed,8,{angle:7.8*step,pointer:true});resumed=extendStroke(resumed,1,{angle:.1*step,pointer:true});assert.equal(resumed.units,193,'resume at a different position inside the end unit retains the cursor angle');
 });
 test('every grid: latched strokes, overlap, wrap, empty/full and split contiguous runs',()=>{
  for(const d of [2,4,8,16]){

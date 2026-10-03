@@ -18,7 +18,7 @@ export function extendStroke(s,k,{angle=(k-.5)*TURN/s.d,direction=0,pointer=fals
  check(Number.isInteger(k)&&k>=1&&k<=s.d,'Invalid piece.');
  // Returning from outside cannot select an unseen connecting arc. Resume at
  // the last in-plate unit; elsewhere the current preview remains unchanged.
- if(s.suspended)return k===s.last?{...s,angle,suspended:false}:s;
+ if(s.suspended)return k===s.last?extendStroke({...s,suspended:false},k,{angle,direction,pointer}):s;
  let delta=angle-s.angle;while(delta>Math.PI)delta-=TURN;while(delta< -Math.PI)delta+=TURN;
  if(Math.abs(Math.abs(delta)-Math.PI)<1e-8){if(pointer&&!direction)return s;if(direction)delta=Math.PI*direction;}
  if(direction>0&&delta<0)delta+=TURN;if(direction<0&&delta>0)delta-=TURN;
