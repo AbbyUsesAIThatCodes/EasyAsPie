@@ -49,7 +49,7 @@ export function makeKnife(){
 }
 export function serveAnimation(pies,plates,room,{reduced,onFrame,onStage}){
  let frame,done=false,start=performance.now(),last='';const knives=new THREE.Group();room.scene.add(knives);
- const homes=pies.map(p=>p.position.clone());
+ const homes=pies.map(p=>p.position.clone()),visibleBefore=pies.map(p=>p.visible);
  for(let side=0;side<plates.length;side++)for(const run of runs(plates[side])){
   if(run.length===plates[side].d)continue;
   for(const k of [run.start,run.start+run.length]){const knife=makeKnife();knife.position.copy(homes[side]);knife.position.y=3;knife.rotation.y=Math.PI+k*TAU/plates[side].d;knives.add(knife);}
@@ -60,7 +60,7 @@ export function serveAnimation(pies,plates,room,{reduced,onFrame,onStage}){
  let resolve;const promise=new Promise(r=>resolve=r);const stop=()=>{finish();resolve();};
  const tick=now=>{
   const t=(now-start)/1000;
-  const name=t<.55?'whole':t<1.1?'cut':t<1.85?'leftovers':t<2.5?'glow':t<3.1?'serve':t<4?'cabinet':'ready';stage(name);
+  const name=t<.55?'whole':t<1.1?'cut':t<1.85?'leftovers':t<2.5?'glow':t<3.1?'serve':t<5.7?'cabinet':'ready';stage(name);
   for(let i=0;i<pies.length;i++){
    const pie=pies[i],p=plates[i];
    pie.children.filter(o=>o.userData.slice).forEach(w=>{
@@ -71,9 +71,13 @@ export function serveAnimation(pies,plates,room,{reduced,onFrame,onStage}){
     const glow=new THREE.Group();glow.name='served-glow';pie.add(glow);for(const run of runs(p))mesh(glow,solidSector(1.64,1.64,.04,Math.PI+run.start*TAU/p.d,run.length*TAU/p.d),new THREE.MeshBasicMaterial({color:'#b769ff',opacity:.35,transparent:true,depthWrite:false}),0,HIT_Y+.06);
    }
    if(t>=2.5&&t<3.1)pie.position.x=homes[i].x+10*Math.pow((t-2.5)/.6,2);
-   if(t>=3.1){pie.visible=true;pie.children.filter(o=>o.userData.slice).forEach(w=>w.visible=false);removeNamed(pie,'served-glow');pie.getObjectByName('selected-serving').visible=false;const a=Math.min(1,(t-3.1)/.9);pie.position.copy(homes[i]).lerp(new THREE.Vector3(i ? 0.82 : -0.82,1.1,-5),1-a);}
+   if(t>=3.1){
+    pie.visible=t>=3.85;pie.children.filter(o=>o.userData.slice).forEach(w=>w.visible=false);removeNamed(pie,'served-glow');pie.getObjectByName('selected-serving').visible=false;
+    const a=Math.min(1,Math.max(0,(t-3.85)/1.2)),destination=homes[i].clone();if(!visibleBefore[i])destination.x=6.1;
+    pie.position.copy(destination).lerp(new THREE.Vector3(i ? 2.1 : -2.1,1.1,-3.05),1-a);
+   }
   }
   knives.visible=t>=.55&&t<1.1;knives.children.forEach(k=>k.position.y=3-2.15*Math.min(1,Math.max(0,(t-.55)/.55)));
-  room.setSupply(t>=3.1?Math.sin(Math.min(1,(t-3.1)/.9)*Math.PI):0);onFrame();if(t>=4)stop();else frame=requestAnimationFrame(tick);
+  room.setSupply(t<3.1?0:t<3.7?(t-3.1)/.6:t<5.1?1:Math.max(0,(5.7-t)/.6));onFrame();if(t>=5.7)stop();else frame=requestAnimationFrame(tick);
  };frame=requestAnimationFrame(tick);return {finish:stop,promise};
 }

@@ -249,7 +249,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
     },
     previewStroke(side,stroke){pies.forEach((pie,i)=>paintPreview(pie,i===side?stroke:null));render();},
     async serve(plates,onStage){
-      this.cancelServing();unitFinishes.forEach(f=>f());unitFinishes=[];
+      this.cancelServing();this.emphasize(null);unitFinishes.forEach(f=>f());unitFinishes=[];
       const animation=serveAnimation(pies,plates,room,{reduced,onFrame:()=>render(true),onStage});finishServing=animation.finish;
       await animation.promise;finishServing=null;
     },

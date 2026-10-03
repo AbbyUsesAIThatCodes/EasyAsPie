@@ -19,12 +19,12 @@ export function makeRoom(scene) {
   const teal = material('#769c92', 0.62), edge = material('#9db8a6'), deep = material('#47675f'), cream = material('#f8e8c8'), brass = material('#cb913f', 0.25, { metalness: 0.75 });
   box(scene, 17.5, 0.30, 8.3, wood, 0, -0.16, -1.9, 0.09);
   box(scene, 13, 2.3, 4, deep, 0, -1.50, -0.50);
-  box(scene, 22, 10, 0.15, material('#fae8a8'), 0, 1.5, -6.5);
+  box(scene, 22, 10, 0.15, material('#fae8a8'), 0, 1.5, -9);
   box(scene, .16, 10, 6, material('#f1e5bc'), -9.5, 1.5, -4.5);
   box(scene, .16, 10, 6, material('#c6e1d1'), 9.5, 1.5, -4.5);
   box(scene, 22, .16, 18, material('#e4cb8e'), 0, -2.7, 0);
   // Back cabinetry: recessed panels, proud rails, knobs and an actual shelf.
-  for (const x of [-6.4, -4, 4, 6.4]) {
+  for (const x of [-6.4, 6.4]) {
     box(scene, 2.32, 3.4, 0.27, teal, x, 0.85, -5.85);
     box(scene, 1.91, 2.82, 0.08, deep, x, 0.85, -5.66);
     box(scene, 1.74, 2.65, 0.10, edge, x, 0.85, -5.59);
@@ -56,16 +56,16 @@ export function makeRoom(scene) {
   // Lemons stay at the rear edge, away from mathematical units and hit targets.
   for(let i=0;i<4;i++){const lemon=mesh(scene,new THREE.SphereGeometry(.24,16,10),material('#f4cf38'),-6.1+i*.34,.25,-3.4+(i%2)*.25);lemon.scale.set(1.4,.85,.85);const leaf=mesh(scene,new THREE.SphereGeometry(.12,8,6),material('#579162'),-6.1+i*.34,.48,-3.4+(i%2)*.25);leaf.scale.set(1,.15,.5);}
   // Independent supply cabinet: real hinges and visible stacks, never the drawer surprise.
-  box(scene,3.6,2.65,.12,deep,0,1.2,-6.3);
-  for(const x of [-1.8,1.8])box(scene,.12,2.65,1.25,deep,x,1.2,-5.68);
-  box(scene,3.6,.12,1.3,wood,0,2.5,-5.68);
-  box(scene,3.6,.1,1.3,wood,0,.1,-5.68);
-  for(const x of [-.82,.82])for(let i=0;i<6;i++){
-    const stack=mesh(scene,new THREE.CylinderGeometry(.63,.59,.06,40),cream,x,.19+i*.1,-5.73);
-    const rim=mesh(scene,new THREE.TorusGeometry(.60,.026,6,40),brass,x,.23+i*.1,-5.73);rim.rotation.x=Math.PI/2;
+  box(scene,8.6,2.65,.12,deep,0,1.2,-8.9);
+  for(const x of [-4.3,4.3])box(scene,.12,2.65,3.9,deep,x,1.2,-6.98);
+  box(scene,8.6,.12,3.9,wood,0,2.5,-6.98);
+  box(scene,8.6,.1,3.9,wood,0,.1,-6.98);
+  for(const x of [-2.1,2.1])for(let i=0;i<6;i++){
+    const stack=mesh(scene,new THREE.CylinderGeometry(1.89,1.84,.06,64),cream,x,.19+i*.1,-7);
+    const rim=mesh(scene,new THREE.TorusGeometry(1.87,.02,6,64),brass,x,.23+i*.1,-7);rim.rotation.x=Math.PI/2;
   }
   const supplyDoors=[];
-  for(const sign of [-1,1]){const hinge=new THREE.Group();hinge.position.set(sign*1.8,1.2,-5.05);scene.add(hinge);box(hinge,1.77,2.65,.13,teal,-sign*.9,0,0);box(hinge,1.43,2.28,.09,edge,-sign*.9,0,.1);mesh(hinge,new THREE.SphereGeometry(.09,12,8),brass,-sign*1.55,0,.2);supplyDoors.push(hinge);}
+  for(const sign of [-1,1]){const hinge=new THREE.Group();hinge.position.set(sign*4.3,1.2,-5.05);scene.add(hinge);box(hinge,4.27,2.65,.13,teal,-sign*2.15,0,0);box(hinge,3.91,2.28,.09,edge,-sign*2.15,0,.1);mesh(hinge,new THREE.SphereGeometry(.09,12,8),brass,-sign*4.05,0,.2);supplyDoors.push(hinge);}
   // Foreground cabinets remain behind the moving tray.
   for (const x of [-5.5, 5.5]) {
     box(scene, 1.35, 1.9, 0.15, teal, x, -1.3, 1.6);
