@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import {sliceMotion} from './slice-motion.js';
 import { TAU, RADIUS, PIE_X, PIE_Z, HIT_Y, BAR_LENGTH, BAR_DEPTH, BAR_Y, BAR_Z, DRAWER_TRAVEL, material, mesh, instances, point, noise, solidSector, pastryRim, pastryWall, berryGeometry, calyxGeometry, dispose } from './bakery-geometry.js';
 import { makeRoom, makeBar, setBarServing } from './bakery-room.js';
+import {paintConstruction,paintPreview,animateUnits,serveAnimation} from './construction-art.js';
 
 // Retained for the historical first-playable modules. Current Free Play is blueberry.
 export const RECIPES = Object.freeze({ blueberry: { name: 'Blueberry', filling: '#3b185f', fruit: '#312078', accent: '#9695c3' }, cherry: { name: 'Cherry', filling: '#8f233c', fruit: '#b63549', accent: '#f2918d' }, strawberry: { name: 'Strawberry', filling: '#a82639', fruit: '#d82c43', accent: '#ffe0bd' }, apple: { name: 'Apple', filling: '#b76928', fruit: '#ecc16b', accent: '#ffdda0' } });
@@ -65,6 +66,7 @@ export function makePie(serving, recipeName, side) {
     // Thin cuts, distinct from the thicker solid serving border.
     const path = new THREE.LineCurve3(point(0, start, HIT_Y), point(RADIUS, start, HIT_Y));
     const cut = mesh(wedge, new THREE.TubeGeometry(path, 1, 0.009, 5, false), material('#f1cf9d'));
+    cut.name = 'unit-cut';
     cut.castShadow = false;
   }
   const hit = new THREE.Mesh(new THREE.CylinderGeometry(RADIUS, RADIUS, HIT_Y - 0.15, 128), new THREE.MeshBasicMaterial());
@@ -130,10 +132,12 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -9, right: 9, top: 7, bottom: -7, near: 0.5, far: 25 });
   sun.shadow.bias = -0.00012; sun.shadow.normalBias = 0.018; sun.shadow.radius = 3; scene.add(sun);
   const fill = new THREE.DirectionalLight('#d4e7ff', 1.2); fill.position.set(5, 4, -1); scene.add(fill);
-  const { drawer } = makeRoom(scene);
+  const room = makeRoom(scene), { drawer } = room;
+  room.scene=scene;
   const raycaster = new THREE.Raycaster(), reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let sceneMode='free';
-  const barX = () => sceneMode==='learn' && width>=700 ? 2.2 : 0;
+  let construction=null, activePlates=2, finishServing=null, unitFinishes=[];
+  const barX = () => activePlates===1 ? 1.8 : 0;
   let exampleVisible = true, recipes = ['blueberry','blueberry'];
   let pies = [], bars = [], disposed = false, emphasized = null, topView = false;
   let drawerOpen = false, drawerValue = 0, viewValue = 0, animation = null, frame = 0;
@@ -159,9 +163,9 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
     Object.assign(camera, { left: -span / 2, right: span / 2, top: halfHeight, bottom: -halfHeight }); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
   };
   const layout = () => {
-    const labels = ['A', 'B'].map((pair, side) => ({ pair, ...project(side ? PIE_X : -PIE_X, 0.02, 1.20) }));
+    const labels = ['A', 'B'].map((pair, side) => ({ pair, ...project(pies[side]?.position.x??(side ? PIE_X : -PIE_X), 1.8, PIE_Z-1.4) }));
     const barRects = ['A', 'B'].map((pair, side) => {
-      const x = barPosition(side).x + barX(), z = barPosition(side).z + drawer.position.z;
+      const x = barPosition(side).x + barX(), z = barPosition(side).z;
       const a = project(x - BAR_LENGTH / 2, BAR_Y + 0.047, z - BAR_DEPTH / 2), b = project(x + BAR_LENGTH / 2, BAR_Y + 0.047, z - BAR_DEPTH / 2), c = project(x - BAR_LENGTH / 2, BAR_Y + 0.047, z + BAR_DEPTH / 2);
       const w = b.x - a.x, h = c.y - a.y;
       return { pair, x: a.x, y: a.y, width: w, height: h, shearX: (c.x-a.x)/h, shearY: (b.y-a.y)/w };
@@ -202,8 +206,8 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       let rebuild = false;
       [left, right].forEach((serving, side) => {
         if (pies[side]?.userData.serving.d !== serving.d || pies[side]?.userData.recipe !== recipes[side]) {
-          if (pies[side]) { scene.remove(pies[side]); dispose(pies[side]); drawer.remove(bars[side]); dispose(bars[side]); }
-          pies[side] = makePie(serving, recipes[side], side); bars[side] = makeBar(serving, side); pies[side].visible = side === 1 || exampleVisible; scene.add(pies[side]); drawer.add(bars[side]); rebuild = true;
+          if (pies[side]) { scene.remove(pies[side]); dispose(pies[side]); scene.remove(bars[side]); dispose(bars[side]); }
+          pies[side] = makePie(serving, recipes[side], side); bars[side] = makeBar(serving, side); pies[side].visible = side === 1 || exampleVisible; scene.add(pies[side]); scene.add(bars[side]); rebuild = true;
           if (modelReview) {
             const wedge = pies[side].children.find(o => o.userData.slice === Math.ceil(serving.d * 0.7));
             const a = wedge.userData.start + wedge.userData.angle / 2;
@@ -232,6 +236,24 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       });
     },
     cancelTransformation() { finishSlices?.(); },
+    construction(plates,active=2,{animate=false}={}) {
+      unitFinishes.forEach(f=>f());unitFinishes=[];
+      const previous=construction;construction=plates?.map(p=>({...p}))||null;activePlates=active;
+      pies.forEach((pie,i)=>{
+        pie.visible=i<active;bars[i].visible=i<active;
+        pie.position.x=active===1?-2.15:(i?PIE_X:-PIE_X);bars[i].position.x=barX();
+        if(construction){paintConstruction(pie,construction[i]);setBarServing(bars[i],{...pie.userData.serving,mask:construction[i].mask});if(animate&&previous?.[i]?.d===construction[i].d)unitFinishes.push(animateUnits(pie,previous[i],construction[i],{reduced,onFrame:()=>render(true)}));}
+        else {for(const name of ['unit-guides','stroke-preview']){const old=pie.getObjectByName(name);if(old){pie.remove(old);dispose(old);}}pie.children.filter(o=>o.userData.slice).forEach(w=>{w.visible=true;w.getObjectByName('unit-cut').visible=true;});setPieServing(pie,pie.userData.serving);setBarServing(bars[i],pie.userData.serving);}
+      });render(true);
+    },
+    previewStroke(side,stroke){pies.forEach((pie,i)=>paintPreview(pie,i===side?stroke:null));render();},
+    async serve(plates,onStage){
+      this.cancelServing();unitFinishes.forEach(f=>f());unitFinishes=[];
+      const animation=serveAnimation(pies,plates,room,{reduced,onFrame:()=>render(true),onStage});finishServing=animation.finish;
+      await animation.promise;finishServing=null;
+    },
+    cancelServing(){finishServing?.();finishServing=null;},
+    projectPiece(side,k,r=1.1){const pie=pies[side];if(!pie)return null;const a=Math.PI+(k-.5)*TAU/pie.userData.serving.d;return project(pie.position.x+Math.sin(a)*r,HIT_Y,pie.position.z+Math.cos(a)*r);},
     pick(clientX, clientY) {
       if (disposed || modelReview || canvas.dataset.slicing === 'true') return null;
       const rect = canvas.getBoundingClientRect();
@@ -259,8 +281,8 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
     setExampleVisible(visible) { exampleVisible=visible; if(pies[0])pies[0].visible=visible; this.emphasize(null); render(true); },
     setDrawer(open) { drawerOpen = open; transition(); },
     setTopView(top) { topView = top; yaw = 0; tilt = 0; transition(); },
-    orbit(dx, dy = 0) { yaw = THREE.MathUtils.clamp(yaw + dx, -0.22, 0.22); tilt = THREE.MathUtils.clamp(tilt + dy, -0.16, 0.18); setCamera(); render(); },
+    orbit(dx, dy = 0) { yaw = THREE.MathUtils.clamp(yaw + dx, -0.48, 0.48); tilt = THREE.MathUtils.clamp(tilt + dy, -0.12, 0.26); setCamera(); render(); },
     resetCamera() { yaw = 0; tilt = 0; topView = false; transition(); },
-    dispose() { finishSlices?.(); disposed = true; cancelAnimationFrame(frame); observer.disconnect(); reduced.removeEventListener('change', motionChange); canvas.removeEventListener('webglcontextlost', contextLost); dispose(scene); env.dispose(); renderer.dispose(); },
+    dispose() { this.cancelServing();unitFinishes.forEach(f=>f());finishSlices?.(); disposed = true; cancelAnimationFrame(frame); observer.disconnect(); reduced.removeEventListener('change', motionChange); canvas.removeEventListener('webglcontextlost', contextLost); dispose(scene); env.dispose(); renderer.dispose(); },
   };
 }
