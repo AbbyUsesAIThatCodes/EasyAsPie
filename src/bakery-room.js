@@ -21,7 +21,7 @@ export function makeRoom(scene) {
   const counter=box(scene,COUNTER.width,COUNTER.height,COUNTER.depth,wood,COUNTER.x,COUNTER.y,COUNTER.z,.09);counter.name='work-counter';
   const obstacles=[];const cabinet=(name,...args)=>{const m=box(scene,...args);m.name=name;obstacles.push(m);return m;};
   box(scene, 13, 2.3, 4, deep, 0, -1.50, -0.50);
-  box(scene, 22, 10, 0.15, material('#fae8a8'), 0, 1.5, -9);
+  const rearWall=box(scene,22,10,.15,material('#fae8a8'),0,1.5,-12);rearWall.name='rear-wall';obstacles.push(rearWall);
   box(scene, .16, 10, 6, material('#f1e5bc'), -9.5, 1.5, -4.5);
   box(scene, .16, 10, 6, material('#c6e1d1'), 9.5, 1.5, -4.5);
   box(scene, 22, .16, 18, material('#e4cb8e'), 0, -2.7, 0);
