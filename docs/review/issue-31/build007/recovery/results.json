@@ -1,0 +1,12 @@
+{
+  "build": "0.4.1_Unassigned_local-5bcdfdbd84_build-007_20261003T181423Z_g36e3b7cdea4e_web",
+  "checks": [
+    "Success interrupted in every stage by skip, reduced-motion change, mode navigation or reload retains exactly one committed answer; no stale advance or geometry.",
+    "CDP touch drag commits exact units, touch cancellation discards preview, native large piece buttons support taps; reload retains unsubmitted construction. Actual hardware remains untested.",
+    "Corrupt, unsupported and externally changed current saves are retained without overwrite.",
+    "Legacy v1 bytes, original wrong/correct responses and hint history remain; legacy report downloads correctly, valid Free Play/flavors copy forward, explicit new-save clearing preserves old work.",
+    "Unchanged-task navigation suppresses glimmer replay; unavailable storage leaves the local game playable."
+  ],
+  "errors": [],
+  "browser": "153.0.8010.12"
+}

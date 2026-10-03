@@ -1,0 +1,5 @@
+
+> easy-as-pie@0.4.1 check:build
+> node scripts/check-build.mjs
+
+BUILD VERIFIED 0.4.1_Unassigned_local-5bcdfdbd84_build-007_20261003T181423Z_g36e3b7cdea4e_web
