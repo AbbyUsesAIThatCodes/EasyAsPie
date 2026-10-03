@@ -1,6 +1,12 @@
 # Build Identity
 
-## Identity Contract
+## Current Local Development Revision
+
+The approved beginner review retains release record **0.4.1 / Unassigned** while the preceding release awaits acceptance. This is unfinished local development, not a newly accepted release or invented codename. Every artifact has an explicit local scope, its own durable ordinal, fixed build UTC and exact source provenance. [Current review](review/issue-31/README.md) identifies the new artifact separately from PR30 and live Pages. No existing artifact is relabeled.
+
+Active UI entry: `index.html` → `src/beginner-main.js`, whose visible `#build-identity` reads the injected manifest. New persistence/report surface: `src/construction-progress.js`, key `easyaspie.construction.v2`, schema 2/taskset `beginner-24-v2`. The previous schema 1 key and report modules remain for preserved legacy data. Build scripts, allocator, immutable artifact directories and workflow are unchanged. New verification scripts compare the displayed identity and downloaded report metadata; `check:build` still verifies manifest/output/bundle/report consistency.
+
+## Previous Release Identity Contract
 
 The current release record is **0.4.1**, a bounded restore-validation correction in PR30: a completed Learn scene must contain the correct serving. PR30 build 002 remains the preserved 0.4.0 review artifact; the correction receives its own later ordinal and fixed identity. Save schema/taskset compatibility is unchanged.
 
@@ -20,7 +26,7 @@ Local builds reserve exclusive numbered files under the Git common directory's `
 
 Each invocation creates an immutable manifest in `.build/ID.json`, builds into `artifacts/ID/`, and writes matching `build.json` and `BUILD.md` into that output. `dist/` is a convenient copy of the latest local output for preview; it preserves the same identity. Generated data is ignored by Git, avoiding timestamp-triggered rebuild loops.
 
-- **Latest Review Build:** see `docs/review/issue-27/correction-build003/README.md` for the bounded restore correction; `docs/review/issue-27/README.md` preserves build 002 for the final integrated PR30 ZIP. PR28 and PR29 have independent exact packages in issue-25 and issue-26. Historical overnight builds remain preserved. Local production checks replace CI for this bounded session to conserve allowance/storage. Ordinary PR runs still report the same identity; PR builds do not deploy.
+- **Previous Draft Review Builds:** see `docs/review/issue-27/correction-build003/README.md` for the bounded restore correction; `docs/review/issue-27/README.md` preserves build 002 for the final integrated PR30 ZIP. PR28 and PR29 have independent exact packages in issue-25 and issue-26. Historical overnight builds remain preserved. Local production checks replace CI for this bounded session to conserve allowance/storage. Ordinary PR runs still report the same identity; PR builds do not deploy.
 - **Deployed Build:** after the first successful main deployment, inspect [the served manifest](https://abbyusesaithatcodes.github.io/EasyAsPie/build.json) and [build report](https://abbyusesaithatcodes.github.io/EasyAsPie/BUILD.md). Until that deployment succeeds, no live build is claimed.
 - **Local Current Build:** `dist/build.json` and `dist/BUILD.md`.
 - **Validation:** `npm run check:build` verifies the copied manifest, output name, bundled UI label, report, and relative asset URLs without rebuilding.

@@ -1,5 +1,11 @@
 # Local Graphics Handoff
 
+## Beginner Review Graphics Handoff
+
+The October 3 additions are original procedural source in `src/construction-art.js` (beige guides, contiguous outlines, add/erase preview, grow/poof, boundary knives and serving), `src/bakery-room.js` (sun, clouds, lemon/bee details and hinged supply cabinet), and `src/beginner.css` (framed reference and glimmer). Reuse the existing EasyAsPie shared pack path after teacher review; no shared repository/catalog was changed here. [Local glimmer recipe](NEW_TASK_GLIMMER.md) links EdugamesGraphicsStorage #11. [Current review manifest and media](review/issue-31/README.md) pin this source. Earlier graphics snapshots and provenance below are retained unchanged.
+
+## Preserved Review History
+
 No changes were made to EdugamesGraphicsStorage or its shared catalogs.
 
 | Asset | Source | Attribution And Handoff |

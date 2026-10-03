@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import {sliceMotion} from './slice-motion.js';
 import { TAU, RADIUS, PIE_X, PIE_Z, HIT_Y, BAR_LENGTH, BAR_DEPTH, BAR_Y, BAR_Z, DRAWER_TRAVEL, material, mesh, instances, point, noise, solidSector, pastryRim, pastryWall, berryGeometry, calyxGeometry, dispose } from './bakery-geometry.js';
 import { makeRoom, makeBar, setBarServing } from './bakery-room.js';
-import {paintConstruction,paintPreview,animateUnits,serveAnimation} from './construction-art.js';
+import {paintConstruction,paintPreview,animateUnits,serveAnimation,makeKnife} from './construction-art.js';
 
 // Retained for the historical first-playable modules. Current Free Play is blueberry.
 export const RECIPES = Object.freeze({ blueberry: { name: 'Blueberry', filling: '#3b185f', fruit: '#312078', accent: '#9695c3' }, cherry: { name: 'Cherry', filling: '#8f233c', fruit: '#b63549', accent: '#f2918d' }, strawberry: { name: 'Strawberry', filling: '#a82639', fruit: '#d82c43', accent: '#ffe0bd' }, apple: { name: 'Apple', filling: '#b76928', fruit: '#ecc16b', accent: '#ffdda0' } });
@@ -134,6 +134,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   const fill = new THREE.DirectionalLight('#d4e7ff', 1.2); fill.position.set(5, 4, -1); scene.add(fill);
   const room = makeRoom(scene), { drawer } = room;
   room.scene=scene;
+  const orderKnife=makeKnife();orderKnife.position.set(0,.25,1.15);orderKnife.rotation.set(0,Math.PI/2,Math.PI/2);scene.add(orderKnife);
   const raycaster = new THREE.Raycaster(), reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let sceneMode='free';
   let construction=null, activePlates=2, finishServing=null, unitFinishes=[];
@@ -156,9 +157,9 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   const project = (x, y, z) => { const p = new THREE.Vector3(x, y, z).project(camera); return { x: (p.x + 1) * width / 2, y: (1 - p.y) * height / 2 }; };
   const setCamera = () => {
     const angle = THREE.MathUtils.clamp(THREE.MathUtils.lerp(modelReview ? 0.50 : 0.68, Math.PI / 2 - 0.001, viewValue) + tilt, 0.42, Math.PI / 2 - 0.001);
-    const targetZ = THREE.MathUtils.lerp(0.25, 0.40, viewValue), targetY = 0.10;
+    const targetZ = THREE.MathUtils.lerp(-1.4, -0.6, viewValue), targetY = 0.60;
     camera.position.set(16 * Math.cos(angle) * Math.sin(yaw), targetY + 16 * Math.sin(angle), targetZ + 16 * Math.cos(angle) * Math.cos(yaw)); camera.lookAt(0, targetY, targetZ);
-    const span = Math.max(12, width / height * THREE.MathUtils.lerp(6.1, 8.5, viewValue));
+    const span = Math.max(13.2, width / height * THREE.MathUtils.lerp(7.8, 9.5, viewValue));
     const halfHeight = span / (width / height) / 2;
     Object.assign(camera, { left: -span / 2, right: span / 2, top: halfHeight, bottom: -halfHeight }); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
   };
@@ -171,7 +172,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       return { pair, x: a.x, y: a.y, width: w, height: h, shearX: (c.x-a.x)/h, shearY: (b.y-a.y)/w };
     });
     const hp=project(0,-.77,2.17+drawer.position.z),hl=project(-.9,-.77,2.17+drawer.position.z),hr=project(.9,-.77,2.17+drawer.position.z);
-    onLayout({ handle:{...hp,width:Math.abs(hr.x-hl.x)}, labels, bars: barRects, drawer: project(0, -0.69, 1.96 + drawer.position.z), moving: Boolean(animation), drawerValue, viewValue });
+    onLayout({ knife:project(0,.25,1.15), handle:{...hp,width:Math.abs(hr.x-hl.x)}, labels, bars: barRects, drawer: project(0, -0.69, 1.96 + drawer.position.z), moving: Boolean(animation), drawerValue, viewValue });
   };
   const render = (shadows = false) => {
     if (disposed) return; if (shadows) renderer.shadowMap.needsUpdate = true;
@@ -199,7 +200,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   const observer = new ResizeObserver(resize); observer.observe(canvas);
   const contextLost = event => { event.preventDefault(); canvas.dispatchEvent(new CustomEvent('scene-error')); };
   canvas.addEventListener('webglcontextlost', contextLost);
-  const motionChange = () => { if (reduced.matches) { finishSlices?.(); transition(); } }; reduced.addEventListener('change', motionChange);
+  const motionChange = () => { if (reduced.matches) { finishSlices?.(); finishServing?.(); transition(); } }; reduced.addEventListener('change', motionChange);
   return {
     update(left, right, recipe = recipes) {
       recipes = Array.isArray(recipe) ? recipe : [recipe,recipe];
@@ -277,7 +278,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       paintFeedback(); render();
     },
     setFeedback(pair, tone) { feedbackTones[pair === 'A' ? 0 : 1] = tone; paintFeedback(); render(); },
-    setMode(mode) { sceneMode=mode; bars.forEach(b=>b.position.x=barX());render(); },
+    setMode(mode) { sceneMode=mode;orderKnife.visible=mode!=='free'; bars.forEach(b=>b.position.x=barX());render(); },
     setExampleVisible(visible) { exampleVisible=visible; if(pies[0])pies[0].visible=visible; this.emphasize(null); render(true); },
     setDrawer(open) { drawerOpen = open; transition(); },
     setTopView(top) { topView = top; yaw = 0; tilt = 0; transition(); },

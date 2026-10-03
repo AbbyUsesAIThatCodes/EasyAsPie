@@ -1,5 +1,19 @@
 # Implementation Status
 
+## October 3 Local Beginner Review
+
+Implemented under the approved #31–#36 checklist on isolated branch `review/31-beginner-pie-building`, based on PR30 `dae9277`. [Exact artifact, source and test evidence](review/issue-31/README.md). The three existing drafts, historical packages, main and deployment workflow are preserved.
+
+Current behavior: eight beginner Learn tasks, twenty retained exact conversion orders plus four mixed extensions; latched quantized add/erase, continuous adjacent artwork, native keyboard/touch alternatives, explicit knife commitment, retained incorrect work, bounded/cancellable success sequence, counter bars, floating Pie Cards, empty openable drawer, larger bottom guidance, framed vocabulary reference, task-keyed glimmer, sunny teal/lemon/bee kitchen and wider bounded camera.
+
+Free Play's existing independent servings and Cut/Regroup remain separate. New schema/taskset validation preserves committed responses and typed help, archives completed rounds, saves all modes locally and downloads anonymous HTML activity evidence. The legacy save key remains unchanged and is not overwritten or reinterpreted. Unsupported/current conflicting storage retains bytes and warns.
+
+Teacher decisions still provisional: direct counter-bar editing, the serving-only whole-pie reveal, the upper order as gold-pulse target, choreography timing, palette and camera composition. #13 retains actual hardware, screen-reader, projector and teacher acceptance. No worksheet, shared repository rewrite, PR change, merge or deployment occurred.
+
+The remainder is preserved historical review status, not the active learning semantics.
+
+## Preserved Review History
+
 Latest bounded correction: **0.4.1_Unassigned_pr-30_build-003_20261001T002857Z_gf2659f310169_web**, source `f2659f3101696d422b007366659c568e02238004`. [Build 003 package](review/issue-27/correction-build003/README.md) adds one completed-Learn serving guard; the regression failed before the fix, then all 34 tests, production checks, recovery and mode suites passed. Build 002 evidence and preview remain preserved. No art, interaction geometry, save schema or taskset changes; no new Library write. The comprehensive build 002 review below remains labeled with its original identity.
 
 The authorized three-draft follow-up is complete for teacher review: **PR28 → PR29 → PR30** (issues #25 → #26 → #27). Retarget successors to main after each predecessor is accepted and manually merged. No merges, auto-merges, deployments, workflow changes or shared graphics catalog changes were made.

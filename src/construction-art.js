@@ -71,7 +71,7 @@ export function serveAnimation(pies,plates,room,{reduced,onFrame,onStage}){
     const glow=new THREE.Group();glow.name='served-glow';pie.add(glow);for(const run of runs(p))mesh(glow,solidSector(1.64,1.64,.04,Math.PI+run.start*TAU/p.d,run.length*TAU/p.d),new THREE.MeshBasicMaterial({color:'#b769ff',opacity:.35,transparent:true,depthWrite:false}),0,HIT_Y+.06);
    }
    if(t>=2.5&&t<3.1)pie.position.x=homes[i].x+10*Math.pow((t-2.5)/.6,2);
-   if(t>=3.1){pie.children.filter(o=>o.userData.slice).forEach(w=>w.visible=false);removeNamed(pie,'served-glow');pie.getObjectByName('selected-serving').visible=false;const a=Math.min(1,(t-3.1)/.9);pie.position.copy(homes[i]).lerp(new THREE.Vector3(i?1.7:-1.7,1.1,-5),1-a);}
+   if(t>=3.1){pie.visible=true;pie.children.filter(o=>o.userData.slice).forEach(w=>w.visible=false);removeNamed(pie,'served-glow');pie.getObjectByName('selected-serving').visible=false;const a=Math.min(1,(t-3.1)/.9);pie.position.copy(homes[i]).lerp(new THREE.Vector3(i ? 0.82 : -0.82,1.1,-5),1-a);}
   }
   knives.visible=t>=.55&&t<1.1;knives.children.forEach(k=>k.position.y=3-2.15*Math.min(1,Math.max(0,(t-.55)/.55)));
   room.setSupply(t>=3.1?Math.sin(Math.min(1,(t-3.1)/.9)*Math.PI):0);onFrame();if(t>=4)stop();else frame=requestAnimationFrame(tick);

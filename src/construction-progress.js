@@ -4,6 +4,7 @@ export const STORAGE_KEY='easyaspie.construction.v2';
 const check=(ok,message)=>{if(!ok)throw Error(message);};
 export function validateSnapshot(raw){
  check(raw&&['free','learn','challenge'].includes(raw.mode),'Unknown mode.');
+ check(raw.free?.A&&raw.free?.B,'Missing Free Play snapshot.');
  const free=createFreePlay(raw.free);check(raw.flavors&&['A','B'].every(p=>['blueberry','cherry','strawberry','apple'].includes(raw.flavors[p])),'Invalid flavors.');
  const learn=validateWork(raw.learn),challenge=validateWork(raw.challenge);check(learn.mode==='learn'&&challenge.mode==='challenge','Mode history mismatch.');
  check(typeof raw.challengeStarted==='boolean'&&typeof raw.drawerOpen==='boolean','Invalid recovery state.');

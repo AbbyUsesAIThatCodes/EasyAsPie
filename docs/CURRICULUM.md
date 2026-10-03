@@ -68,3 +68,8 @@ The three-mode extension is the teacher's explicitly authorized bounded issue21.
 ## Twenty-Order Follow-Up
 
 The current Activity 1.3 index was rechecked for #27 at unchanged blob f50edf179855ec412445df342d81cd22338aa253. The twenty authored conversion tuples are distinct and remain within existing G12 equivalence and G10 equal-partition models, with G11 notation prerequisite only. They cover expansion/regrouping by factors 2, 4 and 8, seven different proper-fraction amounts, zero and whole. Reverse conversions and different scale factors are purposeful transfer checks; there are no timers or new measurement/standards claims. Responses, retries and hints/reference/Learn/Free Play exposure are recorded explicitly. The in-game course section was removed at the user's request; this source provenance remains in the repository.
+
+
+## October 3 Beginner Revision
+
+The current Activity 1.3 index was read at unchanged blob `f50edf179855ec412445df342d81cd22338aa253`. G10/G12 remain audit-local connections and G11 a notation prerequisite only. No new restricted-source audit or official standards alignment is claimed. The [beginner contract](BEGINNER_REVIEW_CONTRACT.md) maps written-to-visual construction, visual-to-written reading and equivalence, with feedback and help evidence. The mixed-number stage is an explicit teacher-local extension: exactly one whole plus a proper fraction. It does not create a new source goal or measurement-mastery claim.

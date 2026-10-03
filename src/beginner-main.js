@@ -13,15 +13,16 @@ const identity=__BUILD_IDENTITY__, $=id=>document.getElementById(id), pairs=['A'
 const params=new URLSearchParams(location.search),fixture=params.get('preview'),canPersist=!fixture;
 let mode=fixture?'free':'learn',free=fixture?previewState(fixture):createFreePlay(),flavors={A:'blueberry',B:'blueberry'};
 let learn=createWork('learn',identity.id),challenge=createWork('challenge',identity.id),archives=[],challengeStarted=false;
-let drawerOpen=false,bakery,busy=false,epoch=0,stroke=null,pointer=null,undo=[],lastCue='',message='',tone='',legacyText=null;
+let drawerOpen=false,bakery,busy=false,served=false,epoch=0,stroke=null,pointer=null,undo=[],lastCue='',message='',tone='',legacyText=null;
 let storageReady=false,storageBlocked=false,lastStored=null,saveTimer=null;
+const noticedTasks=new Set();
 const work=()=>mode==='learn'?learn:challenge;
 const currentTask=()=>tasksFor(mode)[work().index];
 const putWork=w=>{if(w.mode==='learn')learn=w;else challenge=w;};
 const names=()=>mode==='free'?['Test Pie 1','Test Pie 2']:currentTask().whole?['Plate 1','Plate 2']:['Your Pie','Spare Plate'];
 const active=()=>mode==='free'||currentTask().whole?2:1;
 const fractions=()=>mode==='free'?[free.A,free.B]:displayPlates().map(p=>({n:count(p.mask),d:p.d}));
-function displayPlates(){const w=work(),t=currentTask();return t.kind==='read'?[plate(t.grid,full(t.n*t.grid/t.d)),plate(t.grid)]:w.plates;}
+function displayPlates(){const w=work(),t=currentTask();return served&&w.solved?w.plates.map(p=>plate(p.d)):t.kind==='read'?[plate(t.grid,full(t.n*t.grid/t.d)),plate(t.grid)]:w.plates;}
 const snapshot=()=>({mode,free,flavors,learn,challenge,archives,challengeStarted,drawerOpen});
 function download(text,name,type='text/html'){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 
@@ -32,13 +33,15 @@ document.querySelector('#app').innerHTML=`<header class="header"><a class="brand
 $('build-identity').textContent=identity.id;
 function fitPanels(){document.documentElement.style.setProperty('--footer-height',`${document.querySelector('footer').getBoundingClientRect().height}px`);document.documentElement.style.setProperty('--activity-height',`${$('learning-card').getBoundingClientRect().height+18}px`);document.documentElement.style.setProperty('--header-height',`${document.querySelector('.header').getBoundingClientRect().bottom+10}px`);}
 new ResizeObserver(fitPanels).observe($('learning-card'));new ResizeObserver(fitPanels).observe(document.querySelector('footer'));new ResizeObserver(fitPanels).observe(document.querySelector('.header'));
-function layout({labels,bars,handle,moving,drawerValue,viewValue}){
+function layout({labels,bars,handle,knife,moving,drawerValue,viewValue}){
  const top=$('scene').offsetTop,left=$('scene').offsetLeft;
- for(const p of labels){const label=$('label-'+p.pair);label.style.left=`${Math.max(label.offsetWidth/2+8,Math.min(innerWidth-label.offsetWidth/2-8,p.x+left))}px`;label.style.top=`${Math.max(top+6,p.y+top-label.offsetHeight)}px`;}
+ for(const p of labels){const label=$('label-'+p.pair);label.style.left=`${Math.max(label.offsetWidth/2+8,Math.min(innerWidth-label.offsetWidth/2-8,p.x+left))}px`;label.style.top=`${Math.max(top+(innerWidth<700&&active()===2?53:6),p.y+top-label.offsetHeight)}px`;}
  for(const r of bars){Object.assign($('bar-figure-'+r.pair).style,{left:r.x+left+'px',top:r.y+top+'px',width:r.width+'px',transformOrigin:'0 0',transform:`matrix(1,${r.shearY},${r.shearX},1,0,0)`});$('bar-'+r.pair).style.height=Math.max(22,r.height)+'px';}
  Object.assign($('drawer-toggle').style,{left:handle.x+left+'px',top:handle.y+top+'px',width:Math.max(44,handle.width)+'px'});
+ Object.assign($('scene-knife').style,{left:knife.x+left+'px',top:knife.y+top+'px'});
  $('scene').dataset.moving=String(moving);$('scene').dataset.drawerProgress=String(drawerValue);$('scene').dataset.viewProgress=String(viewValue);
 }
+const knifeControl=document.createElement('button');knifeControl.id='scene-knife';knifeControl.textContent='CUT PIES';knifeControl.setAttribute('aria-label','Cut Pies With The Counter Knife');document.querySelector('.bakery').append(knifeControl);knifeControl.onclick=()=>submit();
 try{bakery=createBakery($('scene'),{onLayout:layout,modelReview:params.get('review')==='solids'});}catch(e){$('scene-error').hidden=false;document.body.classList.add('scene-unavailable');}
 $('scene').addEventListener('scene-error',()=>{$('scene-error').hidden=false;document.body.classList.add('scene-unavailable');cancelInput();});
 function say(text){$('operation').textContent=text;$('announcement').textContent=text;}
@@ -63,27 +66,28 @@ function renderScene(animate=false){
  bakery?.update(fs[0],fs[1],[flavors.A,flavors.B]);bakery?.setMode(mode);bakery?.construction(mode==='free'?null:displayPlates(),active(),{animate});
  $('scene').setAttribute('aria-label',`${active()} equal-sized ${active()===1?'plate':'plates'}. ${ns[0]}: ${fs[0].n} of ${fs[0].d} parts.${active()===2?` ${ns[1]}: ${fs[1].n} of ${fs[1].d} parts.`:''} Use Piece Controls for keyboard or touch.`);
  $('scene').dataset.masks=mode==='free'?'':work().plates.map(p=>p.mask).join(',');$('scene').dataset.denominator=String(fs[0].d);
- $('app').setAttribute('aria-busy',String(busy));
+ $('app').setAttribute('aria-busy',String(busy));document.body.classList.toggle('serving',busy&&mode!=='free');
+ knifeControl.hidden=mode==='free';knifeControl.disabled=busy||(mode!=='free'&&(work().solved||work().complete));
 }
 function renderActivity(){
- document.querySelectorAll('[data-mode]').forEach(b=>{b.classList.toggle('active',b.dataset.mode===mode);b.setAttribute('aria-pressed',String(b.dataset.mode===mode));});
+ document.querySelectorAll('button[data-mode]').forEach(b=>{b.classList.toggle('active',b.dataset.mode===mode);b.setAttribute('aria-pressed',String(b.dataset.mode===mode));});
  const card=$('learning-card');
  if(mode==='free'){
   $('upper-order').hidden=true;card.innerHTML=`<div class="activity-head"><h1>Free Play</h1><button id="reset">Reset Mode</button><button data-reference>Fraction Reference</button></div><p>Select a piece to serve it and all earlier pieces. Cut and Regroup keep the same amount.</p><p class="activity-feedback">${message||'Explore two equal wholes. Drag the background to move the camera.'}</p><div class="vocabulary-inline">${term('whole')} · ${term('numerator')} · ${term('denominator')} · ${term('equivalent')}</div>`;
  }else{
   const w=work(),t=currentTask(),rows=evidence(w);card.dataset.task=t.id;card.dataset.solved=String(w.solved);card.dataset.orderAssisted=String(rows[w.index].help.length>0);
-  $('upper-order').hidden=w.complete;$('upper-order').textContent=t.kind==='read'?'Which Fraction Is Shown?':`${orderLabel(t)} · ${t.grid} Equal Parts Per Whole`;
+  $('upper-order').hidden=w.complete;$('upper-order').textContent=served?'Order Served · Fresh Plates Ready':t.kind==='read'?'Which Fraction Is Shown?':`${orderLabel(t)} · ${t.grid} Equal Parts Per Whole`;
   const options=['1/2','1/4','3/4','3/8','2/4','6/8','6/16'];
   card.innerHTML=w.complete?`<div class="activity-head"><h1>${mode==='learn'?'Learning':'Orders'} Complete</h1><button id="new-round">New Round</button><button data-reference>Fraction Reference</button></div><p>${rows.length} tasks completed · ${rows.filter(r=>r.firstWithoutHelp).length} first answers without recorded help · ${rows.filter(r=>r.help.length).length} helped · ${rows.filter(r=>r.retries).length} retried.</p><p class="activity-feedback">Your Activity Report keeps every response and help event. Practice evidence awaits teacher review.</p>`:
-  `<div class="activity-head"><span class="task-count">${mode==='learn'?'Step':'Order'} ${w.index+1} Of ${tasksFor(mode).length}</span><h1>${mode==='learn'?t.title:'Build The Order'}</h1><button data-reference>Fraction Reference</button></div><p class="task-prompt">${mode==='learn'?t.prompt:`Make <strong>${orderLabel(t)}</strong> using ${t.grid} equal parts in each whole.${t.whole?' Fill one plate completely and build the extra fraction on the other.':''}`}</p><div class="activity-actions">${t.kind==='read'?`<label>Written Fraction <select id="written-answer" ${busy||w.solved?'disabled':''}><option value="">Choose An Amount</option>${options.map(x=>`<option value="${x}" ${w.written===x?'selected':''}>${x}</option>`).join('')}</select></label>`:''}<button id="submit-order" class="cut-pies" ${busy||w.solved?'disabled':''}><span class="knife-icon" aria-hidden="true">🔪</span> CUT PIES</button><button id="hint-order" ${busy||w.solved?'disabled':''}>Hint</button><button id="undo" ${busy||w.solved||!undo.length?'disabled':''}>Undo</button><button id="reset" ${busy||w.solved?'disabled':''}>Clear Plates</button><button id="next-order" ${busy||!w.solved?'disabled':''}>${w.index===tasksFor(mode).length-1?'Finish':'Next Order'}</button></div><p class="activity-feedback ${tone}" role="status">${message||'Start empty to ADD; start filled to ERASE. Release to place your pieces. CUT PIES checks your answer.'}</p><p class="keyboard-guidance">Tap pieces or open Piece Controls. Arrows explore; Enter toggles; Shift + arrows previews; Enter commits; Escape cancels.</p>`;
+  `<div class="activity-head"><span class="task-count">${mode==='learn'?'Step':'Order'} ${w.index+1} Of ${tasksFor(mode).length}</span><h1>${mode==='learn'?t.title:'Build The Order'}</h1><button data-reference>Fraction Reference</button></div><p class="task-prompt">${mode==='learn'?t.prompt:`Make <strong>${orderLabel(t)}</strong> using ${t.grid} equal parts in each whole.${t.whole?' Fill one plate completely and build the extra fraction on the other.':''}`}</p><div class="activity-actions">${t.kind==='read'?`<label>Written Fraction <select id="written-answer" ${busy||w.solved?'disabled':''}><option value="">Choose An Amount</option>${options.map(x=>`<option value="${x}" ${w.written===x?'selected':''}>${x}</option>`).join('')}</select></label>`:''}<button id="submit-order" class="cut-pies" ${busy||w.solved?'disabled':''}><span class="knife-icon" aria-hidden="true">🔪</span> CUT PIES</button><button id="hint-order" ${busy||w.solved?'disabled':''}>Hint</button><button id="undo" ${busy||w.solved||!undo.length?'disabled':''}>Undo</button><button id="reset" ${!busy&&w.solved?'disabled':''}>${busy?'Skip Serving':'Clear Plates'}</button><button id="next-order" ${busy||!w.solved?'disabled':''}>${w.index===tasksFor(mode).length-1?'Finish':'Next Order'}</button></div><p class="activity-feedback ${tone}" role="status">${message||'Start empty to ADD; start filled to ERASE. Release to place your pieces. CUT PIES checks your answer.'}</p><p class="keyboard-guidance">Tap pieces or open Piece Controls. Arrows explore; Enter toggles; Shift + arrows previews; Enter commits; Escape cancels.</p>`;
  }
  const cueKey=mode==='free'?'free':`${mode}:${work().index}:${work().complete}`;
- if(cueKey!==lastCue){lastCue=cueKey;card.classList.remove('new-task');void card.offsetWidth;card.classList.add('new-task');card.dataset.cueCount=String(Number(card.dataset.cueCount||0)+1);}
+ if(cueKey!==lastCue){lastCue=cueKey;card.classList.remove('new-task');if(!noticedTasks.has(cueKey)){noticedTasks.add(cueKey);void card.offsetWidth;card.classList.add('new-task');card.dataset.cueCount=String(Number(card.dataset.cueCount||0)+1);}}
  fitPanels();changed();
 }
 function render(animate=false){renderScene(animate);renderActivity();}
 function cancelInput(){stroke=null;pointer=null;bakery?.previewStroke(-1,null);$('operation').textContent='';}
-function interrupt(){cancelInput();++epoch;bakery?.cancelServing();bakery?.cancelTransformation();busy=false;$('upper-order').classList.remove('success-gold');}
+function interrupt(){cancelInput();++epoch;bakery?.cancelServing();bakery?.cancelTransformation();busy=false;served=false;$('upper-order').classList.remove('success-gold');}
 function recordHelp(source){
  if(challengeStarted&&!challenge.solved&&!challenge.complete){const id=tasksFor('challenge')[challenge.index].id;if(source!=='vocabulary'||!challenge.history.some(e=>e.kind==='help'&&e.id===id&&e.source===source))challenge=help(challenge,source);}
  if(mode==='learn'&&!learn.solved&&!learn.complete){const id=currentTask().id;if(source!=='vocabulary'||!learn.history.some(e=>e.kind==='help'&&e.id===id&&e.source===source))learn=help(learn,source);}
@@ -110,23 +114,24 @@ async function submit(){
  const token=++epoch;busy=true;tone='correct';message=`Correct — ${orderLabel(t)}. Your selected answer is saved.`;render();
  const stageCopy={whole:'Serving view: the whole pie briefly appears. Your answer is unchanged.',cut:'Cutting at the boundaries of each contiguous serving.',leftovers:'The unselected leftovers lift and whisk left.',glow:'Your retained serving glows purple.',serve:'The completed order is served to the right.',cabinet:'The cabinet opens and fresh plates arrive.',ready:`Correct — ${orderLabel(t)}. ${t.goal||'Same amount, even when the equal parts have different names.'} Choose Next Order when ready.`};
  await bakery?.serve(displayPlates(),stage=>{if(token!==epoch)return;$('scene').dataset.servingStage=stage;message=stageCopy[stage];const feedback=$('learning-card').querySelector('.activity-feedback');if(feedback)feedback.textContent=message;if(stage==='glow')$('upper-order').classList.add('success-gold');});
- if(token!==epoch)return;busy=false;render();$('next-order')?.focus();save();
+ if(token!==epoch)return;busy=false;served=true;render();$('next-order')?.focus();save();
 }
 function clearPlates(){interrupt();if(mode==='free'){free=createFreePlay();message='Free Play reset to equal halves.';}else if(!work().solved){const w=work();undo.push(w.plates.map(p=>({...p})));putWork({...w,plates:w.plates.map(p=>plate(p.d)),written:''});message='Plates cleared. Your previous submitted responses are still in the report.';}render();}
 document.addEventListener('click',e=>{
- const modeButton=e.target.closest('[data-mode]');if(modeButton){changeMode(modeButton.dataset.mode);return;}
- const piece=e.target.closest('[data-piece]');if(piece){if(stroke?.keyboard)commitStroke();else toggleUnit(pairs.indexOf(piece.dataset.pair),Number(piece.dataset.piece));return;}
+ const modeButton=e.target.closest('button[data-mode]');if(modeButton){changeMode(modeButton.dataset.mode);return;}
+ const piece=e.target.closest('[data-piece]');if(piece){if(stroke?.keyboard)cancelInput();toggleUnit(pairs.indexOf(piece.dataset.pair),Number(piece.dataset.piece));return;}
  const action=e.target.closest('[data-action]');if(action){if(mode==='free')freeAction({pair:action.dataset.pair,type:action.dataset.action});else if(action.dataset.action==='clear'&&editable(pairs.indexOf(action.dataset.pair))){const w=work(),side=pairs.indexOf(action.dataset.pair);undo.push(w.plates.map(p=>({...p})));putWork({...w,plates:w.plates.map((p,i)=>i===side?plate(p.d):p)});render(true);}return;}
  if(e.target.closest('#submit-order'))submit();
  if(e.target.closest('#next-order')&&!busy&&mode!=='free'&&work().solved){interrupt();putWork(nextWork(work()));undo=[];message='';tone='';render();$('submit-order')?.focus();save();}
  if(e.target.closest('#reset'))clearPlates();
  if(e.target.closest('#undo')&&!busy&&undo.length&&!work().solved){cancelInput();putWork({...work(),plates:undo.pop()});message='Last construction change undone. Submitted responses stay recorded.';render(true);}
  if(e.target.closest('#hint-order')&&!busy&&!work().solved){recordHelp('hint');const t=currentTask();message=t.kind==='read'?'Count the purple equal parts, then count all equal parts in the whole. Equivalent names show the same amount.':`${t.whole?'Fill one whole plate first. ':''}${t.n}/${t.d} is ${t.n*t.grid/t.d}/${t.grid}. Select ${t.n*t.grid/t.d} of ${t.grid} equal parts${t.whole?' on the other plate':''}. This task is marked as helped.`;renderActivity();}
- if(e.target.closest('#new-round')){if(archives.length>=100){message='Download your report before clearing saved work; the local archive is full.';renderActivity();return;}archives.push(work());putWork(createWork(mode,identity.id));undo=[];message='';tone='';render();}
+ if(e.target.closest('#new-round')){if(archives.length>=100){message='Download your report before clearing saved work; the local archive is full.';renderActivity();return;}archives.push(work());putWork(createWork(mode,identity.id));for(const key of noticedTasks)if(key.startsWith(mode+':'))noticedTasks.delete(key);lastCue='';undo=[];message='';tone='';render();}
 });
 document.addEventListener('change',e=>{if(e.target.id==='written-answer'&&!busy&&!work().solved){putWork({...work(),written:e.target.value});changed();}if(e.target.matches('[data-flavor]')&&!busy){flavors={...flavors,[e.target.dataset.flavor]:e.target.value};renderScene();changed();}});
 document.addEventListener('focusin',e=>{const b=e.target.closest('[data-piece]');if(!b)return;const side=pairs.indexOf(b.dataset.pair);b.parentElement.querySelectorAll('button').forEach(x=>x.tabIndex=x===b?0:-1);if(!stroke)bakery?.emphasize({pair:b.dataset.pair,k:Number(b.dataset.piece)});});
 document.addEventListener('keydown',e=>{
+ if(e.key==='Tab'&&stroke)cancelInput();
  if(e.key==='Escape'&&stroke){e.preventDefault();cancelInput();say('Preview cancelled. Your pie is unchanged.');return;}
  const b=e.target.closest('[data-piece]');if(!b)return;const side=pairs.indexOf(b.dataset.pair),k=Number(b.dataset.piece),d=fractions()[side].d;
  if(stroke?.keyboard&&['Enter',' '].includes(e.key)){e.preventDefault();commitStroke();return;}
@@ -155,7 +160,7 @@ $('drawer-toggle').onclick=()=>{drawerOpen=!drawerOpen;$('drawer-toggle').setAtt
 $('fullscreen').hidden=!document.fullscreenEnabled;$('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{say('Full Screen is unavailable in this browser.');}};
 $('download-report').onclick=()=>{const {html}=report(snapshot(),identity);download(html,identity.id+'_activity-report.html');};
 function changed(){if(storageReady&&!storageBlocked&&canPersist){clearTimeout(saveTimer);saveTimer=setTimeout(save,100);}}
-function save(){clearTimeout(saveTimer);if(!storageReady||storageBlocked||!canPersist)return;try{if(localStorage.getItem(STORAGE_KEY)!==lastStored){storageBlocked=true;$('save-status').textContent='Saved work changed elsewhere — reload to restore';return;}lastStored=encode(snapshot(),identity);localStorage.setItem(STORAGE_KEY,lastStored);$('save-status').textContent=legacyText?'Saved Here · Previous Activity Preserved':'Saved Only In This Browser';}catch{$('save-status').textContent='Could Not Save — Keep This Page Open';}}
+function save(){clearTimeout(saveTimer);if(!storageReady||storageBlocked||!canPersist)return;try{if(localStorage.getItem(STORAGE_KEY)!==lastStored){storageBlocked=true;$('save-status').textContent='Saved work changed elsewhere — reload to restore';return;}const text=encode(snapshot(),identity);localStorage.setItem(STORAGE_KEY,text);lastStored=text;$('save-status').textContent=legacyText?'Saved Here · Previous Activity Preserved':'Saved Only In This Browser';}catch{$('save-status').textContent='Could Not Save — Keep This Page Open';}}
 if(canPersist){try{
  legacyText=localStorage.getItem('easyaspie.progress.v1');lastStored=localStorage.getItem(STORAGE_KEY);
  if(lastStored){const s=decode(lastStored).state;({mode,free,flavors,learn,challenge,archives,challengeStarted,drawerOpen}=s);message=work().solved?'Restored your committed correct response. Choose Next Order when ready.':'Restored your work and original response history.';}

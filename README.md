@@ -1,5 +1,21 @@
 # EasyAsPie
 
+## Beginner Construction — Local Development Review
+
+The approved October 3 revision (#31–#36) is on `review/31-beginner-pie-building`, based on corrected PR30 head `dae9277`. [Review contract](docs/BEGINNER_REVIEW_CONTRACT.md) · [Exact review build and evidence](docs/review/issue-31/README.md). PR28 → PR29 → PR30, main, live Pages and workflows remain untouched.
+
+Start in **Learn**: build a whole, halves and quarters; read visual amounts into written fractions; explore equivalence; then make one whole plus a proper fraction. **Challenge** retains the twenty exact orders and adds four mixed-number extensions. Start empty to ADD; start occupied to ERASE. Drag operation stays latched, units remain exact, and CUT PIES is the only answer commitment. Wrong answers keep the work for revision. Free Play retains its independent prefix servings and physical Cut/Regroup.
+
+Counter bars mirror the active plates. Pie Cards have native Piece Controls; arrows explore, Enter/Space toggles, Shift + arrows previews a range, Enter commits, Escape cancels. Background drags orbit; Reset View restores the camera. The empty drawer remains openable. No surprise or worksheet is implemented.
+
+New work saves under `easyaspie.construction.v2`. Previous `easyaspie.progress.v1` bytes are preserved; a version notice and Previous Work download prevent old assessment evidence being mistaken for new completion. The local Activity Report includes committed masks, answers, retries, help, archived rounds and build/source identity. No account, upload or expiry. Small portrait screens scroll vertically and offer larger native piece buttons.
+
+Use the existing `npm ci`, `npm test`, `npm run build`, `npm run check:build` entrypoints. `index.html` now loads `src/beginner-main.js`; historical controllers remain inactive for legacy validation/report provenance. New actual-input suites: `scripts/review-beginner.mjs` and `scripts/review-beginner-recovery.mjs`. Set `PLAYWRIGHT_MODULE`, `CHROMIUM_PATH` and optionally `REVIEW_OUTPUT`. Teacher visual acceptance, actual touch hardware, screen reader and projector checks remain under #13.
+
+The earlier sections below are preserved review history, including superseded controls and instructions.
+
+## Preserved Review History
+
 **Same amount. Different slices. Delicious fractions.**
 
 A full-viewport 3D fraction bakery for Design And Modeling, **1.3 — Measuring Matters**. Two equal-sized pies and equal-length unitless bars connect the same exact fraction state.

@@ -1,5 +1,17 @@
 # Current Validation
 
+## Beginner Revision Verification
+
+The authoritative current evidence is [the local #31 review report](review/issue-31/README.md), pinned to its own production manifest. Tests cover exact unit strokes and task representability, immutable responses/help, legacy compatibility and new save validation, along with preserved geometry, fraction and allocator tests.
+
+`review-beginner.mjs` uses real pointer and keyboard events for the sequence, all 24 orders, Free Play's complete per-denominator serving matrix, layout sizes, reference, report download and recovery. `review-beginner-recovery.mjs` checks serving-stage interruption, touch emulation, unsupported/corrupt/changed saves, legacy report bytes and explicit clearing. Read-only geometry coordinates in `?review=beginner` guide input; they cannot mutate answers.
+
+Screenshots/video must come from the exact final artifact. Development screenshots are exploratory evidence only. Previous browser scripts contain old mode/layout assumptions and remain historical; do not report them as validating the new UI. Actual classroom devices, touch hardware, screen-reader behavior, projector readability and visual acceptance remain teacher checks under #13.
+
+The sections below preserve historical evidence with its original identity.
+
+## Preserved Review History
+
 The current [integrated PR30 evidence](review/issue-27/README.md) covers all three follow-up increments, including twenty-order report download and local recovery. [PR28](review/issue-25/README.md) and [PR29](review/issue-26/README.md) retain their independent exact artifacts. See [Implementation Status](IMPLEMENTATION_STATUS.md) for the current checked matrices and outstanding human review. The sections below preserve historical 0.1.0 behavior and do not describe current saving or modes.
 
 # First Playable Validation
