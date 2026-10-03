@@ -1,14 +1,14 @@
 import {mkdir,writeFile} from 'node:fs/promises';
 import {LEARN_TASKS} from '../src/construction.js';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
-const out=process.env.REVIEW_OUTPUT||'docs/review/issue-31/build005/video';await mkdir(out,{recursive:true});
+const out=process.env.REVIEW_OUTPUT||'docs/review/issue-31/build006/video';await mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH});const ctx=await browser.newContext({viewport:{width:1366,height:768},recordVideo:{dir:out+'/raw',size:{width:1366,height:768}}}),page=await ctx.newPage();
 const chapters=[],errors=[],requests=[],start=Date.now();page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>requests.push(r.url()));
 const pause=ms=>page.waitForTimeout(ms),settle=()=>page.waitForFunction(()=>document.querySelector('#app')?.getAttribute('aria-busy')!=='true'&&document.querySelector('#scene')?.dataset.moving==='false');
 const chapter=async title=>{chapters.push({second:(Date.now()-start)/1000,title});await pause(700);};
 const unit=async(side,k)=>{const p=await page.evaluate(([s,k])=>window.__review.point(s,k),[side,k]);await page.mouse.click(p.x,p.y);};
 try{
- await page.goto((process.env.REVIEW_URL||'http://127.0.0.1:4198/')+'?review=beginner');await settle();const build=await page.locator('#build-identity').textContent();
+ await page.goto((process.env.REVIEW_URL||'http://127.0.0.1:4199/')+'?review=beginner');await settle();const build=await page.locator('#build-identity').textContent();
  await chapter('Blank Plate And Beginner Language');await pause(1000);await page.locator('#submit-order').click();await pause(1200);
  const a=await page.evaluate(()=>window.__review.point(0,1)),b=await page.evaluate(()=>window.__review.point(0,2));await page.mouse.move(a.x,a.y);await page.mouse.down();await pause(500);await page.mouse.move(b.x,b.y,{steps:20});await pause(500);await page.mouse.up();await pause(600);await chapter('Explicit Cut Pies And Whole-Pie Serving');await page.locator('#scene-knife').click();await settle();await pause(500);await page.locator('#next-order').click();
  await page.emulateMedia({reducedMotion:'reduce'});

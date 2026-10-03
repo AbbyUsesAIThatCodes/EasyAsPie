@@ -134,7 +134,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   const fill = new THREE.DirectionalLight('#d4e7ff', 1.2); fill.position.set(5, 4, -1); scene.add(fill);
   const room = makeRoom(scene), { drawer } = room;
   room.scene=scene;
-  const orderKnife=makeKnife();orderKnife.position.set(0,.25,1.15);orderKnife.rotation.set(0,Math.PI/2,Math.PI/2);scene.add(orderKnife);
+  const orderKnife=makeKnife();orderKnife.position.set(0,.25,1.8);orderKnife.rotation.set(0,Math.PI/2,Math.PI/2);scene.add(orderKnife);
   const raycaster = new THREE.Raycaster(), reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let sceneMode='free';
   let construction=null, activePlates=2, finishServing=null, unitFinishes=[];
@@ -172,7 +172,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       return { pair, x: a.x, y: a.y, width: w, height: h, shearX: (c.x-a.x)/h, shearY: (b.y-a.y)/w };
     });
     const hp=project(0,-.77,2.17+drawer.position.z),hl=project(-.9,-.77,2.17+drawer.position.z),hr=project(.9,-.77,2.17+drawer.position.z);
-    onLayout({ knife:project(0,.25,1.15), handle:{...hp,width:Math.abs(hr.x-hl.x)}, labels, bars: barRects, drawer: project(0, -0.69, 1.96 + drawer.position.z), moving: Boolean(animation), drawerValue, viewValue });
+    onLayout({ knife:project(0,.25,1.8), handle:{...hp,width:Math.abs(hr.x-hl.x)}, labels, bars: barRects, drawer: project(0, -0.69, 1.96 + drawer.position.z), moving: Boolean(animation), drawerValue, viewValue });
   };
   const render = (shadows = false) => {
     if (disposed) return; if (shadows) renderer.shadowMap.needsUpdate = true;

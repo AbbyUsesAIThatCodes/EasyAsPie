@@ -35,7 +35,7 @@ function fitPanels(){document.documentElement.style.setProperty('--footer-height
 new ResizeObserver(fitPanels).observe($('learning-card'));new ResizeObserver(fitPanels).observe(document.querySelector('footer'));new ResizeObserver(fitPanels).observe(document.querySelector('.header'));
 function layout({labels,bars,handle,knife,moving,drawerValue,viewValue}){
  const top=$('scene').offsetTop,left=$('scene').offsetLeft;
- for(const p of labels){const label=$('label-'+p.pair);label.style.left=`${Math.max(label.offsetWidth/2+8,Math.min(innerWidth-label.offsetWidth/2-8,p.x+left))}px`;label.style.top=`${Math.max(top+(innerWidth<700&&active()===2?53:6),p.y+top-label.offsetHeight)}px`;}
+ for(const p of labels){const label=$('label-'+p.pair);label.style.left=`${Math.max(label.offsetWidth/2+8,Math.min(innerWidth-label.offsetWidth/2-8,p.x+left))}px`;label.style.top=`${Math.max(top+(mode!=='free'&&active()===2?48:6),p.y+top-label.offsetHeight)}px`;}
  for(const r of bars){Object.assign($('bar-figure-'+r.pair).style,{left:r.x+left+'px',top:r.y+top+'px',width:r.width+'px',transformOrigin:'0 0',transform:`matrix(1,${r.shearY},${r.shearX},1,0,0)`});$('bar-'+r.pair).style.height=Math.max(22,r.height)+'px';}
  Object.assign($('drawer-toggle').style,{left:handle.x+left+'px',top:handle.y+top+'px',width:Math.max(44,handle.width)+'px'});
  Object.assign($('scene-knife').style,{left:knife.x+left+'px',top:knife.y+top+'px'});
