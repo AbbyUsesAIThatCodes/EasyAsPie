@@ -4,6 +4,7 @@ import {sliceMotion} from './slice-motion.js';
 import { TAU, RADIUS, PIE_X, PIE_Z, HIT_Y, BAR_LENGTH, BAR_DEPTH, BAR_Y, BAR_Z, DRAWER_TRAVEL, material, mesh, instances, point, noise, solidSector, pastryRim, pastryWall, berryGeometry, calyxGeometry, dispose } from './bakery-geometry.js';
 import { makeRoom, makeBar, setBarServing } from './bakery-room.js';
 import {paintConstruction,paintPreview,animateUnits,serveAnimation,makeKnife} from './construction-art.js';
+import {occupied} from './construction.js';
 
 // Retained for the historical first-playable modules. Current Free Play is blueberry.
 export const RECIPES = Object.freeze({ blueberry: { name: 'Blueberry', filling: '#3b185f', fruit: '#312078', accent: '#9695c3' }, cherry: { name: 'Cherry', filling: '#8f233c', fruit: '#b63549', accent: '#f2918d' }, strawberry: { name: 'Strawberry', filling: '#a82639', fruit: '#d82c43', accent: '#ffe0bd' }, apple: { name: 'Apple', filling: '#b76928', fruit: '#ecc16b', accent: '#ffdda0' } });
@@ -20,6 +21,8 @@ export function makePie(serving, recipeName, side) {
   for (let i = 0; i < serving.d; i++) {
     const start = Math.PI + i * step, wedge = new THREE.Group(); group.add(wedge);
     wedge.userData = { slice: i + 1, selected: i < serving.n, start, angle: step, side };
+    const target=mesh(wedge,solidSector(RADIUS,RADIUS,HIT_Y-.15,start,step),new THREE.MeshBasicMaterial(),0,(HIT_Y+.15)/2);target.name='occupied-hit';target.visible=false;target.userData.piece=i+1;
+    const empty=mesh(group,solidSector(RADIUS,RADIUS,.025,start,step),new THREE.MeshBasicMaterial(),0,.1525);empty.name='empty-hit';empty.visible=false;empty.userData.piece=i+1;
     // Equal core solids define the mathematics; surface decoration never changes it.
     const base = mesh(wedge, solidSector(1.52, RADIUS, 0.31, start, step), material('#cf8c40', 0.6), 0, 0.305);
     base.name = 'pastry-solid';
@@ -100,13 +103,14 @@ export function pieceAtPoint(x, z, denominator) {
   const angle = ((Math.atan2(x, z) - Math.PI) % TAU + TAU) % TAU;
   return (Math.floor(angle / (TAU / denominator) + 1e-10) % denominator) + 1;
 }
-function pieceOutline(k, d) {
-  const group = new THREE.Group(), path = perimeter(Math.PI + (k - 1) * TAU / d, TAU / d, 1.60, HIT_Y + 0.03);
-  mesh(group, new THREE.TubeGeometry(path, 96, 0.031, 5, false), new THREE.MeshBasicMaterial({ color: '#24182c' }));
+function pieceOutline(k, d, height=HIT_Y+.03) {
+  const group = new THREE.Group(), path = perimeter(Math.PI + (k - 1) * TAU / d, TAU / d, 1.60, height);
+  group.userData.height=height;
+  mesh(group, new THREE.TubeGeometry(path, 96, 0.031, 5, false), new THREE.MeshBasicMaterial({ color: '#111111' }));
   const count = Math.ceil(path.getLength() / 0.16);
   for (let i = 0; i < count; i++) {
     const dash = new THREE.LineCurve3(path.getPointAt(i / count), path.getPointAt((i + 0.52) / count));
-    const mark = mesh(group, new THREE.TubeGeometry(dash, 1, 0.017, 5, false), new THREE.MeshBasicMaterial({ color: '#fff7dc', depthTest: false, depthWrite: false })); mark.renderOrder = 2;
+    const mark = mesh(group, new THREE.TubeGeometry(dash, 1, 0.0315, 5, false), new THREE.MeshBasicMaterial({ color: '#ffffff', depthTest: true })); mark.renderOrder = 2;
   }
   group.traverse(o => { o.castShadow = false; }); group.name = 'piece-emphasis'; return group;
 }
@@ -249,31 +253,34 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       });render(true);
     },
     previewStroke(side,stroke){pies.forEach((pie,i)=>paintPreview(pie,i===side?stroke:null));render();},
-    async serve(plates,onStage){
+    async serve(plates,onStage,next={count:1,grid:2}){
       this.cancelServing();this.emphasize(null);unitFinishes.forEach(f=>f());unitFinishes=[];
-      const animation=serveAnimation(pies,plates,room,{reduced,onFrame:()=>render(true),onStage});finishServing=animation.finish;
+      const animation=serveAnimation(pies,plates,room,{reduced,onFrame:()=>render(true),onStage,next,makeFresh:(side)=>makePie({n:0,d:next.grid},recipes[side],side)});finishServing=animation.finish;
       await animation.promise;finishServing=null;
     },
     cancelServing(){finishServing?.();finishServing=null;},
-    projectPiece(side,k,r=1.1){const pie=pies[side];if(!pie)return null;const a=Math.PI+(k-.5)*TAU/pie.userData.serving.d;return project(pie.position.x+Math.sin(a)*r,HIT_Y,pie.position.z+Math.cos(a)*r);},
+    projectPiece(side,k,r=1.1){const pie=pies[side];if(!pie)return null;const a=Math.PI+(k-.5)*TAU/pie.userData.serving.d,y=construction&&!occupied(construction[side],k)?.165:HIT_Y;return project(pie.position.x+Math.sin(a)*r,y,pie.position.z+Math.cos(a)*r);},
     pick(clientX, clientY) {
       if (disposed || modelReview || canvas.dataset.slicing === 'true') return null;
       const rect = canvas.getBoundingClientRect();
       raycaster.setFromCamera(new THREE.Vector2((clientX - rect.left) / rect.width * 2 - 1, -(clientY - rect.top) / rect.height * 2 + 1), camera);
-      const hits = raycaster.intersectObjects(pies.filter(p=>p.visible).map(p => p.getObjectByName('serving-hit-target')), false);
+      const targets=[];
+      pies.forEach((p,side)=>{if(!p.visible)return;p.children.filter(o=>o.userData.slice).forEach(w=>{const k=w.userData.slice;targets.push(!construction||occupied(construction[side],k)?w.getObjectByName('occupied-hit'):p.children.find(o=>o.name==='empty-hit'&&o.userData.piece===k));});});
+      const hits = raycaster.intersectObjects(targets, false);
       if (!hits.length) return null;
-      const pie = hits[0].object.parent, local = pie.worldToLocal(hits[0].point.clone());
-      return { pair: pies.indexOf(pie) === 0 ? 'A' : 'B', k: pieceAtPoint(local.x, local.z, pie.userData.serving.d) };
+      const hit=hits[0],pie=hit.object.name==='occupied-hit'?hit.object.parent.parent:hit.object.parent,local=pie.worldToLocal(hit.point.clone());
+      return { pair:pies.indexOf(pie)===0?'A':'B',k:hit.object.userData.piece,angle:((Math.atan2(local.x,local.z)-Math.PI)%TAU+TAU)%TAU,height:local.y,radius:Math.hypot(local.x,local.z) };
     },
     emphasize(piece) {
       if (piece?.pair === 'A' && !exampleVisible) piece = null;
       if (piece && (!Number.isInteger(piece.k) || piece.k < 1 || piece.k > pies[piece.pair === 'A' ? 0 : 1]?.userData.serving.d || canvas.dataset.slicing === 'true')) piece = null;
-      if (emphasized?.pair === piece?.pair && emphasized?.k === piece?.k) return;
+      const side=piece?.pair==='B'?1:0,height=piece?construction&&!occupied(construction[side],piece.k)?.19:HIT_Y*(pies[side].children.find(o=>o.userData.slice===piece.k)?.scale.y||1)+.03:0;
+      if (emphasized?.pair === piece?.pair && emphasized?.k === piece?.k && emphasized?.outlineHeight===height) return;
       pies.forEach(pie => { const outline = pie.getObjectByName('piece-emphasis'); if (outline) { pie.remove(outline); dispose(outline); }
         pie.traverse(o => { if (o.material?.name === 'serving-fruit') { o.material.emissive.set('#6e37e7'); o.material.emissiveIntensity = 0; } });
       });
-      emphasized = piece;
-      if (piece && !modelReview) { const pie = pies[piece.pair === 'A' ? 0 : 1]; pie.add(pieceOutline(piece.k, pie.userData.serving.d));
+      emphasized = piece?{...piece,outlineHeight:height}:null;
+      if (piece && !modelReview) { const pie = pies[piece.pair === 'A' ? 0 : 1]; pie.add(pieceOutline(piece.k, pie.userData.serving.d,height));
         pie.children.find(o => o.userData.slice === piece.k)?.traverse(o => { if (o.material?.name === 'serving-fruit') o.material.emissiveIntensity = 0.3; });
       }
       paintFeedback(); render();

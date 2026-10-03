@@ -22,3 +22,17 @@ October 3, 2026 teacher-authorized follow-up to #31–#36. Baseline `7c690b06f50
 - Retain the existing exact task bank, save schema/history, legacy export, keyboard/touch controls, reduced motion and identified artifacts.
 
 Build and evidence links will be recorded here after verification. Teacher visual and classroom-device acceptance remain separate.
+
+## Paused WIP Checkpoint For Computer Switch
+
+Work paused at the parent's October 3 checkpoint request. This is source preservation, not a playable finishing review or accepted build. Build 007 at localhost 4201 remains the last verified playable artifact and is unchanged.
+
+- Added the signed-span construction model and a regression test for shrinking, wrap, reversal, explicit keyboard direction, ambiguous jumps, and outside suspension. The current input controller still needs to pass continuous hit angles/direction and call outside suspension.
+- Began per-unit occupied/empty raycast targets and surface-dependent alternating black/white outlines. Browser verification, animation-height refresh, and public diagnostic checks are pending.
+- Began extending the serving API with next-task plate metadata; the animation does not consume it yet.
+- Cabinet/counter separation, full enclosure/fan, wallpaper, outward serving knives, task-matched arrival count, automatic advancement and interrupted/reloaded lifecycle work remain unimplemented.
+- `node --check src/pies.js`, `node --check src/construction.js`, and `git diff --check` pass.
+- `npm test`: **40 passed, 1 failed, 41 total**. Failure: `tests/selection-geometry.test.js:39` reads a wedge material by child index; the newly inserted hidden hit target shifts those indices (`cf8c40` versus expected `3b185f`). Resolve the object-selection contract and rerun; do not report this checkpoint as passing.
+- No finishing artifact, browser results, or PR exists at this checkpoint. Remote publication was initially rejected by automatic approval review because it did not recognize delegated authorization for the new finishing work/publication; destination and payload are being verified for the checkpoint report.
+
+Resume in this worktree/branch. The `node_modules` junction refers to the preserved build-007 worktree's installed dependencies; source recovery on another computer should run the repository's normal dependency install. No unsaved editor-only state is required.
