@@ -1,5 +1,13 @@
 # Finishing Review After Build 007
 
+## Teacher Acceptance And Materials Freeze
+
+On October 3, 2026, the teacher accepted PR #38 build 006 mechanics and said EasyAsPie is ready for its worksheet. Freeze the instructional interface, mechanics, task order and labels at runtime `b3901d2b07bbc31380b1d1cb027b1aa3d087b6d1`, with evidence checkpoint `dcc9bb7c762d5bdc557249903b8d6c08e5238ef5`. The parent worksheet task uses that identified baseline; no worksheet is authored in this implementation branch. [Student workflow and exact lesson labels](TEACHER.md) support that handoff.
+
+The next game changes are visual only and must wait until the materials are complete. Keep full enclosure, higher ceiling/fan, illustrated lemon-vine/bee wallpaper and all-camera scenery acceptance in the backlog. Teacher mechanics acceptance does not complete #13's actual classroom hardware, projector, touch-device or screen-reader checks. PR #38 remains draft; no main merge or deployment. The historical authorization and WIP notes below are preserved, with their pending-game-approval statements superseded by this acceptance.
+
+## Original Implementation Authorization
+
 October 3, 2026 teacher-authorized follow-up to #31–#36. Baseline `7c690b06f508ea05ac591e8374b9d651cf13cb80` preserves build 007 and its evidence. Work lives in a separate `EasyAsPie-finishing` worktree on `review/31-finishing-revision`; the original branch/worktree is reserved for its parallel preservation checkpoint. A recoverable work branch and draft PR are authorized. No main merge, deployment, worksheet, or unrelated repository change.
 
 ## Approved Corrections
@@ -21,7 +29,7 @@ October 3, 2026 teacher-authorized follow-up to #31–#36. Baseline `7c690b06f50
 - Every camera extent, drawer state, top/reset view, laptop and mobile sizes; closed room and ceiling fan with clear mathematical workspace.
 - Retain the existing exact task bank, save schema/history, legacy export, keyboard/touch controls, reduced motion and identified artifacts.
 
-[The identified mechanics checkpoint and verification evidence](review/issue-31-finishing/README.md) are the current review handoff. Full enclosure/fan and illustrated wallpaper remain deferred by the teacher's revised priority. Teacher lesson, visual and classroom-device acceptance remain separate.
+[The identified mechanics checkpoint and verification evidence](review/issue-31-finishing/README.md) are the accepted worksheet baseline. Full enclosure/fan and illustrated wallpaper remain deferred by the teacher's revised priority. Visual and classroom-device acceptance remain separate.
 
 ## Current Mechanics Contract
 

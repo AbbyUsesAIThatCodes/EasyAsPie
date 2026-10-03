@@ -1,10 +1,16 @@
 # EasyAsPie Roadmap
 
+## Accepted Mechanics And Materials Priority
+
+On October 3, 2026, the teacher accepted PR #38 build 006 mechanics and authorized the worksheet. Freeze the instructional interface, mechanics, lesson labels and sequence at runtime `b3901d2b07bbc31380b1d1cb027b1aa3d087b6d1`, with evidence `dcc9bb7c762d5bdc557249903b8d6c08e5238ef5`. The parent materials task authors from that baseline. See [the accepted handoff](docs/review/issue-31-finishing/README.md) and [student workflow](docs/TEACHER.md).
+
+Next game work is visual only and waits for materials: complete room enclosure, higher ceiling/fan, illustrated lemon-vine/bee wallpaper and all-camera scenery acceptance remain backlog. #13 remains open for real classroom hardware, touch-device, projector and screen-reader review. Keep PR #38 draft and preserve main/live; no merge or deployment is authorized.
+
 ## Authorized October 3 Review
 
 #31–#36 now have an isolated local implementation on the corrected PR30 baseline. See [the bounded contract](docs/BEGINNER_REVIEW_CONTRACT.md), [current implementation](docs/IMPLEMENTATION_STATUS.md), and [identified review evidence](docs/review/issue-31/README.md). The first checkpoint established exact construction and activity state; follow-up checkpoints cover recovery, input and physical layout. Existing draft PRs are preserved, with no main merge or deployment.
 
-#13 is explicitly reconciled as the teacher/device/accessibility review gate for **all three current modes**, including the new beginner and mixed-number sequence. Its historical Free Play-only exclusion does not describe this newly approved scope. Do not close it or claim classroom readiness from browser automation. Next: teacher review of gameplay, bar interaction, whole-pie reveal, upper gold highlight, kitchen/camera, and actual hardware. Shared glimmer/archive work remains a local handoff; no global retrofit. The separate fraction-name game is parked. No worksheet until game approval.
+#13 is explicitly reconciled as the teacher/device/accessibility review gate for **all three current modes**, including the new beginner and mixed-number sequence. Its historical Free Play-only exclusion does not describe this newly approved scope. Do not close it or claim classroom readiness from browser automation. The current teacher mechanics acceptance and worksheet authorization are recorded above; kitchen/camera visual acceptance and actual hardware review remain open. Shared glimmer/archive work remains a local handoff; no global retrofit. The separate fraction-name game is parked.
 
 All following roadmap sequences are historical; their earlier one-issue scope and deferred modes do not override the October 3 authorization.
 

@@ -1,5 +1,21 @@
 # EasyAsPie Teacher Notes
 
+## Accepted Worksheet Baseline
+
+The teacher accepted PR #38 build 006 mechanics on October 3, 2026 and authorized the worksheet. Materials use the frozen runtime `b3901d2b07bbc31380b1d1cb027b1aa3d087b6d1` and evidence checkpoint `dcc9bb7c762d5bdc557249903b8d6c08e5238ef5`. The interface, task sequence and mechanics stay fixed while the parent task authors materials; visual polishing waits. This does not authorize merging/deployment or close #13's real-device and accessibility gate.
+
+## Student Workflow For Materials
+
+1. Open **Learn**. For construction tasks, click or drag on the blank beige-guided plate to add pieces; start on a filled piece to erase. Backtracking shrinks the current drag. **Undo**, **Clear Plates**, **Hint**, **Top View** and **Piece Controls** remain available.
+2. In **Read The Pie** and **Read Smaller Pieces**, inspect the visible pie and choose its **Written Fraction** instead of building a new serving.
+3. Use **CUT PIES** to check the answer. Incorrect work stays for revision. After success, the next question opens automatically when its fresh plates land; there is no manual Next Order step. **Skip Serving** can finish that transition immediately.
+4. Continue to **Challenge** for **Build The Order**, with 24 orders. Mixed tasks require one whole plate plus the proper fraction on the other; either plate can hold the whole.
+5. **Activity Report** downloads anonymous browser-local responses, help and retries. Treat this as fraction practice evidence; ask the learner to explain equal amounts. It does not independently assess ruler use or measurement mastery.
+
+The eight Learn labels, in order, are **One Whole**, **Build Half A Pie**, **Build Three Quarters**, **Read The Pie**, **Read Smaller Pieces**, **Same Amount, Smaller Pieces**, **Same Amount, Larger Pieces**, and **One Whole And A Little More**. Use the [exact answer key](BEGINNER_ANSWER_KEY.md) for the grids and all 24 Challenge orders. Equal wholes and exact halves, quarters, eighths and sixteenths are the model throughout. Offered equivalent written answers are accepted in reading tasks.
+
+**Free Play** retains separate prefix-serving selection and amount-preserving **Cut**/**Regroup**; those controls are not the Learn/Challenge construction-and-**CUT PIES** workflow. For pieces hidden by an angled view, use **Top View** or native **Piece Controls**. Avoid importing the superseded prediction quiz or old manual advancement directions from the historical notes below.
+
 ## Beginner Review Teaching Path
 
 [Exact Learn And Challenge Answer Key](BEGINNER_ANSWER_KEY.md) · [Implementation Contract And Curriculum Limits](BEGINNER_REVIEW_CONTRACT.md) · [Current Finishing Review](FINISHING_REVIEW.md).
@@ -12,7 +28,7 @@ Start on empty space to add, or a filled slice to erase. The operation stays lat
 
 All modes save only in this browser, without expiry. Activity Report downloads the current and archived new sessions. Previous Work downloads the preserved legacy challenge report; old raw save bytes remain under their original key. Valid legacy Free Play and flavors copy forward, but old completion is not awarded as new completion. Unsupported/corrupt saves are retained without overwrite. Clear Saved Work explicitly clears this review's new save only.
 
-Review direct bar editing, the brief whole-pie reveal, gold highlight target, timing and kitchen/camera as provisional design choices. Classroom hardware, projector and screen-reader checks remain open under #13. This is anonymous fraction-practice evidence, not proof of measurement mastery. No worksheet is included before game approval.
+Direct bar editing, the brief serving-only whole-pie reveal and the gold highlight remain as implemented in the accepted worksheet baseline. The reveal does not change the learner's selected answer. Future visual refinement remains separate from the frozen instructional workflow. Classroom hardware, projector and screen-reader checks remain open under #13. This is anonymous fraction-practice evidence, not proof of measurement mastery. Worksheet creation is now authorized in the parent materials task.
 
 ## Historical Teacher Notes
 

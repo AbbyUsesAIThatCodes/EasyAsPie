@@ -1,10 +1,18 @@
 # Mechanics And Lesson Checkpoint
 
+## Teacher-Accepted Worksheet Baseline
+
+On October 3, 2026, the teacher accepted PR #38 build 006 mechanics and authorized worksheet creation. Freeze its instructional interface, mechanics, lesson labels and task sequence at runtime `b3901d2b07bbc31380b1d1cb027b1aa3d087b6d1`, with evidence checkpoint `dcc9bb7c762d5bdc557249903b8d6c08e5238ef5`. The parent worksheet task uses this version; [Teacher Notes](../../TEACHER.md) and [Exact Answer Key](../../BEGINNER_ANSWER_KEY.md) describe the student workflow. This acceptance record changes no runtime files or packaged artifact.
+
+Visual fixes remain deferred until the materials are complete. Hardware, projector, actual touch-device and screen-reader acceptance remain open under #13. PR #38 stays draft and unmerged, with no deployment.
+
+## Playable Baseline
+
 **Play On Abigail: http://127.0.0.1:4216/**
 
 [Playable ZIP](0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web.zip) · [Gameplay Video](build006/video/beginner-gameplay.webm) · [Mixed-Number Construction](build006/video/mixed-built.png) · [Draft PR #38](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/pull/38)
 
-This checkpoint follows the teacher's mechanics → lesson acceptance → worksheet → aesthetics priority. Worksheets remain on hold until the game is accepted. Build 007 and its original branch/worktree are preserved; its Abigail preview remains http://127.0.0.1:4201/.
+This checkpoint follows the teacher's mechanics → lesson acceptance → worksheet → aesthetics priority. The teacher has now released the worksheet gate for this frozen version. Build 007 and its original branch/worktree are preserved; its Abigail preview remains http://127.0.0.1:4201/.
 
 ## What Changed Since Build 007
 
@@ -50,6 +58,6 @@ The extracted package was launched independently and checked against the persist
 
 ## Remaining Work And Preserved Boundaries
 
-Full enclosure, higher ceiling/fan, lemon-vine/bee wallpaper, and comprehensive all-camera scenery acceptance remain unfinished by the teacher's revised priority. Existing artwork is preserved, not accepted as final. Teacher lesson/visual acceptance and real classroom laptop/projector, touch hardware and screen-reader checks remain pending under #13. No classroom-readiness or measurement-mastery claim is made.
+Full enclosure, higher ceiling/fan, lemon-vine/bee wallpaper, and comprehensive all-camera scenery acceptance remain unfinished by the teacher's revised priority. Existing artwork is preserved, not accepted as final. Teacher mechanics acceptance and worksheet authorization are recorded above; visual acceptance and real classroom laptop/projector, touch hardware and screen-reader checks remain pending under #13. No classroom-readiness or measurement-mastery claim is made.
 
 No main merge, deployment, worksheet, shared-standard rewrite, or changes to draft PRs #28–#30 were made. Build 007 remains immutable. The JavaScript bundle is about 176 KB gzipped; Vite's existing 650 KB uncompressed warning remains reported. [Finishing Contract And Resume Notes](../../FINISHING_REVIEW.md) retain the exact scope and earlier WIP history.

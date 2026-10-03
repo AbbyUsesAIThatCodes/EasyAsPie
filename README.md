@@ -1,8 +1,8 @@
 # EasyAsPie
 
-## Finishing Mechanics And Lesson Review
+## Accepted Mechanics And Worksheet Baseline
 
-The current mechanics checkpoint is [draft PR #38](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/pull/38) on `review/31-finishing-revision`. See [the identified playable build and evidence](docs/review/issue-31-finishing/README.md) and [remaining finishing scope](docs/FINISHING_REVIEW.md). Retracing now shrinks the selected arc; correct orders advance once when the next task's one or two plates arrive. Cabinet clearance, surface hover, outward knives, accessible input, saves and reports are covered by the review checks. Full room/fan and wallpaper polish remain deferred under the teacher's mechanics-first priority. Worksheets still wait for game acceptance.
+On October 3, 2026, the teacher accepted [draft PR #38](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/pull/38) build 006 mechanics and authorized the worksheet. Its instructional interface, lesson sequence and mechanics are frozen for materials at runtime source `b3901d2b07bbc31380b1d1cb027b1aa3d087b6d1`, with evidence `dcc9bb7c762d5bdc557249903b8d6c08e5238ef5`. See [the identified playable build and evidence](docs/review/issue-31-finishing/README.md), [the student workflow](docs/TEACHER.md), and [remaining visual scope](docs/FINISHING_REVIEW.md). The parent worksheet task authors from that baseline. Full room/fan and wallpaper polish stay deferred until materials are complete. Classroom hardware and accessibility acceptance remain open under #13; no main merge or deployment is authorized.
 
 The build-007 section below remains preserved history.
 
