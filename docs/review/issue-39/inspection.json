@@ -1,0 +1,1339 @@
+{
+  "observedAt": "2026-10-03T23:09:06.012Z",
+  "scope": "Isolated fresh browser contexts; not a capture of the teacher's existing tab.",
+  "pages": [
+    {
+      "port": 4216,
+      "label": "pr38-build006",
+      "manifest": {
+        "id": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web",
+        "version": "0.4.1",
+        "codename": null,
+        "codenameSlug": "Unassigned",
+        "scope": "pr-38",
+        "pr": 38,
+        "ordinal": 6,
+        "builtAt": "2026-10-03T22:17:30.290Z",
+        "sha": "b3901d2b07bbc31380b1d1cb027b1aa3d087b6d1",
+        "dirty": false,
+        "sourceFingerprint": "af4ab6e94a6dafa247995e8e1872dfd60e1936b16e5a0bb336499aff05e982e3",
+        "prHead": "b3901d2b07bbc31380b1d1cb027b1aa3d087b6d1",
+        "target": "web",
+        "reservation": "refs/tags/easyaspie-builds/pr-38/000006"
+      },
+      "states": [
+        {
+          "url": "http://127.0.0.1:4216/?review=visual-followup",
+          "title": "EasyAsPie · The Fraction Bakery",
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "visibleIdentity": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web",
+          "mode": "learn",
+          "elements": {
+            "#app": {
+              "x": 0,
+              "y": 0,
+              "width": 1366,
+              "height": 768,
+              "bottom": 768,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "flex",
+              "position": "relative"
+            },
+            ".header": {
+              "x": 27.3125,
+              "y": 12,
+              "width": 1311.375,
+              "height": 65.984375,
+              "bottom": 77.984375,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "grid",
+              "position": "absolute"
+            },
+            "#scene": {
+              "x": 0,
+              "y": 87.984375,
+              "width": 1366,
+              "height": 401.984375,
+              "bottom": 489.96875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#learning-card": {
+              "x": 103,
+              "y": 499.96875,
+              "width": 1160,
+              "height": 220.03125,
+              "bottom": 720,
+              "background": "rgb(255, 249, 239)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "footer": {
+              "x": 0,
+              "y": 728,
+              "width": 1366,
+              "height": 40,
+              "bottom": 768,
+              "background": "rgb(255, 248, 236)",
+              "display": "flex",
+              "position": "absolute"
+            },
+            "#label-A": {
+              "x": 442.1875,
+              "y": 134.828125,
+              "width": 260,
+              "height": 84.640625,
+              "bottom": 219.46875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#label-B": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "bottom": 0,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "none",
+              "position": "absolute"
+            },
+            "#upper-order": {
+              "x": 1060.703125,
+              "y": 93.984375,
+              "width": 277.984375,
+              "height": 41,
+              "bottom": 134.984375,
+              "background": "rgb(112, 41, 167)",
+              "display": "block",
+              "position": "absolute"
+            }
+          },
+          "cssVars": {
+            "header": "87.984375px",
+            "footer": "40px",
+            "activity": "238.03125px"
+          },
+          "geometry": {
+            "hover": null,
+            "serving": null,
+            "collisions": [],
+            "plates": [
+              {
+                "visible": true,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 2
+              },
+              {
+                "visible": false,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 2
+              }
+            ],
+            "knives": [],
+            "camera": {
+              "position": [
+                0,
+                10.660688384295497,
+                11.041163500014846
+              ],
+              "yaw": 0,
+              "tilt": 0,
+              "viewValue": 0,
+              "drawerValue": 0
+            }
+          },
+          "task": "Step 1 Of 8\nOne Whole\nFraction Reference\n\nThis plate is one whole. Add both equal halves to make 1 whole.\n\n🔪 CUT PIES\nHint\nUndo\nClear Plates\n\nStart empty to ADD; start filled to ERASE. Release to place your pieces. CUT PIES checks your answer.\n\nUse Top View to see every piece, or open Piece Controls. Arrows explore; Enter toggles; Shift + arrows previews; Enter commits; Escape cancels.",
+          "screenshot": "pr38-build006-learn-1366.png"
+        },
+        {
+          "url": "http://127.0.0.1:4216/?review=visual-followup",
+          "title": "EasyAsPie · The Fraction Bakery",
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "visibleIdentity": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web",
+          "mode": "challenge",
+          "elements": {
+            "#app": {
+              "x": 0,
+              "y": 0,
+              "width": 1366,
+              "height": 768,
+              "bottom": 768,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "flex",
+              "position": "relative"
+            },
+            ".header": {
+              "x": 27.3125,
+              "y": 12,
+              "width": 1311.375,
+              "height": 65.984375,
+              "bottom": 77.984375,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "grid",
+              "position": "absolute"
+            },
+            "#scene": {
+              "x": 0,
+              "y": 87.984375,
+              "width": 1366,
+              "height": 401.984375,
+              "bottom": 489.96875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#learning-card": {
+              "x": 103,
+              "y": 499.96875,
+              "width": 1160,
+              "height": 220.03125,
+              "bottom": 720,
+              "background": "rgb(255, 249, 239)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "footer": {
+              "x": 0,
+              "y": 728,
+              "width": 1366,
+              "height": 40,
+              "bottom": 768,
+              "background": "rgb(255, 248, 236)",
+              "display": "flex",
+              "position": "absolute"
+            },
+            "#label-A": {
+              "x": 442.1875,
+              "y": 134.828125,
+              "width": 260,
+              "height": 84.640625,
+              "bottom": 219.46875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#label-B": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "bottom": 0,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "none",
+              "position": "absolute"
+            },
+            "#upper-order": {
+              "x": 1060.703125,
+              "y": 93.984375,
+              "width": 277.984375,
+              "height": 41,
+              "bottom": 134.984375,
+              "background": "rgb(112, 41, 167)",
+              "display": "block",
+              "position": "absolute"
+            }
+          },
+          "cssVars": {
+            "header": "87.984375px",
+            "footer": "40px",
+            "activity": "238.03125px"
+          },
+          "geometry": {
+            "hover": null,
+            "serving": null,
+            "collisions": [],
+            "plates": [
+              {
+                "visible": true,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 4
+              },
+              {
+                "visible": false,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 4
+              }
+            ],
+            "knives": [],
+            "camera": {
+              "position": [
+                0,
+                10.660688384295497,
+                11.041163500014846
+              ],
+              "yaw": 0,
+              "tilt": 0,
+              "viewValue": 0,
+              "drawerValue": 0
+            }
+          },
+          "task": "Order 1 Of 24\nBuild The Order\nFraction Reference\n\nMake 1/2 using 4 equal parts in each whole.\n\n🔪 CUT PIES\nHint\nUndo\nClear Plates\n\nStart empty to ADD; start filled to ERASE. Release to place your pieces. CUT PIES checks your answer.\n\nUse Top View to see every piece, or open Piece Controls. Arrows explore; Enter toggles; Shift + arrows previews; Enter commits; Escape cancels.",
+          "screenshot": "pr38-build006-challenge-1366.png"
+        },
+        {
+          "url": "http://127.0.0.1:4216/?review=visual-followup",
+          "title": "EasyAsPie · The Fraction Bakery",
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "visibleIdentity": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web",
+          "mode": "challenge",
+          "elements": {
+            "#app": {
+              "x": 0,
+              "y": 0,
+              "width": 1366,
+              "height": 768,
+              "bottom": 768,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "flex",
+              "position": "relative"
+            },
+            ".header": {
+              "x": 27.3125,
+              "y": 12,
+              "width": 1311.375,
+              "height": 65.984375,
+              "bottom": 77.984375,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "grid",
+              "position": "absolute"
+            },
+            "#scene": {
+              "x": 0,
+              "y": 87.984375,
+              "width": 1366,
+              "height": 401.984375,
+              "bottom": 489.96875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#learning-card": {
+              "x": 103,
+              "y": 499.96875,
+              "width": 1160,
+              "height": 220.03125,
+              "bottom": 720,
+              "background": "rgb(255, 249, 239)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "footer": {
+              "x": 0,
+              "y": 728,
+              "width": 1366,
+              "height": 40,
+              "bottom": 768,
+              "background": "rgb(255, 248, 236)",
+              "display": "flex",
+              "position": "absolute"
+            },
+            "#label-A": {
+              "x": 470.171875,
+              "y": 105.046875,
+              "width": 260,
+              "height": 84.640625,
+              "bottom": 189.6875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#label-B": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "bottom": 0,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "none",
+              "position": "absolute"
+            },
+            "#upper-order": {
+              "x": 1060.703125,
+              "y": 93.984375,
+              "width": 277.984375,
+              "height": 41,
+              "bottom": 134.984375,
+              "background": "rgb(112, 41, 167)",
+              "display": "block",
+              "position": "absolute"
+            }
+          },
+          "cssVars": {
+            "header": "87.984375px",
+            "footer": "40px",
+            "activity": "238.03125px"
+          },
+          "geometry": {
+            "hover": null,
+            "serving": null,
+            "collisions": [],
+            "plates": [
+              {
+                "visible": true,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 4
+              },
+              {
+                "visible": false,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 4
+              }
+            ],
+            "knives": [],
+            "camera": {
+              "position": [
+                5.745070223813646,
+                10.660688384295497,
+                9.635248857980118
+              ],
+              "yaw": 0.48,
+              "tilt": 0,
+              "viewValue": 0,
+              "drawerValue": 0
+            }
+          },
+          "task": "Order 1 Of 24\nBuild The Order\nFraction Reference\n\nMake 1/2 using 4 equal parts in each whole.\n\n🔪 CUT PIES\nHint\nUndo\nClear Plates\n\nStart empty to ADD; start filled to ERASE. Release to place your pieces. CUT PIES checks your answer.\n\nUse Top View to see every piece, or open Piece Controls. Arrows explore; Enter toggles; Shift + arrows previews; Enter commits; Escape cancels.",
+          "screenshot": "pr38-build006-right-limit.png"
+        },
+        {
+          "url": "http://127.0.0.1:4216/?review=visual-followup",
+          "title": "EasyAsPie · The Fraction Bakery",
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "visibleIdentity": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web",
+          "mode": "challenge",
+          "elements": {
+            "#app": {
+              "x": 0,
+              "y": 0,
+              "width": 1366,
+              "height": 768,
+              "bottom": 768,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "flex",
+              "position": "relative"
+            },
+            ".header": {
+              "x": 27.3125,
+              "y": 12,
+              "width": 1311.375,
+              "height": 65.984375,
+              "bottom": 77.984375,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "grid",
+              "position": "absolute"
+            },
+            "#scene": {
+              "x": 0,
+              "y": 87.984375,
+              "width": 1366,
+              "height": 401.984375,
+              "bottom": 489.96875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#learning-card": {
+              "x": 103,
+              "y": 499.96875,
+              "width": 1160,
+              "height": 220.03125,
+              "bottom": 720,
+              "background": "rgb(255, 249, 239)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "footer": {
+              "x": 0,
+              "y": 728,
+              "width": 1366,
+              "height": 40,
+              "bottom": 768,
+              "background": "rgb(255, 248, 236)",
+              "display": "flex",
+              "position": "absolute"
+            },
+            "#label-A": {
+              "x": 439.234375,
+              "y": 169.390625,
+              "width": 260,
+              "height": 84.640625,
+              "bottom": 254.03125,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#label-B": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "bottom": 0,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "none",
+              "position": "absolute"
+            },
+            "#upper-order": {
+              "x": 1060.703125,
+              "y": 93.984375,
+              "width": 277.984375,
+              "height": 41,
+              "bottom": 134.984375,
+              "background": "rgb(112, 41, 167)",
+              "display": "block",
+              "position": "absolute"
+            }
+          },
+          "cssVars": {
+            "header": "87.984375px",
+            "footer": "40px",
+            "activity": "238.03125px"
+          },
+          "geometry": {
+            "hover": null,
+            "serving": null,
+            "collisions": [],
+            "plates": [
+              {
+                "visible": true,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 4
+              },
+              {
+                "visible": false,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 4
+              }
+            ],
+            "knives": [],
+            "camera": {
+              "position": [
+                -5.745070223813646,
+                10.660688384295497,
+                9.635248857980118
+              ],
+              "yaw": -0.48,
+              "tilt": 0,
+              "viewValue": 0,
+              "drawerValue": 0
+            }
+          },
+          "task": "Order 1 Of 24\nBuild The Order\nFraction Reference\n\nMake 1/2 using 4 equal parts in each whole.\n\n🔪 CUT PIES\nHint\nUndo\nClear Plates\n\nStart empty to ADD; start filled to ERASE. Release to place your pieces. CUT PIES checks your answer.\n\nUse Top View to see every piece, or open Piece Controls. Arrows explore; Enter toggles; Shift + arrows previews; Enter commits; Escape cancels.",
+          "screenshot": "pr38-build006-left-limit.png"
+        },
+        {
+          "url": "http://127.0.0.1:4216/?review=visual-followup",
+          "title": "EasyAsPie · The Fraction Bakery",
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "visibleIdentity": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web",
+          "mode": "challenge",
+          "elements": {
+            "#app": {
+              "x": 0,
+              "y": 0,
+              "width": 1366,
+              "height": 768,
+              "bottom": 768,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "flex",
+              "position": "relative"
+            },
+            ".header": {
+              "x": 27.3125,
+              "y": 12,
+              "width": 1311.375,
+              "height": 65.984375,
+              "bottom": 77.984375,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "grid",
+              "position": "absolute"
+            },
+            "#scene": {
+              "x": 0,
+              "y": 87.984375,
+              "width": 1366,
+              "height": 401.984375,
+              "bottom": 489.96875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#learning-card": {
+              "x": 103,
+              "y": 499.96875,
+              "width": 1160,
+              "height": 220.03125,
+              "bottom": 720,
+              "background": "rgb(255, 249, 239)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "footer": {
+              "x": 0,
+              "y": 728,
+              "width": 1366,
+              "height": 40,
+              "bottom": 768,
+              "background": "rgb(255, 248, 236)",
+              "display": "flex",
+              "position": "absolute"
+            },
+            "#label-A": {
+              "x": 442.1875,
+              "y": 140.453125,
+              "width": 260,
+              "height": 84.640625,
+              "bottom": 225.09375,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#label-B": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "bottom": 0,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "none",
+              "position": "absolute"
+            },
+            "#upper-order": {
+              "x": 1060.703125,
+              "y": 93.984375,
+              "width": 277.984375,
+              "height": 41,
+              "bottom": 134.984375,
+              "background": "rgb(112, 41, 167)",
+              "display": "block",
+              "position": "absolute"
+            }
+          },
+          "cssVars": {
+            "header": "87.984375px",
+            "footer": "40px",
+            "activity": "238.03125px"
+          },
+          "geometry": {
+            "hover": null,
+            "serving": null,
+            "collisions": [],
+            "plates": [
+              {
+                "visible": true,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 4
+              },
+              {
+                "visible": false,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 4
+              }
+            ],
+            "knives": [],
+            "camera": {
+              "position": [
+                0,
+                13.520929606481829,
+                8.03660840049757
+              ],
+              "yaw": 0,
+              "tilt": 0.26,
+              "viewValue": 0,
+              "drawerValue": 0
+            }
+          },
+          "task": "Order 1 Of 24\nBuild The Order\nFraction Reference\n\nMake 1/2 using 4 equal parts in each whole.\n\n🔪 CUT PIES\nHint\nUndo\nClear Plates\n\nStart empty to ADD; start filled to ERASE. Release to place your pieces. CUT PIES checks your answer.\n\nUse Top View to see every piece, or open Piece Controls. Arrows explore; Enter toggles; Shift + arrows previews; Enter commits; Escape cancels.",
+          "screenshot": "pr38-build006-tilt-limit.png"
+        },
+        {
+          "url": "http://127.0.0.1:4216/?review=visual-followup",
+          "title": "EasyAsPie · The Fraction Bakery",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "visibleIdentity": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web",
+          "mode": "challenge",
+          "elements": {
+            "#app": {
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "bottom": 720,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "flex",
+              "position": "relative"
+            },
+            ".header": {
+              "x": 25.59375,
+              "y": 12,
+              "width": 1228.8125,
+              "height": 63.40625,
+              "bottom": 75.40625,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "grid",
+              "position": "absolute"
+            },
+            "#scene": {
+              "x": 0,
+              "y": 85.40625,
+              "width": 1280,
+              "height": 356.5625,
+              "bottom": 441.96875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#learning-card": {
+              "x": 60,
+              "y": 451.96875,
+              "width": 1160,
+              "height": 220.03125,
+              "bottom": 672,
+              "background": "rgb(255, 249, 239)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "footer": {
+              "x": 0,
+              "y": 680,
+              "width": 1280,
+              "height": 40,
+              "bottom": 720,
+              "background": "rgb(255, 248, 236)",
+              "display": "flex",
+              "position": "absolute"
+            },
+            "#label-A": {
+              "x": 411.703125,
+              "y": 116.9375,
+              "width": 260,
+              "height": 84.640625,
+              "bottom": 201.578125,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#label-B": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "bottom": 0,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "none",
+              "position": "absolute"
+            },
+            "#upper-order": {
+              "x": 976.421875,
+              "y": 91.40625,
+              "width": 277.984375,
+              "height": 41,
+              "bottom": 132.40625,
+              "background": "rgb(112, 41, 167)",
+              "display": "block",
+              "position": "absolute"
+            }
+          },
+          "cssVars": {
+            "header": "85.40625px",
+            "footer": "40px",
+            "activity": "238.03125px"
+          },
+          "geometry": {
+            "hover": null,
+            "serving": null,
+            "collisions": [],
+            "plates": [
+              {
+                "visible": true,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 4
+              },
+              {
+                "visible": false,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 4
+              }
+            ],
+            "knives": [],
+            "camera": {
+              "position": [
+                0,
+                10.660688384295497,
+                11.041163500014846
+              ],
+              "yaw": 0,
+              "tilt": 0,
+              "viewValue": 0,
+              "drawerValue": 0
+            }
+          },
+          "task": "Order 1 Of 24\nBuild The Order\nFraction Reference\n\nMake 1/2 using 4 equal parts in each whole.\n\n🔪 CUT PIES\nHint\nUndo\nClear Plates\n\nStart empty to ADD; start filled to ERASE. Release to place your pieces. CUT PIES checks your answer.\n\nUse Top View to see every piece, or open Piece Controls. Arrows explore; Enter toggles; Shift + arrows previews; Enter commits; Escape cancels.",
+          "screenshot": "pr38-build006-challenge-1280.png"
+        },
+        {
+          "url": "http://127.0.0.1:4216/?review=visual-followup",
+          "title": "EasyAsPie · The Fraction Bakery",
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "visibleIdentity": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web",
+          "mode": "challenge",
+          "elements": {
+            "#app": {
+              "x": 0,
+              "y": 0,
+              "width": 1920,
+              "height": 1080,
+              "bottom": 1080,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "flex",
+              "position": "relative"
+            },
+            ".header": {
+              "x": 38.390625,
+              "y": 12,
+              "width": 1843.21875,
+              "height": 67,
+              "bottom": 79,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "grid",
+              "position": "absolute"
+            },
+            "#scene": {
+              "x": 0,
+              "y": 89,
+              "width": 1920,
+              "height": 712.96875,
+              "bottom": 801.96875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#learning-card": {
+              "x": 380,
+              "y": 811.96875,
+              "width": 1160,
+              "height": 220.03125,
+              "bottom": 1032,
+              "background": "rgb(255, 249, 239)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "footer": {
+              "x": 0,
+              "y": 1040,
+              "width": 1920,
+              "height": 40,
+              "bottom": 1080,
+              "background": "rgb(255, 248, 236)",
+              "display": "flex",
+              "position": "absolute"
+            },
+            "#label-A": {
+              "x": 633.46875,
+              "y": 237.828125,
+              "width": 260,
+              "height": 84.640625,
+              "bottom": 322.46875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#label-B": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "bottom": 0,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "none",
+              "position": "absolute"
+            },
+            "#upper-order": {
+              "x": 1603.625,
+              "y": 95,
+              "width": 277.984375,
+              "height": 41,
+              "bottom": 136,
+              "background": "rgb(112, 41, 167)",
+              "display": "block",
+              "position": "absolute"
+            }
+          },
+          "cssVars": {
+            "header": "89px",
+            "footer": "40px",
+            "activity": "238.03125px"
+          },
+          "geometry": {
+            "hover": null,
+            "serving": null,
+            "collisions": [],
+            "plates": [
+              {
+                "visible": true,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 4
+              },
+              {
+                "visible": false,
+                "position": [
+                  -2.15,
+                  0,
+                  -0.65
+                ],
+                "grid": 4
+              }
+            ],
+            "knives": [],
+            "camera": {
+              "position": [
+                0,
+                10.660688384295497,
+                11.041163500014846
+              ],
+              "yaw": 0,
+              "tilt": 0,
+              "viewValue": 0,
+              "drawerValue": 0
+            }
+          },
+          "task": "Order 1 Of 24\nBuild The Order\nFraction Reference\n\nMake 1/2 using 4 equal parts in each whole.\n\n🔪 CUT PIES\nHint\nUndo\nClear Plates\n\nStart empty to ADD; start filled to ERASE. Release to place your pieces. CUT PIES checks your answer.\n\nUse Top View to see every piece, or open Piece Controls. Arrows explore; Enter toggles; Shift + arrows previews; Enter commits; Escape cancels.",
+          "screenshot": "pr38-build006-challenge-1920.png"
+        },
+        {
+          "url": "http://127.0.0.1:4216/?review=visual-followup",
+          "title": "EasyAsPie · The Fraction Bakery",
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "visibleIdentity": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web",
+          "mode": "free",
+          "elements": {
+            "#app": {
+              "x": 0,
+              "y": 0,
+              "width": 1366,
+              "height": 768,
+              "bottom": 768,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "flex",
+              "position": "relative"
+            },
+            ".header": {
+              "x": 27.3125,
+              "y": 12,
+              "width": 1311.375,
+              "height": 65.984375,
+              "bottom": 77.984375,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "grid",
+              "position": "absolute"
+            },
+            "#scene": {
+              "x": 0,
+              "y": 87.984375,
+              "width": 1366,
+              "height": 462.375,
+              "bottom": 550.359375,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#learning-card": {
+              "x": 103,
+              "y": 560.359375,
+              "width": 1160,
+              "height": 159.640625,
+              "bottom": 720,
+              "background": "rgb(255, 249, 239)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "footer": {
+              "x": 0,
+              "y": 728,
+              "width": 1366,
+              "height": 40,
+              "bottom": 768,
+              "background": "rgb(255, 248, 236)",
+              "display": "flex",
+              "position": "absolute"
+            },
+            "#label-A": {
+              "x": 342.546875,
+              "y": 113.640625,
+              "width": 260,
+              "height": 126.34375,
+              "bottom": 239.984375,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#label-B": {
+              "x": 763.4375,
+              "y": 113.640625,
+              "width": 260,
+              "height": 126.34375,
+              "bottom": 239.984375,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#upper-order": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "bottom": 0,
+              "background": "rgb(112, 41, 167)",
+              "display": "none",
+              "position": "absolute"
+            }
+          },
+          "cssVars": {
+            "header": "87.984375px",
+            "footer": "40px",
+            "activity": "177.640625px"
+          },
+          "geometry": {
+            "hover": null,
+            "serving": null,
+            "collisions": [],
+            "plates": [
+              {
+                "visible": true,
+                "position": [
+                  -3.55,
+                  0,
+                  -0.65
+                ],
+                "grid": 2
+              },
+              {
+                "visible": true,
+                "position": [
+                  3.55,
+                  0,
+                  -0.65
+                ],
+                "grid": 4
+              }
+            ],
+            "knives": [],
+            "camera": {
+              "position": [
+                0,
+                10.660688384295497,
+                11.041163500014846
+              ],
+              "yaw": 0,
+              "tilt": 0,
+              "viewValue": 0,
+              "drawerValue": 0
+            }
+          },
+          "task": "Free Play\nReset Mode\nFraction Reference\n\nSelect a piece to serve it and all earlier pieces. Cut and Regroup keep the same amount.\n\nExplore two equal wholes. Drag the background to move the camera.\n\nWhole · Numerator · Denominator · Equivalent Fractions",
+          "screenshot": "pr38-build006-free-play-1366.png"
+        }
+      ]
+    },
+    {
+      "port": 4201,
+      "label": "preserved-build007",
+      "manifest": {
+        "id": "0.4.1_Unassigned_local-5bcdfdbd84_build-007_20261003T181423Z_g36e3b7cdea4e_web",
+        "version": "0.4.1",
+        "codename": null,
+        "codenameSlug": "Unassigned",
+        "scope": "local-5bcdfdbd84",
+        "pr": null,
+        "ordinal": 7,
+        "builtAt": "2026-10-03T18:14:23.862Z",
+        "sha": "36e3b7cdea4e25af406bb231c68a144184c95cf1",
+        "dirty": false,
+        "sourceFingerprint": "2d5ba0cf5a899cd792a76007f1c8d627dcdea68f10a6dfa29f4e29cc22ee489b",
+        "prHead": null,
+        "target": "web",
+        "reservation": "local-exclusive-file"
+      },
+      "states": [
+        {
+          "url": "http://127.0.0.1:4201/?review=visual-followup",
+          "title": "EasyAsPie · The Fraction Bakery",
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "visibleIdentity": "0.4.1_Unassigned_local-5bcdfdbd84_build-007_20261003T181423Z_g36e3b7cdea4e_web",
+          "mode": "learn",
+          "elements": {
+            "#app": {
+              "x": 0,
+              "y": 0,
+              "width": 1366,
+              "height": 768,
+              "bottom": 768,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "flex",
+              "position": "relative"
+            },
+            ".header": {
+              "x": 27.3125,
+              "y": 12,
+              "width": 1311.375,
+              "height": 65.984375,
+              "bottom": 77.984375,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "grid",
+              "position": "absolute"
+            },
+            "#scene": {
+              "x": 0,
+              "y": 87.984375,
+              "width": 1366,
+              "height": 401.984375,
+              "bottom": 489.96875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#learning-card": {
+              "x": 103,
+              "y": 499.96875,
+              "width": 1160,
+              "height": 220.03125,
+              "bottom": 720,
+              "background": "rgb(255, 249, 239)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "footer": {
+              "x": 0,
+              "y": 728,
+              "width": 1366,
+              "height": 40,
+              "bottom": 768,
+              "background": "rgb(255, 248, 236)",
+              "display": "flex",
+              "position": "absolute"
+            },
+            "#label-A": {
+              "x": 442.1875,
+              "y": 134.828125,
+              "width": 260,
+              "height": 84.640625,
+              "bottom": 219.46875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#label-B": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "bottom": 0,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "none",
+              "position": "absolute"
+            },
+            "#upper-order": {
+              "x": 1060.703125,
+              "y": 93.984375,
+              "width": 277.984375,
+              "height": 41,
+              "bottom": 134.984375,
+              "background": "rgb(112, 41, 167)",
+              "display": "block",
+              "position": "absolute"
+            }
+          },
+          "cssVars": {
+            "header": "87.984375px",
+            "footer": "40px",
+            "activity": "238.03125px"
+          },
+          "geometry": null,
+          "task": "Step 1 Of 8\nOne Whole\nFraction Reference\n\nThis plate is one whole. Add both equal halves to make 1 whole.\n\n🔪 CUT PIES\nHint\nUndo\nClear Plates\nNext Order\n\nStart empty to ADD; start filled to ERASE. Release to place your pieces. CUT PIES checks your answer.\n\nTap pieces or open Piece Controls. Arrows explore; Enter toggles; Shift + arrows previews; Enter commits; Escape cancels.",
+          "screenshot": "preserved-build007-learn-1366.png"
+        },
+        {
+          "url": "http://127.0.0.1:4201/?review=visual-followup",
+          "title": "EasyAsPie · The Fraction Bakery",
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "visibleIdentity": "0.4.1_Unassigned_local-5bcdfdbd84_build-007_20261003T181423Z_g36e3b7cdea4e_web",
+          "mode": "challenge",
+          "elements": {
+            "#app": {
+              "x": 0,
+              "y": 0,
+              "width": 1366,
+              "height": 768,
+              "bottom": 768,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "flex",
+              "position": "relative"
+            },
+            ".header": {
+              "x": 27.3125,
+              "y": 12,
+              "width": 1311.375,
+              "height": 65.984375,
+              "bottom": 77.984375,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "grid",
+              "position": "absolute"
+            },
+            "#scene": {
+              "x": 0,
+              "y": 87.984375,
+              "width": 1366,
+              "height": 401.984375,
+              "bottom": 489.96875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#learning-card": {
+              "x": 103,
+              "y": 499.96875,
+              "width": 1160,
+              "height": 220.03125,
+              "bottom": 720,
+              "background": "rgb(255, 249, 239)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "footer": {
+              "x": 0,
+              "y": 728,
+              "width": 1366,
+              "height": 40,
+              "bottom": 768,
+              "background": "rgb(255, 248, 236)",
+              "display": "flex",
+              "position": "absolute"
+            },
+            "#label-A": {
+              "x": 442.1875,
+              "y": 134.828125,
+              "width": 260,
+              "height": 84.640625,
+              "bottom": 219.46875,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "block",
+              "position": "absolute"
+            },
+            "#label-B": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "bottom": 0,
+              "background": "rgba(0, 0, 0, 0)",
+              "display": "none",
+              "position": "absolute"
+            },
+            "#upper-order": {
+              "x": 1060.703125,
+              "y": 93.984375,
+              "width": 277.984375,
+              "height": 41,
+              "bottom": 134.984375,
+              "background": "rgb(112, 41, 167)",
+              "display": "block",
+              "position": "absolute"
+            }
+          },
+          "cssVars": {
+            "header": "87.984375px",
+            "footer": "40px",
+            "activity": "238.03125px"
+          },
+          "geometry": null,
+          "task": "Order 1 Of 24\nBuild The Order\nFraction Reference\n\nMake 1/2 using 4 equal parts in each whole.\n\n🔪 CUT PIES\nHint\nUndo\nClear Plates\nNext Order\n\nStart empty to ADD; start filled to ERASE. Release to place your pieces. CUT PIES checks your answer.\n\nTap pieces or open Piece Controls. Arrows explore; Enter toggles; Shift + arrows previews; Enter commits; Escape cancels.",
+          "screenshot": "preserved-build007-challenge-1366.png"
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
