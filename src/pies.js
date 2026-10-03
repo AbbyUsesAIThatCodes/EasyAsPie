@@ -141,7 +141,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   const orderKnife=makeKnife();orderKnife.position.set(0,.25,1.8);orderKnife.rotation.set(0,Math.PI/2,Math.PI/2);scene.add(orderKnife);
   const raycaster = new THREE.Raycaster(), reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let sceneMode='free';
-  let construction=null, activePlates=2, finishServing=null, unitFinishes=[];
+  let construction=null, activePlates=2, finishServing=null, unitFinishes=[],previewPlane=null;
   const barX = () => activePlates===1 ? 1.8 : 0;
   let exampleVisible = true, recipes = ['blueberry','blueberry'];
   let pies = [], bars = [], disposed = false, emphasized = null, topView = false;
@@ -277,7 +277,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
         else {for(const name of ['unit-guides','stroke-preview']){const old=pie.getObjectByName(name);if(old){pie.remove(old);dispose(old);}}pie.children.filter(o=>o.userData.slice).forEach(w=>{w.visible=true;w.getObjectByName('unit-cut').visible=true;});setPieServing(pie,pie.userData.serving);setBarServing(bars[i],pie.userData.serving);}
       });render(true);
     },
-    previewStroke(side,stroke){pies.forEach((pie,i)=>paintPreview(pie,i===side?stroke:null));render();},
+    previewStroke(side,stroke){previewPlane=stroke?{side,height:stroke.height}:null;pies.forEach((pie,i)=>paintPreview(pie,i===side?stroke:null));render();},
     async serve(plates,onStage,next={count:1,grid:2}){
       this.cancelServing();this.emphasize(null);unitFinishes.forEach(f=>f());unitFinishes=[];
       const animation=serveAnimation(pies,plates,room,{reduced,onFrame:()=>render(true),onStage,next,makeFresh:(side)=>makePie({n:0,d:next.grid},recipes[side],side)});finishServing=animation.finish;
@@ -285,7 +285,14 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
     },
     cancelServing(){finishServing?.();finishServing=null;},
     finishServing(){finishServing?.();},
-    projectPiece(side,k,r=1.1){const pie=pies[side];if(!pie)return null;const d=pie.userData.serving.d,a=Math.PI+(k-.5)*TAU/d,unit=((Math.floor(k-.5)%d)+d)%d+1,w=pie.children.find(o=>o.userData.slice===unit),y=construction&&!occupied(construction[side],unit)?.165:Math.max(.165,HIT_Y*w.scale.y);return project(pie.position.x+Math.sin(a)*r,y,pie.position.z+Math.cos(a)*r);},
+    projectPiece(side,k,r=1.1){const pie=pies[side];if(!pie)return null;const d=pie.userData.serving.d,a=Math.PI+(k-.5)*TAU/d,unit=((Math.floor(k-.5)%d)+d)%d+1,w=pie.children.find(o=>o.userData.slice===unit),y=previewPlane?.side===side?previewPlane.height:construction&&!occupied(construction[side],unit)?.165:Math.max(.165,HIT_Y*w.scale.y);return project(pie.position.x+Math.sin(a)*r,y,pie.position.z+Math.cos(a)*r);},
+    pickStroke(clientX,clientY,side,height){
+      const pie=pies[side],rect=canvas.getBoundingClientRect();if(!pie?.visible)return null;
+      raycaster.setFromCamera(new THREE.Vector2((clientX-rect.left)/rect.width*2-1,-(clientY-rect.top)/rect.height*2+1),camera);
+      const hit=raycaster.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,1,0),-(pie.position.y+height)),new THREE.Vector3());if(!hit)return null;
+      const local=pie.worldToLocal(hit),radius=Math.hypot(local.x,local.z);if(radius>RADIUS)return null;
+      return {pair:side?'B':'A',k:pieceAtPoint(local.x,local.z,pie.userData.serving.d),angle:((Math.atan2(local.x,local.z)-Math.PI)%TAU+TAU)%TAU,height,radius};
+    },
     pick(clientX, clientY) {
       if (disposed || modelReview || canvas.dataset.slicing === 'true') return null;
       const rect = canvas.getBoundingClientRect();

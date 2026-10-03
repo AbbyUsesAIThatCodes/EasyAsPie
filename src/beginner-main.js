@@ -97,7 +97,7 @@ function recordHelp(source){
 installReference(recordHelp);
 function changeMode(next){if(next===mode)return;interrupt();if(challengeStarted&&['learn','free'].includes(next))recordHelp(next==='free'?'free-play':'learn');mode=next;if(mode==='challenge')challengeStarted=true;undo=[];message='';tone='';render();save();resumeServing();}
 function editable(side){return !busy&&side<active()&&(mode==='free'||(!work().solved&&!work().complete&&currentTask().kind!=='read'));}
-function startStroke(side,k,keyboard=false,angle){if(mode==='free'||!editable(side))return;stroke={side,keyboard,...beginStroke(work().plates[side],k,angle)};bakery?.emphasize(null);preview();}
+function startStroke(side,k,keyboard=false,angle,height){if(mode==='free'||!editable(side))return;stroke={side,keyboard,...beginStroke(work().plates[side],k,angle),height:height??(occupied(work().plates[side],k)?.99:.165)};bakery?.emphasize(null);preview();}
 function preview(){if(!stroke)return;bakery?.previewStroke(stroke.side,stroke);say(`${stroke.operation.toUpperCase()} preview — ${count(stroke.units)} ${count(stroke.units)===1?'unit':'units'}. ${stroke.keyboard?'Enter to commit; Escape to cancel.':'Release to commit; Escape to cancel.'}`);}
 function commitStroke(){if(!stroke)return;const s=stroke;stroke=null;bakery?.previewStroke(-1,null);if(!editable(s.side))return;const w=work(),p=applyStroke(w.plates[s.side],s);undo.push(w.plates.map(x=>({...x})));putWork({...w,plates:w.plates.map((x,i)=>i===s.side?p:x)});message='Pieces changed. CUT PIES checks the complete order.';tone='';render(true);say(`${s.operation==='add'?'Added missing':'Removed occupied'} units. ${count(p.mask)} of ${p.d} parts now selected.`);}
 async function freeAction(action){
@@ -156,13 +156,13 @@ const canvas=$('scene');
 canvas.addEventListener('pointerleave',()=>{if(!pointer&&!stroke)bakery?.emphasize(null);});
 canvas.addEventListener('pointerdown',e=>{
  if(pointer||busy||e.button!==0)return;const hit=bakery?.pick(e.clientX,e.clientY);pointer={id:e.pointerId,x:e.clientX,y:e.clientY,kind:hit?'plate':'camera',pair:hit?.pair,k:hit?.k,moved:false};canvas.setPointerCapture(e.pointerId);
- if(hit&&mode!=='free')startStroke(pairs.indexOf(hit.pair),hit.k,false,hit.angle);
+ if(hit&&mode!=='free')startStroke(pairs.indexOf(hit.pair),hit.k,false,hit.angle,hit.height);
 });
 canvas.addEventListener('pointermove',e=>{
  if(!pointer){const hit=bakery?.pick(e.clientX,e.clientY);canvas.style.cursor=hit?'crosshair':'grab';if(!stroke)bakery?.emphasize(hit);return;}
  if(pointer.id!==e.pointerId)return;const dx=e.clientX-pointer.x,dy=e.clientY-pointer.y;
  if(pointer.kind==='camera'){if(pointer.moved||Math.hypot(dx,dy)>5){pointer.moved=true;bakery?.orbit(-dx*.003,dy*.003);pointer.x=e.clientX;pointer.y=e.clientY;}}
- else if(stroke){const hit=bakery?.pick(e.clientX,e.clientY);if(hit?.pair===pairs[stroke.side]&&hit.radius>.18){stroke={...stroke,...extendStroke(stroke,hit.k,{angle:hit.angle,pointer:true})};preview();}else{stroke=pauseStroke(stroke);say('Preview paused. Return to its end piece to continue, or release to keep this span.');}}
+ else if(stroke){const hit=bakery?.pickStroke(e.clientX,e.clientY,stroke.side,stroke.height);if(hit?.pair===pairs[stroke.side]&&hit.radius>.18){stroke={...stroke,...extendStroke(stroke,hit.k,{angle:hit.angle,pointer:true})};preview();}else{stroke=pauseStroke(stroke);say('Preview paused. Return to its end piece to continue, or release to keep this span.');}}
 });
 canvas.addEventListener('pointerup',e=>{if(pointer?.id!==e.pointerId)return;const p=pointer;pointer=null;if(stroke)commitStroke();else if(p.kind==='plate'&&mode==='free')toggleUnit(pairs.indexOf(p.pair),p.k);if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);});
 for(const event of ['pointercancel','lostpointercapture'])canvas.addEventListener(event,e=>{if(pointer?.id===e.pointerId)cancelInput();});

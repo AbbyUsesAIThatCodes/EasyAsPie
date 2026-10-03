@@ -32,16 +32,16 @@ export function paintPreview(pie,stroke){
  const preview=new THREE.Group();preview.name='stroke-preview';pie.add(preview);
  for(let i=0;i<stroke.d;i++)if(stroke.units&(1<<i)){
   const m=new THREE.MeshBasicMaterial({color:stroke.operation==='add'?'#a346ff':'#ed445d',transparent:true,opacity:.55,depthTest:false,depthWrite:false});
-  const sector=mesh(preview,solidSector(1.63,1.63,.025,Math.PI+i*TAU/stroke.d,TAU/stroke.d),m,0,HIT_Y+.04);sector.renderOrder=5;sector.castShadow=false;
+  const sector=mesh(preview,solidSector(1.63,1.63,.025,Math.PI+i*TAU/stroke.d,TAU/stroke.d),m,0,(stroke.height??HIT_Y)+.04);sector.renderOrder=5;sector.castShadow=false;
  }
 }
 export function animateUnits(pie,before,after,{reduced,onFrame}){
  const changed=before.mask^after.mask;if(!changed||reduced.matches)return ()=>{};
  const moving=pie.children.filter(o=>o.userData.slice&&(changed&(1<<(o.userData.slice-1))));
  let frame,done=false;const start=performance.now(),puffs=new THREE.Group();pie.add(puffs);
- moving.forEach(w=>{w.visible=true;if(occupied(after,w.userData.slice))w.scale.set(.01,.05,.01);else{const a=w.userData.start+w.userData.angle/2;for(let i=0;i<4;i++){const puff=mesh(puffs,new THREE.SphereGeometry(.06,6,4),material('#eadbba'),...point(.8+i*.16,a,.65).toArray());puff.userData.seed=i;}}});
+ moving.forEach(w=>{w.visible=true;if(occupied(after,w.userData.slice))w.scale.set(.01,1,.01);else{const a=w.userData.start+w.userData.angle/2;for(let i=0;i<4;i++){const puff=mesh(puffs,new THREE.SphereGeometry(.06,6,4),material('#eadbba'),...point(.8+i*.16,a,.65).toArray());puff.userData.seed=i;}}});
  const finish=()=>{if(done)return;done=true;cancelAnimationFrame(frame);moving.forEach(w=>{w.scale.setScalar(1);w.visible=occupied(after,w.userData.slice);});pie.remove(puffs);dispose(puffs);onFrame();};
- const tick=now=>{const t=Math.min(1,(now-start)/380);for(const w of moving){const add=occupied(after,w.userData.slice);const s=add?(t<.65?1.12*Math.sin(t/.65*Math.PI/2):1+.12*Math.cos((t-.65)/.35*Math.PI/2)):1-t;w.scale.set(s,add?Math.max(.05,s-(t>.5&&t<.8?.12:0)):s,s);}puffs.children.forEach(p=>{p.position.y+=.016;p.scale.setScalar(Math.sin(t*Math.PI)*1.6);});onFrame();if(t===1)finish();else frame=requestAnimationFrame(tick);};frame=requestAnimationFrame(tick);return finish;
+ const tick=now=>{const t=Math.min(1,(now-start)/380);for(const w of moving){const add=occupied(after,w.userData.slice);const s=add?(t<.65?1.12*Math.sin(t/.65*Math.PI/2):1+.12*Math.cos((t-.65)/.35*Math.PI/2)):1-t;w.scale.set(s,add?1+.09*Math.sin(t*TAU):s,s);}puffs.children.forEach(p=>{p.position.y+=.016;p.scale.setScalar(Math.sin(t*Math.PI)*1.6);});onFrame();if(t===1)finish();else frame=requestAnimationFrame(tick);};frame=requestAnimationFrame(tick);return finish;
 }
 export function makeKnife(){
  const knife=new THREE.Group();
