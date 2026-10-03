@@ -44,6 +44,7 @@ function layout({labels,bars,handle,knife,moving,drawerValue,viewValue}){
 const knifeControl=document.createElement('button');knifeControl.id='scene-knife';knifeControl.textContent='CUT PIES';knifeControl.setAttribute('aria-label','Cut Pies With The Counter Knife');document.querySelector('.bakery').append(knifeControl);knifeControl.onclick=()=>submit();
 try{bakery=createBakery($('scene'),{onLayout:layout,modelReview:params.get('review')==='solids'});}catch(e){$('scene-error').hidden=false;document.body.classList.add('scene-unavailable');}
 $('scene').addEventListener('scene-error',()=>{$('scene-error').hidden=false;document.body.classList.add('scene-unavailable');cancelInput();});
+document.addEventListener('toggle',e=>{if(e.target.matches?.('.unit-access'))bakery?.refreshLayout();},true);
 function say(text){$('operation').textContent=text;$('announcement').textContent=text;}
 function piecesHTML(pair,d,kind){return Array.from({length:d},(_,i)=>`<button type="button" class="${kind==='bar'?'bar-segment':'pie-choice'}" data-pair="${pair}" data-piece="${i+1}" tabindex="${i===0?0:-1}">${kind==='bar'?'<span class="selection-mark">●</span>':i+1}</button>`).join('');}
 function renderScene(animate=false){

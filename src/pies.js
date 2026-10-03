@@ -202,6 +202,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   canvas.addEventListener('webglcontextlost', contextLost);
   const motionChange = () => { if (reduced.matches) { finishSlices?.(); finishServing?.(); transition(); } }; reduced.addEventListener('change', motionChange);
   return {
+    refreshLayout(){layout();},
     update(left, right, recipe = recipes) {
       recipes = Array.isArray(recipe) ? recipe : [recipe,recipe];
       let rebuild = false;
