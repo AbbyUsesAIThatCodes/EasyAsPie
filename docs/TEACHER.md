@@ -1,5 +1,23 @@
 # EasyAsPie Teacher Notes
 
+## Beginner Review Teaching Path
+
+[Exact Learn And Challenge Answer Key](BEGINNER_ANSWER_KEY.md) · [Implementation Contract And Curriculum Limits](BEGINNER_REVIEW_CONTRACT.md) · [Playable Review And Evidence](review/issue-31/README.md).
+
+Begin with Learn's eight steps: one whole, half, three quarters, two visible-to-written questions, equivalent amounts under finer/coarser partitions, and one whole plus a proper fraction. Ask what stays the same when the parts change size. Technical vocabulary is available in the reference after the plain-language introduction; no numerator naming quiz is required.
+
+Challenge has the twenty preserved exact conversion tasks followed by four mixed-number orders. A mixed answer must show one completely filled plate and the extra proper fraction on the other, in either order. Bars mirror the learner's own work and may edit its units; they reveal no target answer. Hints, vocabulary/reference exposure and Learn/Free Play detours while an order is unfinished are recorded as help. A correct answer after a wrong attempt is retained as a retry, not first-try success. Resetting construction never erases previous submitted responses.
+
+Start on empty space to add, or a filled slice to erase. The operation stays latched through the drag. Purple and red previews include textual ADD/ERASE descriptions. CUT PIES explicitly commits the complete order. Incorrect work stays available to revise. Correct work gets a serving-only whole-pie reveal and bounded choreography, then empty plates await Next Order. The committed response stays exact and saved throughout. Skip Serving, navigation and reload are safe interruption paths; reduced motion settles immediately.
+
+All modes save only in this browser, without expiry. Activity Report downloads the current and archived new sessions. Previous Work downloads the preserved legacy challenge report; old raw save bytes remain under their original key. Valid legacy Free Play and flavors copy forward, but old completion is not awarded as new completion. Unsupported/corrupt saves are retained without overwrite. Clear Saved Work explicitly clears this review's new save only.
+
+Review direct bar editing, the brief whole-pie reveal, gold highlight target, timing and kitchen/camera as provisional design choices. Classroom hardware, projector and screen-reader checks remain open under #13. This is anonymous fraction-practice evidence, not proof of measurement mastery. No worksheet is included before game approval.
+
+## Historical Teacher Notes
+
+The following notes describe older artifacts and their superseded assessment semantics; use the current path above for this review.
+
 ## Integrated Overnight Review
 
 The current provisional build combines PR19's 3D bakery, PR20's physical slicing and PR22's three modes. [Playable build and exact evidence](review/issue-21/README.md). Manual merge order is PR19 → PR20 → PR22; teacher visual acceptance and #13 classroom review remain pending.

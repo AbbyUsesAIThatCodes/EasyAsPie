@@ -1,5 +1,17 @@
 # EasyAsPie Design Brief
 
+## Current Beginner Revision
+
+The approved October 3 [construction contract](BEGINNER_REVIEW_CONTRACT.md) supersedes the historical numerator-prediction entry, prefix-only assessment, drawer-bound bars and single-plate-only scope below. Current Learn and Challenge use exact occupied-unit masks on blank plates; amounts are checked in integer sixteenths. Adjacent units render continuously while retaining recoverable unit data. A mixed answer visibly contains one full plate plus a proper fraction in either plate order.
+
+CUT PIES commits before visual serving begins. The committed answer cannot change during whole-pie reveal, boundary knives, leftward leftovers, retained purple glow, one gold upper-highlight pulse, rightward serving and cabinet plate supply. Next Order explicitly activates the next task. Interruptions settle to a saved solved response. Reduced motion settles without travel.
+
+The counter is larger; both equal-length bars sit between pies and stay independent of drawer travel. A single-pie task parks the inactive spare and pairs one bar with the active plate. The camera remains orthographic, with yaw limited to ±0.48 radians and bounded tilt; the cutaway side walls keep the work visible. The reference has a fixed framed header and independently scrolling content. The [local glimmer recipe](NEW_TASK_GLIMMER.md) is separate from success feedback.
+
+The sections below preserve earlier designs and are not the active assessment contract.
+
+## Preserved Review History
+
 ## Current Direction And Implementation Boundary
 
 The [preserved Current Direction](DESIGN-DISCUSSION-2026-09-28.md#current-direction) governs the paired pie/bar redesign. Each independent pair shares one exact fraction; its equal-length bar mirrors its pie without units or ruler ticks. The [Free Play Action Contract](FREE_PLAY_ACTIONS.md) now defines the tested state foundation, serving changes, and exact Cut/Regroup behavior. See [Implementation Status](IMPLEMENTATION_STATUS.md) for what is connected to the UI.

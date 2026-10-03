@@ -1,5 +1,15 @@
 # EasyAsPie Roadmap
 
+## Authorized October 3 Review
+
+#31–#36 now have an isolated local implementation on the corrected PR30 baseline. See [the bounded contract](docs/BEGINNER_REVIEW_CONTRACT.md), [current implementation](docs/IMPLEMENTATION_STATUS.md), and [identified review evidence](docs/review/issue-31/README.md). The first checkpoint established exact construction and activity state; follow-up checkpoints cover recovery, input and physical layout. Existing draft PRs are preserved, with no main merge or deployment.
+
+#13 is explicitly reconciled as the teacher/device/accessibility review gate for **all three current modes**, including the new beginner and mixed-number sequence. Its historical Free Play-only exclusion does not describe this newly approved scope. Do not close it or claim classroom readiness from browser automation. Next: teacher review of gameplay, bar interaction, whole-pie reveal, upper gold highlight, kitchen/camera, and actual hardware. Shared glimmer/archive work remains a local handoff; no global retrofit. The separate fraction-name game is parked. No worksheet until game approval.
+
+All following roadmap sequences are historical; their earlier one-issue scope and deferred modes do not override the October 3 authorization.
+
+## Preserved Review History
+
 ## Current Follow-Up Review
 
 The user authorized three bounded successive drafts: [PR28 / #25](docs/review/issue-25/README.md), [PR29 / #26](docs/review/issue-26/README.md), then [PR30 / #27](docs/review/issue-27/README.md). The final PR30 artifact contains all three. Manual merge order is 28 → 29 → 30; explicitly retarget each successor to main after accepting/merging its predecessor. No task merged or deployed these changes. The teacher previously integrated the older stack through PR24; the following plan is preserved history, with #13 classroom signoff still pending.

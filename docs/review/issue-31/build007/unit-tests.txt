@@ -1,0 +1,254 @@
+
+> easy-as-pie@0.4.1 test
+> node --test tests/*.test.js
+
+TAP version 13
+# Subtest: physical bars keep equal wholes and exact selected counts in all 34 states
+ok 1 - physical bars keep equal wholes and exact selected counts in all 34 states
+  ---
+  duration_ms: 59.2879
+  type: 'test'
+  ...
+# Subtest: concurrent CI builds and reruns reserve unique increasing PR ordinals
+ok 2 - concurrent CI builds and reruns reserve unique increasing PR ordinals
+  ---
+  duration_ms: 2.7269
+  type: 'test'
+  ...
+# Subtest: separate local build processes cannot reserve the same ordinal
+ok 3 - separate local build processes cannot reserve the same ordinal
+  ---
+  duration_ms: 188.5395
+  type: 'test'
+  ...
+# Subtest: every movable pastry/filling sector is closed, outward-facing and equal-volume
+ok 4 - every movable pastry/filling sector is closed, outward-facing and equal-volume
+  ---
+  duration_ms: 37.9944
+  type: 'test'
+  ...
+# Subtest: decorative pastry shells are closed and face outward
+ok 5 - decorative pastry shells are closed and face outward
+  ---
+  duration_ms: 51.329
+  type: 'test'
+  ...
+# Subtest: new save is versioned, has no expiry, preserves all modes and anonymous exact history
+ok 6 - new save is versioned, has no expiry, preserves all modes and anonymous exact history
+  ---
+  duration_ms: 4.6198
+  type: 'test'
+  ...
+# Subtest: reject inconsistent, corrupt, wrong-grid and unsupported saves without altering caller data
+ok 7 - reject inconsistent, corrupt, wrong-grid and unsupported saves without altering caller data
+  ---
+  duration_ms: 1.1224
+  type: 'test'
+  ...
+# Subtest: every grid: latched strokes, overlap, wrap, empty/full and split contiguous runs
+ok 8 - every grid: latched strokes, overlap, wrap, empty/full and split contiguous runs
+  ---
+  duration_ms: 3.175
+  type: 'test'
+  ...
+# Subtest: all authored targets are exact; all 20 legacy conversions retained, then mixed extension
+ok 9 - all authored targets are exact; all 20 legacy conversions retained, then mixed extension
+  ---
+  duration_ms: 0.6913
+  type: 'test'
+  ...
+# Subtest: immutable committed responses, retries, help, no double-submit/advance and verified recovery
+ok 10 - immutable committed responses, retries, help, no double-submit/advance and verified recovery
+  ---
+  duration_ms: 1.4452
+  type: 'test'
+  ...
+# Subtest: all orders including zero and whole complete with recoverable exact evidence
+ok 11 - all orders including zero and whole complete with recoverable exact evidence
+  ---
+  duration_ms: 4.2661
+  type: 'test'
+  ...
+# Subtest: only a genuine settled user open/close grants at least ten minutes quiet
+ok 12 - only a genuine settled user open/close grants at least ten minutes quiet
+  ---
+  duration_ms: 2.6144
+  type: 'test'
+  ...
+# Subtest: locked and background time cannot run or catch up the decorative cue
+ok 13 - locked and background time cannot run or catch up the decorative cue
+  ---
+  duration_ms: 0.2062
+  type: 'test'
+  ...
+# Subtest: every flavor uses identical core solids and keeps its recipe through serving changes
+ok 14 - every flavor uses identical core solids and keeps its recipe through serving changes
+  ---
+  duration_ms: 298.2838
+  type: 'test'
+  ...
+# Subtest: all valid servings convert exactly and reversibly when representable
+ok 15 - all valid servings convert exactly and reversibly when representable
+  ---
+  duration_ms: 2.7503
+  type: 'test'
+  ...
+# Subtest: reject invalid counts and unsupported partitions, rather than rounding
+ok 16 - reject invalid counts and unsupported partitions, rather than rounding
+  ---
+  duration_ms: 0.6337
+  type: 'test'
+  ...
+# Subtest: authored tasks all have exact, in-range whole-slice answers
+ok 17 - authored tasks all have exact, in-range whole-slice answers
+  ---
+  duration_ms: 0.9075
+  type: 'test'
+  ...
+# Subtest: initial states preserve notation and do not retain mutable caller fractions
+ok 18 - initial states preserve notation and do not retain mutable caller fractions
+  ---
+  duration_ms: 2.2454
+  type: 'test'
+  ...
+# Subtest: A: every serving action is bounded and independent across all 34 ├ù 34 paired states
+ok 19 - A: every serving action is bounded and independent across all 34 ├ù 34 paired states
+  ---
+  duration_ms: 30.4449
+  type: 'test'
+  ...
+# Subtest: A: every Cut/Regroup preserves amount, round-trips, and leaves the other pair alone
+ok 20 - A: every Cut/Regroup preserves amount, round-trips, and leaves the other pair alone
+  ---
+  duration_ms: 12.624
+  type: 'test'
+  ...
+# Subtest: A: invalid selections leave both fractions unchanged at every valid serving
+ok 21 - A: invalid selections leave both fractions unchanged at every valid serving
+  ---
+  duration_ms: 1.0339
+  type: 'test'
+  ...
+# Subtest: B: every serving action is bounded and independent across all 34 ├ù 34 paired states
+ok 22 - B: every serving action is bounded and independent across all 34 ├ù 34 paired states
+  ---
+  duration_ms: 26.7217
+  type: 'test'
+  ...
+# Subtest: B: every Cut/Regroup preserves amount, round-trips, and leaves the other pair alone
+ok 23 - B: every Cut/Regroup preserves amount, round-trips, and leaves the other pair alone
+  ---
+  duration_ms: 8.1916
+  type: 'test'
+  ...
+# Subtest: B: invalid selections leave both fractions unchanged at every valid serving
+ok 24 - B: invalid selections leave both fractions unchanged at every valid serving
+  ---
+  duration_ms: 0.1962
+  type: 'test'
+  ...
+# Subtest: malformed requests and presentation events never partially update either pair
+ok 25 - malformed requests and presentation events never partially update either pair
+  ---
+  duration_ms: 0.2838
+  type: 'test'
+  ...
+# Subtest: the agreed discovery sequences and repeated input keep exact independent servings
+ok 26 - the agreed discovery sequences and repeated input keep exact independent servings
+  ---
+  duration_ms: 0.4128
+  type: 'test'
+  ...
+# Subtest: all pie servings retain equal solid wedges, a common origin, and the same whole
+ok 27 - all pie servings retain equal solid wedges, a common origin, and the same whole
+  ---
+  duration_ms: 360.483
+  type: 'test'
+  ...
+# Subtest: review fixtures use the same validated immutable state as the default preview
+ok 28 - review fixtures use the same validated immutable state as the default preview
+  ---
+  duration_ms: 0.6546
+  type: 'test'
+  ...
+# Subtest: local progress has no time expiry; flavors, exact notation and cue quiet period survive round trip
+ok 29 - local progress has no time expiry; flavors, exact notation and cue quiet period survive round trip
+  ---
+  duration_ms: 2.5369
+  type: 'test'
+  ...
+# Subtest: malformed, unsupported and inconsistent saved work is rejected without changing its input
+ok 30 - malformed, unsupported and inconsistent saved work is rejected without changing its input
+  ---
+  duration_ms: 1.9945
+  type: 'test'
+  ...
+# Subtest: completed Learn restores only its correct serving; unfinished responses and other modes stay valid
+ok 31 - completed Learn restores only its correct serving; unfinished responses and other modes stay valid
+  ---
+  duration_ms: 4.0494
+  type: 'test'
+  ...
+# Subtest: history replay retains retries and help, rejects forged first-try flags and impossible advancement
+ok 32 - history replay retains retries and help, rejects forged first-try flags and impossible advancement
+  ---
+  duration_ms: 0.6431
+  type: 'test'
+  ...
+# Subtest: twenty distinct authored conversions cover both directions, factors two/four/eight, zero and whole
+ok 33 - twenty distinct authored conversions cover both directions, factors two/four/eight, zero and whole
+  ---
+  duration_ms: 0.3265
+  type: 'test'
+  ...
+# Subtest: download reports every response, retry/help source, original build and exact current build
+ok 34 - download reports every response, retry/help source, original build and exact current build
+  ---
+  duration_ms: 1.3978
+  type: 'test'
+  ...
+# Subtest: an edited unsubmitted response restores without stale feedback or invented credit
+ok 35 - an edited unsubmitted response restores without stale feedback or invented credit
+  ---
+  duration_ms: 0.1727
+  type: 'test'
+  ...
+# Subtest: all piece interiors and both sides of every cut follow the back-center origin
+ok 36 - all piece interiors and both sides of every cut follow the back-center origin
+  ---
+  duration_ms: 1.3318
+  type: 'test'
+  ...
+# Subtest: serving updates retain solid wedges and independently update all 34 visual states
+ok 37 - serving updates retain solid wedges and independently update all 34 visual states
+  ---
+  duration_ms: 222.0111
+  type: 'test'
+  ...
+# Subtest: wrong answers cannot advance; solving twice cannot inflate results
+ok 38 - wrong answers cannot advance; solving twice cannot inflate results
+  ---
+  duration_ms: 1.6732
+  type: 'test'
+  ...
+# Subtest: hints and example visits are assistance; the next task resets assistance
+ok 39 - hints and example visits are assistance; the next task resets assistance
+  ---
+  duration_ms: 0.4021
+  type: 'test'
+  ...
+# Subtest: a full round terminates once and keeps each result, including zero and whole
+ok 40 - a full round terminates once and keeps each result, including zero and whole
+  ---
+  duration_ms: 0.5073
+  type: 'test'
+  ...
+1..40
+# tests 40
+# suites 0
+# pass 40
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 652.8806

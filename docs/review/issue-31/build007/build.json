@@ -1,0 +1,16 @@
+{
+  "id": "0.4.1_Unassigned_local-5bcdfdbd84_build-007_20261003T181423Z_g36e3b7cdea4e_web",
+  "version": "0.4.1",
+  "codename": null,
+  "codenameSlug": "Unassigned",
+  "scope": "local-5bcdfdbd84",
+  "pr": null,
+  "ordinal": 7,
+  "builtAt": "2026-10-03T18:14:23.862Z",
+  "sha": "36e3b7cdea4e25af406bb231c68a144184c95cf1",
+  "dirty": false,
+  "sourceFingerprint": "2d5ba0cf5a899cd792a76007f1c8d627dcdea68f10a6dfa29f4e29cc22ee489b",
+  "prHead": null,
+  "target": "web",
+  "reservation": "local-exclusive-file"
+}

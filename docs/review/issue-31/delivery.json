@@ -1,0 +1,9 @@
+{
+  "build": "0.4.1_Unassigned_local-5bcdfdbd84_build-007_20261003T181423Z_g36e3b7cdea4e_web",
+  "source": "36e3b7cdea4e25af406bb231c68a144184c95cf1",
+  "zip": "0.4.1_Unassigned_local-5bcdfdbd84_build-007_20261003T181423Z_g36e3b7cdea4e_web.zip",
+  "zipSha256": "70de3fc2891762195315fc71a687330532414867d9e181523578ff94e9f93a72",
+  "zipBytes": 10241278,
+  "preview": "http://127.0.0.1:4201/",
+  "branch": "review/31-beginner-pie-building"
+}
