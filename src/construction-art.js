@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {TAU,RADIUS,HIT_Y,point,mesh,material,solidSector,dispose,box} from './bakery-geometry.js';
-import {occupied,runs} from './construction.js';
+import {occupied,runs,plate} from './construction.js';
+import {arrivingPlate} from './serving-layout.js';
 
 function removeNamed(group,name){const old=group.getObjectByName(name);if(old){group.remove(old);dispose(old);}}
 export function paintConstruction(pie,p){
@@ -44,23 +45,29 @@ export function animateUnits(pie,before,after,{reduced,onFrame}){
 }
 export function makeKnife(){
  const knife=new THREE.Group();
- box(knife,.09,.29,1.42,material('#e6eff2',.2,{metalness:.6}),0,0,.55,.02);
- box(knife,.16,.22,.7,material('#36796f'),0,0,-.46,.05);return knife;
+ const blade=box(knife,.09,.29,1.6,material('#e6eff2',.2,{metalness:.6}),0,0,.85,.02);blade.name='blade';
+ const handle=box(knife,.16,.22,.7,material('#36796f'),0,0,2.1,.05);handle.name='handle';
+ return knife;
 }
-export function serveAnimation(pies,plates,room,{reduced,onFrame,onStage}){
- let frame,done=false,start=performance.now(),last='';const knives=new THREE.Group();room.scene.add(knives);
+export function serveAnimation(pies,plates,room,{reduced,onFrame,onStage,next,makeFresh}){
+ let frame,done=false,start=performance.now(),last='',resolve;
+ const promise=new Promise(r=>resolve=r),knives=new THREE.Group();knives.name='serving-knives';room.scene.add(knives);
  const homes=pies.map(p=>p.position.clone()),visibleBefore=pies.map(p=>p.visible);
- for(let side=0;side<plates.length;side++)for(const run of runs(plates[side])){
+ const fresh=Array.from({length:next.count},(_,i)=>{const p=makeFresh(i);p.name='arriving-plate';paintConstruction(p,plate(next.grid));p.visible=false;room.scene.add(p);return p;});
+ for(let side=0;side<plates.length;side++)if(visibleBefore[side])for(const run of runs(plates[side])){
   if(run.length===plates[side].d)continue;
   for(const k of [run.start,run.start+run.length]){const knife=makeKnife();knife.position.copy(homes[side]);knife.position.y=3;knife.rotation.y=Math.PI+k*TAU/plates[side].d;knives.add(knife);}
  }
- const stage=(name)=>{if(last!==name){last=name;onStage(name);}};
- const finish=()=>{if(done)return;done=true;cancelAnimationFrame(frame);pies.forEach((pie,i)=>{pie.position.copy(homes[i]);pie.children.filter(o=>o.userData.slice).forEach(w=>{w.position.set(0,0,0);w.scale.setScalar(1);});paintConstruction(pie,plates[i]);removeNamed(pie,'served-glow');});room.setSupply(0);room.scene.remove(knives);dispose(knives);stage('ready');onFrame();};
- if(reduced.matches){stage('whole');stage('cut');stage('leftovers');stage('glow');stage('serve');stage('cabinet');finish();return {finish,promise:Promise.resolve()};}
- let resolve;const promise=new Promise(r=>resolve=r);const stop=()=>{finish();resolve();};
+ const stage=name=>{if(last!==name){last=name;onStage(name);}};
+ const finish=()=>{
+  if(done)return;done=true;cancelAnimationFrame(frame);
+  pies.forEach((pie,i)=>{pie.position.copy(homes[i]);pie.visible=visibleBefore[i];pie.children.filter(o=>o.userData.slice).forEach(w=>{w.position.set(0,0,0);w.scale.setScalar(1);});paintConstruction(pie,plates[i]);removeNamed(pie,'served-glow');});
+  fresh.forEach(p=>{room.scene.remove(p);dispose(p);});room.setSupply(0);room.scene.remove(knives);dispose(knives);room.serving=null;stage('ready');onFrame();resolve();
+ };
+ if(reduced.matches){for(const name of ['whole','cut','leftovers','glow','serve','cabinet'])stage(name);finish();return {finish,promise};}
  const tick=now=>{
-  const t=(now-start)/1000;
-  const name=t<.55?'whole':t<1.1?'cut':t<1.85?'leftovers':t<2.5?'glow':t<3.1?'serve':t<5.7?'cabinet':'ready';stage(name);
+  const t=(now-start)/1000,end=next.count?5.45:3.1;
+  stage(t<.55?'whole':t<1.1?'cut':t<1.85?'leftovers':t<2.5?'glow':t<3.1?'serve':t<end?'cabinet':'ready');
   for(let i=0;i<pies.length;i++){
    const pie=pies[i],p=plates[i];
    pie.children.filter(o=>o.userData.slice).forEach(w=>{
@@ -71,13 +78,13 @@ export function serveAnimation(pies,plates,room,{reduced,onFrame,onStage}){
     const glow=new THREE.Group();glow.name='served-glow';pie.add(glow);for(const run of runs(p))mesh(glow,solidSector(1.64,1.64,.04,Math.PI+run.start*TAU/p.d,run.length*TAU/p.d),new THREE.MeshBasicMaterial({color:'#b769ff',opacity:.35,transparent:true,depthWrite:false}),0,HIT_Y+.06);
    }
    if(t>=2.5&&t<3.1)pie.position.x=homes[i].x+10*Math.pow((t-2.5)/.6,2);
-   if(t>=3.1){
-    pie.visible=t>=3.85;pie.children.filter(o=>o.userData.slice).forEach(w=>w.visible=false);removeNamed(pie,'served-glow');pie.getObjectByName('selected-serving').visible=false;
-    const a=Math.min(1,Math.max(0,(t-3.85)/1.2)),destination=homes[i].clone();if(!visibleBefore[i])destination.x=6.1;
-    pie.position.copy(destination).lerp(new THREE.Vector3(i ? 2.1 : -2.1,1.1,-3.05),1-a);
-   }
+   if(t>=3.1)pie.visible=false;
   }
+  const progress=Math.min(1,Math.max(0,(t-3.85)/1.6));
+  for(let i=0;i<fresh.length;i++){fresh[i].visible=t>=3.85;const p=arrivingPlate(i,next.count,progress);fresh[i].position.set(p.x,p.y,p.z);}
   knives.visible=t>=.55&&t<1.1;knives.children.forEach(k=>k.position.y=3-2.15*Math.min(1,Math.max(0,(t-.55)/.55)));
-  room.setSupply(t<3.1?0:t<3.7?(t-3.1)/.6:t<5.1?1:Math.max(0,(5.7-t)/.6));onFrame();if(t>=5.7)stop();else frame=requestAnimationFrame(tick);
- };frame=requestAnimationFrame(tick);return {finish:stop,promise};
+  room.setSupply(t<3.1?0:t<3.7?(t-3.1)/.6:progress<.95?1:Math.max(0,(1-progress)/.05));
+  room.serving={stage:last,nextCount:next.count,progress,plates:fresh.filter(p=>p.visible).map(p=>p.position.toArray())};
+  onFrame();if(t>=end)finish();else frame=requestAnimationFrame(tick);
+ };frame=requestAnimationFrame(tick);return {finish,promise};
 }

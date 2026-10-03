@@ -21,6 +21,7 @@ export function extendStroke(s,k,{angle=(k-.5)*TURN/s.d,direction=0,pointer=fals
  if(s.suspended)return k===s.last?{...s,angle,suspended:false}:s;
  let delta=angle-s.angle;while(delta>Math.PI)delta-=TURN;while(delta< -Math.PI)delta+=TURN;
  if(Math.abs(Math.abs(delta)-Math.PI)<1e-8){if(pointer&&!direction)return s;if(direction)delta=Math.PI*direction;}
+ if(direction>0&&delta<0)delta+=TURN;if(direction<0&&delta>0)delta-=TURN;
  const travel=s.travel+delta,step=TURN/s.d,end=Math.floor((s.origin+travel)/step+1e-9),start=s.start-1;
  let units=0;for(let i=Math.min(start,end);i<=Math.min(Math.max(start,end),Math.min(start,end)+s.d-1);i++)units|=1<<((i%s.d+s.d)%s.d);
  return {...s,last:k,angle,travel,units};

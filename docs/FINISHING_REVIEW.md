@@ -25,6 +25,10 @@ Build and evidence links will be recorded here after verification. Teacher visua
 
 ## Paused WIP Checkpoint For Computer Switch
 
+### Resumed Mechanics Priority
+
+The teacher reprioritized mechanics, lesson acceptance, then worksheets, then aesthetics. Worksheet creation still waits for the accepted game. The resumed source now integrates continuous signed pointer arcs, outside suspension, automatic saved-answer serving/advancement, next-task plate counts, outward serving knives, and cabinet/counter/path clearance. The material-index regression was fixed by selecting named geometry. All 43 model/geometry tests passed before real-input QA; browser QA exposed a rapid-click hit-target problem during slice growth, now under correction. This source checkpoint is not yet the new tested review build. Full enclosure, ceiling fan and illustrated wallpaper remain later finishing work; the prior scenery is retained until that focused replacement.
+
 Work paused at the parent's October 3 checkpoint request. This is source preservation, not a playable finishing review or accepted build. Build 007 at localhost 4201 remains the last verified playable artifact and is unchanged.
 
 - Added the signed-span construction model and a regression test for shrinking, wrap, reversal, explicit keyboard direction, ambiguous jumps, and outside suspension. The current input controller still needs to pass continuous hit angles/direction and call outside suspension.

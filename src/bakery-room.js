@@ -1,6 +1,7 @@
 import { barPosition } from './bakery-geometry.js';
 import * as THREE from 'three';
 import { box, mesh, material, noise, BAR_LENGTH, BAR_DEPTH, BAR_Y, BAR_Z, PIE_X } from './bakery-geometry.js';
+import {COUNTER,SUPPLY} from './serving-layout.js';
 
 function woodTexture() {
   const canvas = document.createElement('canvas'); canvas.width = canvas.height = 512;
@@ -17,17 +18,18 @@ function woodTexture() {
 export function makeRoom(scene) {
   const wood = material('#fff4df', 0.46, { map: woodTexture() });
   const teal = material('#769c92', 0.62), edge = material('#9db8a6'), deep = material('#47675f'), cream = material('#f8e8c8'), brass = material('#cb913f', 0.25, { metalness: 0.75 });
-  box(scene, 17.5, 0.30, 8.3, wood, 0, -0.16, -1.9, 0.09);
+  const counter=box(scene,COUNTER.width,COUNTER.height,COUNTER.depth,wood,COUNTER.x,COUNTER.y,COUNTER.z,.09);counter.name='work-counter';
+  const obstacles=[];const cabinet=(name,...args)=>{const m=box(scene,...args);m.name=name;obstacles.push(m);return m;};
   box(scene, 13, 2.3, 4, deep, 0, -1.50, -0.50);
   box(scene, 22, 10, 0.15, material('#fae8a8'), 0, 1.5, -9);
   box(scene, .16, 10, 6, material('#f1e5bc'), -9.5, 1.5, -4.5);
   box(scene, .16, 10, 6, material('#c6e1d1'), 9.5, 1.5, -4.5);
   box(scene, 22, .16, 18, material('#e4cb8e'), 0, -2.7, 0);
   // Back cabinetry: recessed panels, proud rails, knobs and an actual shelf.
-  for (const x of [-6.4, 6.4]) {
-    box(scene, 2.32, 3.4, 0.27, teal, x, 0.85, -5.85);
-    box(scene, 1.91, 2.82, 0.08, deep, x, 0.85, -5.66);
-    box(scene, 1.74, 2.65, 0.10, edge, x, 0.85, -5.59);
+  for (const x of [-7.2, 7.2]) {
+    cabinet('side-cabinet',2.32,3.4,.27,teal,x,.85,-5.85);
+    cabinet('side-panel',1.91,2.82,.08,deep,x,.85,-5.66);
+    cabinet('side-frame',1.74,2.65,.10,edge,x,.85,-5.59);
     mesh(scene, new THREE.SphereGeometry(0.085, 12, 8), brass, x + 0.73, 0.7, -5.45);
   }
   box(scene, 15.3, 0.18, 0.9, wood, 0, 2.7, -5.50);
@@ -56,27 +58,29 @@ export function makeRoom(scene) {
   // Lemons stay at the rear edge, away from mathematical units and hit targets.
   for(let i=0;i<4;i++){const lemon=mesh(scene,new THREE.SphereGeometry(.24,16,10),material('#f4cf38'),-6.1+i*.34,.25,-3.4+(i%2)*.25);lemon.scale.set(1.4,.85,.85);const leaf=mesh(scene,new THREE.SphereGeometry(.12,8,6),material('#579162'),-6.1+i*.34,.48,-3.4+(i%2)*.25);leaf.scale.set(1,.15,.5);}
   // Independent supply cabinet: real hinges and visible stacks, never the drawer surprise.
-  box(scene,8.6,2.65,.12,deep,0,1.2,-8.9);
-  for(const x of [-4.3,4.3])box(scene,.12,2.65,3.9,deep,x,1.2,-6.98);
-  box(scene,8.6,.12,3.9,wood,0,2.5,-6.98);
-  box(scene,8.6,.1,3.9,wood,0,.1,-6.98);
+  const {halfWidth,front,back,bottom,top}=SUPPLY,cy=(bottom+top)/2,cz=(front+back)/2;
+  cabinet('supply-back',halfWidth*2,top-bottom,.12,deep,0,cy,back);
+  for(const x of [-halfWidth,halfWidth])cabinet('supply-side',.12,top-bottom,front-back,deep,x,cy,cz);
+  cabinet('supply-roof',halfWidth*2,.12,front-back,wood,0,top,cz);
+  cabinet('supply-shelf',halfWidth*2,.1,front-back,wood,0,bottom,cz);
+  cabinet('supply-base',halfWidth*2,3.35,front-back,teal,0,-1.025,cz);
   for(const x of [-2.1,2.1])for(let i=0;i<6;i++){
-    const stack=mesh(scene,new THREE.CylinderGeometry(1.89,1.84,.06,64),cream,x,.19+i*.1,-7);
-    const rim=mesh(scene,new THREE.TorusGeometry(1.87,.02,6,64),brass,x,.23+i*.1,-7);rim.rotation.x=Math.PI/2;
+    const stack=mesh(scene,new THREE.CylinderGeometry(1.89,1.84,.06,64),cream,x,.79+i*.1,SUPPLY.stackZ);
+    const rim=mesh(scene,new THREE.TorusGeometry(1.87,.02,6,64),brass,x,.83+i*.1,SUPPLY.stackZ);rim.rotation.x=Math.PI/2;
   }
   const supplyDoors=[];
-  for(const sign of [-1,1]){const hinge=new THREE.Group();hinge.position.set(sign*4.3,1.2,-5.05);scene.add(hinge);box(hinge,4.27,2.65,.13,teal,-sign*2.15,0,0);box(hinge,3.91,2.28,.09,edge,-sign*2.15,0,.1);mesh(hinge,new THREE.SphereGeometry(.09,12,8),brass,-sign*4.05,0,.2);supplyDoors.push(hinge);}
+  for(const sign of [-1,1]){const hinge=new THREE.Group();hinge.name='supply-door';hinge.position.set(sign*halfWidth,cy,front);scene.add(hinge);box(hinge,halfWidth-.03,top-bottom,.13,teal,-sign*halfWidth/2,0,0);box(hinge,halfWidth-.38,top-bottom-.34,.09,edge,-sign*halfWidth/2,0,.1);mesh(hinge,new THREE.SphereGeometry(.09,12,8),brass,-sign*(halfWidth-.25),0,.2);supplyDoors.push(hinge);obstacles.push(hinge);}
   // Foreground cabinets remain behind the moving tray.
   for (const x of [-5.5, 5.5]) {
     box(scene, 1.35, 1.9, 0.15, teal, x, -1.3, 1.6);
     box(scene, 1.05, 1.55, 0.09, edge, x, -1.3, 1.7);
   }
   // Small ceramic crock and folded cloth ground the edges without hiding pies.
-  const crock = mesh(scene, new THREE.CylinderGeometry(0.30, 0.35, 0.65, 32), cream, -5.15, 0.34, -0.6);
+  const crock = mesh(scene, new THREE.CylinderGeometry(0.30, 0.35, 0.65, 32), cream, -7.6, 0.34, -3.4);
   for (const y of [0.22, 0.5]) { const stripe = mesh(scene, new THREE.TorusGeometry(0.325, 0.018, 6, 32), teal, crock.position.x, y, crock.position.z); stripe.rotation.x = Math.PI / 2; }
-  for (let i = 0; i < 3; i++) { const spoon = box(scene, 0.05, 0.9, 0.06, wood, -5.15 + i * 0.1, 0.85, -0.62); spoon.rotation.z = (i - 1) * 0.2; }
-  box(scene, 0.85, 0.055, 1.85, material('#e6decc'), 5.0, 0.055, -0.2);
-  for (let i = 0; i < 5; i++) box(scene, 0.065, 0.058, 1.85, material('#8b9fba'), 4.65 + i * 0.17, 0.06, -0.2, 0.01);
+  for (let i = 0; i < 3; i++) { const spoon = box(scene, 0.05, 0.9, 0.06, wood, -7.6 + i * 0.1, 0.85, -3.42); spoon.rotation.z = (i - 1) * 0.2; }
+  box(scene,.85,.055,1.1,material('#e6decc'),7.2,.055,-3.2);
+  for(let i=0;i<5;i++)box(scene,.065,.058,1.1,material('#8b9fba'),6.85+i*.17,.06,-3.2,.01);
   const drawer = new THREE.Group(); drawer.name = 'fraction-drawer'; scene.add(drawer);
   box(drawer, 10.55, 0.10, 1.78, wood, 0, -0.69, 0.89);
   for (const x of [-5.3, 5.3]) box(drawer, 0.14, 0.41, 1.85, wood, x, -0.54, 0.89);
@@ -87,7 +91,7 @@ export function makeRoom(scene) {
   mesh(drawer, new THREE.TubeGeometry(handle, 24, 0.065, 8, false), brass);
   // Rails extend toward the viewer with the tray and receive live shadows.
   for (const x of [-5.16, 5.16]) box(drawer, 0.055, 0.06, 2.2, brass, x, -0.65, 0.68);
-  return { drawer, setSupply:value=>supplyDoors.forEach((door,i)=>door.rotation.y=(i?1:-1)*value*1.25) };
+  return {drawer,counter,obstacles,supplyDoors,setSupply:value=>supplyDoors.forEach((door,i)=>door.rotation.y=(i?1:-1)*value*SUPPLY.openAngle)};
 }
 export function makeBar(serving, side) {
   const group = new THREE.Group(); group.position.set(barPosition(side).x, BAR_Y, barPosition(side).z);

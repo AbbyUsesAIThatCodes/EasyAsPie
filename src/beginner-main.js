@@ -3,7 +3,7 @@ import './beginner.css';
 import {RECIPES,createBakery} from './pies.js';
 import {createFreePlay,applyFreePlayAction} from './free-play.js';
 import {previewState} from './preview-fixtures.js';
-import {plate,full,count,amount,occupied,beginStroke,extendStroke,applyStroke,createWork,help,commit,nextWork,tasksFor,orderLabel,expectedUnits,evidence} from './construction.js';
+import {plate,full,count,amount,occupied,beginStroke,extendStroke,pauseStroke,applyStroke,createWork,help,commit,nextWork,tasksFor,orderLabel,expectedUnits,evidence} from './construction.js';
 import {STORAGE_KEY,encode,decode,report} from './construction-progress.js';
 import {decodeProgress} from './progress.js';
 import {activityReport} from './activity-report.js';
@@ -80,7 +80,7 @@ function renderActivity(){
   $('upper-order').hidden=w.complete;$('upper-order').textContent=served?'Order Served · Fresh Plates Ready':t.kind==='read'?'Which Fraction Is Shown?':`${orderLabel(t)} · ${t.grid} Equal Parts Per Whole`;
   const options=['1/2','1/4','3/4','3/8','2/4','6/8','6/16'];
   card.innerHTML=w.complete?`<div class="activity-head"><h1>${mode==='learn'?'Learning':'Orders'} Complete</h1><button id="new-round">New Round</button><button data-reference>Fraction Reference</button></div><p>${rows.length} tasks completed · ${rows.filter(r=>r.firstWithoutHelp).length} first answers without recorded help · ${rows.filter(r=>r.help.length).length} helped · ${rows.filter(r=>r.retries).length} retried.</p><p class="activity-feedback">Your Activity Report keeps every response and help event. Practice evidence awaits teacher review.</p>`:
-  `<div class="activity-head"><span class="task-count">${mode==='learn'?'Step':'Order'} ${w.index+1} Of ${tasksFor(mode).length}</span><h1>${mode==='learn'?t.title:'Build The Order'}</h1><button data-reference>Fraction Reference</button></div><p class="task-prompt">${mode==='learn'?t.prompt:`Make <strong>${orderLabel(t)}</strong> using ${t.grid} equal parts in each whole.${t.whole?' Fill one plate completely and build the extra fraction on the other.':''}`}</p><div class="activity-actions">${t.kind==='read'?`<label>Written Fraction <select id="written-answer" ${busy||w.solved?'disabled':''}><option value="">Choose An Amount</option>${options.map(x=>`<option value="${x}" ${w.written===x?'selected':''}>${x}</option>`).join('')}</select></label>`:''}<button id="submit-order" class="cut-pies" ${busy||w.solved?'disabled':''}><span class="knife-icon" aria-hidden="true">🔪</span> CUT PIES</button><button id="hint-order" ${busy||w.solved?'disabled':''}>Hint</button><button id="undo" ${busy||w.solved||!undo.length?'disabled':''}>Undo</button><button id="reset" ${!busy&&w.solved?'disabled':''}>${busy?'Skip Serving':'Clear Plates'}</button><button id="next-order" ${busy||!w.solved?'disabled':''}>${w.index===tasksFor(mode).length-1?'Finish':'Next Order'}</button></div><p class="activity-feedback ${tone}" role="status">${message||'Start empty to ADD; start filled to ERASE. Release to place your pieces. CUT PIES checks your answer.'}</p><p class="keyboard-guidance">Tap pieces or open Piece Controls. Arrows explore; Enter toggles; Shift + arrows previews; Enter commits; Escape cancels.</p>`;
+  `<div class="activity-head"><span class="task-count">${mode==='learn'?'Step':'Order'} ${w.index+1} Of ${tasksFor(mode).length}</span><h1>${mode==='learn'?t.title:'Build The Order'}</h1><button data-reference>Fraction Reference</button></div><p class="task-prompt">${mode==='learn'?t.prompt:`Make <strong>${orderLabel(t)}</strong> using ${t.grid} equal parts in each whole.${t.whole?' Fill one plate completely and build the extra fraction on the other.':''}`}</p><div class="activity-actions">${t.kind==='read'?`<label>Written Fraction <select id="written-answer" ${busy||w.solved?'disabled':''}><option value="">Choose An Amount</option>${options.map(x=>`<option value="${x}" ${w.written===x?'selected':''}>${x}</option>`).join('')}</select></label>`:''}<button id="submit-order" class="cut-pies" ${busy||w.solved?'disabled':''}><span class="knife-icon" aria-hidden="true">🔪</span> CUT PIES</button><button id="hint-order" ${busy||w.solved?'disabled':''}>Hint</button><button id="undo" ${busy||w.solved||!undo.length?'disabled':''}>Undo</button><button id="reset" ${!busy&&w.solved?'disabled':''}>${busy?'Skip Serving':'Clear Plates'}</button></div><p class="activity-feedback ${tone}" role="status">${message||'Start empty to ADD; start filled to ERASE. Release to place your pieces. CUT PIES checks your answer.'}</p><p class="keyboard-guidance">Tap pieces or open Piece Controls. Arrows explore; Enter toggles; Shift + arrows previews; Enter commits; Escape cancels.</p>`;
  }
  const cueKey=mode==='free'?'free':`${mode}:${work().index}:${work().complete}`;
  if(cueKey!==lastCue){lastCue=cueKey;card.classList.remove('new-task');if(!noticedTasks.has(cueKey)){noticedTasks.add(cueKey);void card.offsetWidth;card.classList.add('new-task');card.dataset.cueCount=String(Number(card.dataset.cueCount||0)+1);}}
@@ -95,9 +95,9 @@ function recordHelp(source){
  if(mode!=='free')$('learning-card').dataset.orderAssisted=String(evidence(work())[work().index].help.length>0);changed();
 }
 installReference(recordHelp);
-function changeMode(next){if(next===mode)return;interrupt();if(challengeStarted&&['learn','free'].includes(next))recordHelp(next==='free'?'free-play':'learn');mode=next;if(mode==='challenge')challengeStarted=true;undo=[];message='';tone='';render();save();}
+function changeMode(next){if(next===mode)return;interrupt();if(challengeStarted&&['learn','free'].includes(next))recordHelp(next==='free'?'free-play':'learn');mode=next;if(mode==='challenge')challengeStarted=true;undo=[];message='';tone='';render();save();resumeServing();}
 function editable(side){return !busy&&side<active()&&(mode==='free'||(!work().solved&&!work().complete&&currentTask().kind!=='read'));}
-function startStroke(side,k,keyboard=false){if(mode==='free'||!editable(side))return;stroke={side,keyboard,...beginStroke(work().plates[side],k)};preview();}
+function startStroke(side,k,keyboard=false,angle){if(mode==='free'||!editable(side))return;stroke={side,keyboard,...beginStroke(work().plates[side],k,angle)};bakery?.emphasize(null);preview();}
 function preview(){if(!stroke)return;bakery?.previewStroke(stroke.side,stroke);say(`${stroke.operation.toUpperCase()} preview — ${count(stroke.units)} ${count(stroke.units)===1?'unit':'units'}. ${stroke.keyboard?'Enter to commit; Escape to cancel.':'Release to commit; Escape to cancel.'}`);}
 function commitStroke(){if(!stroke)return;const s=stroke;stroke=null;bakery?.previewStroke(-1,null);if(!editable(s.side))return;const w=work(),p=applyStroke(w.plates[s.side],s);undo.push(w.plates.map(x=>({...x})));putWork({...w,plates:w.plates.map((x,i)=>i===s.side?p:x)});message='Pieces changed. CUT PIES checks the complete order.';tone='';render(true);say(`${s.operation==='add'?'Added missing':'Removed occupied'} units. ${count(p.mask)} of ${p.d} parts now selected.`);}
 async function freeAction(action){
@@ -112,18 +112,30 @@ async function submit(){
  if(t.kind==='read'&&!w.written){message='Choose the written amount first. Your answer stays hidden until CUT PIES.';renderActivity();return;}
  const next=commit(w);putWork(next);save();
  if(!next.solved){const total=next.plates.reduce((n,p)=>n+amount(p),0);tone='incorrect';message=t.kind==='read'?'Not Yet. Compare the purple amount with the same whole, then revise your written fraction.':total===expectedUnits(t)&&t.whole?'Not Yet. The total matches; show one complete whole on one plate, then the extra fraction on the other.':`Not Yet. Your serving is ${total<expectedUnits(t)?'less':'more'} than ${orderLabel(t)}. Your work is kept; add or erase and try again.`;renderActivity();return;}
- const token=++epoch;busy=true;tone='correct';message=`Correct — ${orderLabel(t)}. Your selected answer is saved.`;render();
- const stageCopy={whole:'Serving view: the whole pie briefly appears. Your answer is unchanged.',cut:'Cutting at the boundaries of each contiguous serving.',leftovers:'The unselected leftovers lift and whisk left.',glow:'Your retained serving glows purple.',serve:'The completed order is served to the right.',cabinet:'The cabinet opens and fresh plates arrive.',ready:`Correct — ${orderLabel(t)}. ${t.goal||'Same amount, even when the equal parts have different names.'} Choose Next Order when ready.`};
- await bakery?.serve(displayPlates(),stage=>{if(token!==epoch)return;$('scene').dataset.servingStage=stage;message=stageCopy[stage];const feedback=$('learning-card').querySelector('.activity-feedback');if(feedback)feedback.textContent=message;if(stage==='glow')$('upper-order').classList.add('success-gold');});
- if(token!==epoch)return;busy=false;served=true;render();$('next-order')?.focus();save();
+ await playServing();
 }
-function clearPlates(){interrupt();if(mode==='free'){free=createFreePlay();message='Free Play reset to equal halves.';}else if(!work().solved){const w=work();undo.push(w.plates.map(p=>({...p})));putWork({...w,plates:w.plates.map(p=>plate(p.d)),written:''});message='Plates cleared. Your previous submitted responses are still in the report.';}render();}
+function resumeServing(){if(mode!=='free'&&work().solved&&!work().complete&&!busy&&!document.hidden)void playServing();}
+async function playServing(){
+ if(mode==='free'||busy||!work().solved||work().complete)return;
+ const completed=work(),t=currentTask(),following=nextWork(completed),nextTask=tasksFor(mode)[following.index];
+ const incoming={count:following.complete?0:nextTask.whole?2:1,grid:nextTask.grid};
+ const token=++epoch;busy=true;tone='correct';message=`Correct - ${orderLabel(t)}. Your selected answer is saved.`;render();
+ const stageCopy={whole:'Serving view: the whole pie briefly appears. Your answer is unchanged.',cut:'Cutting at the boundaries of each contiguous serving.',leftovers:'The unselected leftovers lift and whisk left.',glow:'Your retained serving glows purple.',serve:'The completed order is served to the right.',cabinet:`The cabinet opens. ${incoming.count===1?'One fresh plate arrives':'Two fresh plates arrive'} for the next order.`,ready:'Fresh plates are on the counter.'};
+ await bakery?.serve(displayPlates(),stage=>{if(token!==epoch)return;$('scene').dataset.servingStage=stage;message=stageCopy[stage];const feedback=$('learning-card').querySelector('.activity-feedback');if(feedback)feedback.textContent=message;if(stage==='glow')$('upper-order').classList.add('success-gold');},incoming);
+ if(token!==epoch||work().index!==completed.index||!work().solved||work().complete)return;
+ // Only this token may append the advance event. A cancelled animation keeps
+ // the solved response; returning/reloading resumes it without another answer.
+ putWork(nextWork(work()));busy=false;served=false;undo=[];tone='';
+ $('upper-order').classList.remove('success-gold');message=work().complete?'Every order is served. Your report keeps the original responses.':`Correct! ${t.goal||'Your serving matched the requested amount.'} Here is your next order.`;
+ render();save();say(work().complete?'Activity complete.':`New ${mode==='learn'?'step':'order'}: ${nextTask.prompt||'Make '+orderLabel(nextTask)+'.'}`);
+}
+
+function clearPlates(){if(busy&&mode!=='free'){bakery?.finishServing();return;}interrupt();if(mode==='free'){free=createFreePlay();message='Free Play reset to equal halves.';}else if(!work().solved){const w=work();undo.push(w.plates.map(p=>({...p})));putWork({...w,plates:w.plates.map(p=>plate(p.d)),written:''});message='Plates cleared. Your previous submitted responses are still in the report.';}render();}
 document.addEventListener('click',e=>{
  const modeButton=e.target.closest('button[data-mode]');if(modeButton){changeMode(modeButton.dataset.mode);return;}
  const piece=e.target.closest('[data-piece]');if(piece){if(stroke?.keyboard)cancelInput();toggleUnit(pairs.indexOf(piece.dataset.pair),Number(piece.dataset.piece));return;}
  const action=e.target.closest('[data-action]');if(action){if(mode==='free')freeAction({pair:action.dataset.pair,type:action.dataset.action});else if(action.dataset.action==='clear'&&editable(pairs.indexOf(action.dataset.pair))){const w=work(),side=pairs.indexOf(action.dataset.pair);undo.push(w.plates.map(p=>({...p})));putWork({...w,plates:w.plates.map((p,i)=>i===side?plate(p.d):p)});render(true);}return;}
  if(e.target.closest('#submit-order'))submit();
- if(e.target.closest('#next-order')&&!busy&&mode!=='free'&&work().solved){interrupt();putWork(nextWork(work()));undo=[];message='';tone='';render();$('submit-order')?.focus();save();}
  if(e.target.closest('#reset'))clearPlates();
  if(e.target.closest('#undo')&&!busy&&undo.length&&!work().solved){cancelInput();putWork({...work(),plates:undo.pop()});message='Last construction change undone. Submitted responses stay recorded.';render(true);}
  if(e.target.closest('#hint-order')&&!busy&&!work().solved){recordHelp('hint');const t=currentTask();message=t.kind==='read'?'Count the purple equal parts, then count all equal parts in the whole. Equivalent names show the same amount.':`${t.whole?'Fill one whole plate first. ':''}${t.n}/${t.d} is ${t.n*t.grid/t.d}/${t.grid}. Select ${t.n*t.grid/t.d} of ${t.grid} equal parts${t.whole?' on the other plate':''}. This task is marked as helped.`;renderActivity();}
@@ -137,23 +149,24 @@ document.addEventListener('keydown',e=>{
  const b=e.target.closest('[data-piece]');if(!b)return;const side=pairs.indexOf(b.dataset.pair),k=Number(b.dataset.piece),d=fractions()[side].d;
  if(stroke?.keyboard&&['Enter',' '].includes(e.key)){e.preventDefault();commitStroke();return;}
  const n={ArrowRight:k%d+1,ArrowDown:k%d+1,ArrowLeft:(k-2+d)%d+1,ArrowUp:(k-2+d)%d+1,Home:1,End:d}[e.key];if(n===undefined)return;e.preventDefault();
- if(e.shiftKey&&mode!=='free'){if(!stroke)startStroke(side,k,true);if(stroke?.side===side){stroke={...stroke,...extendStroke(stroke,n)};preview();}}else if(stroke?.keyboard)cancelInput();
+ if(e.shiftKey&&mode!=='free'){if(!stroke)startStroke(side,k,true);if(stroke?.side===side){stroke={...stroke,...extendStroke(stroke,n,{direction:['ArrowLeft','ArrowUp','Home'].includes(e.key)?-1:1})};preview();}}else if(stroke?.keyboard)cancelInput();
  b.parentElement.querySelector(`[data-piece="${n}"]`).focus();
 });
 const canvas=$('scene');
+canvas.addEventListener('pointerleave',()=>{if(!pointer&&!stroke)bakery?.emphasize(null);});
 canvas.addEventListener('pointerdown',e=>{
  if(pointer||busy||e.button!==0)return;const hit=bakery?.pick(e.clientX,e.clientY);pointer={id:e.pointerId,x:e.clientX,y:e.clientY,kind:hit?'plate':'camera',pair:hit?.pair,k:hit?.k,moved:false};canvas.setPointerCapture(e.pointerId);
- if(hit&&mode!=='free')startStroke(pairs.indexOf(hit.pair),hit.k);
+ if(hit&&mode!=='free')startStroke(pairs.indexOf(hit.pair),hit.k,false,hit.angle);
 });
 canvas.addEventListener('pointermove',e=>{
  if(!pointer){const hit=bakery?.pick(e.clientX,e.clientY);canvas.style.cursor=hit?'crosshair':'grab';if(!stroke)bakery?.emphasize(hit);return;}
  if(pointer.id!==e.pointerId)return;const dx=e.clientX-pointer.x,dy=e.clientY-pointer.y;
  if(pointer.kind==='camera'){if(pointer.moved||Math.hypot(dx,dy)>5){pointer.moved=true;bakery?.orbit(-dx*.003,dy*.003);pointer.x=e.clientX;pointer.y=e.clientY;}}
- else if(stroke){const hit=bakery?.pick(e.clientX,e.clientY);if(hit?.pair===pairs[stroke.side]){stroke={...stroke,...extendStroke(stroke,hit.k)};preview();}}
+ else if(stroke){const hit=bakery?.pick(e.clientX,e.clientY);if(hit?.pair===pairs[stroke.side]&&hit.radius>.18){stroke={...stroke,...extendStroke(stroke,hit.k,{angle:hit.angle,pointer:true})};preview();}else{stroke=pauseStroke(stroke);say('Preview paused. Return to its end piece to continue, or release to keep this span.');}}
 });
 canvas.addEventListener('pointerup',e=>{if(pointer?.id!==e.pointerId)return;const p=pointer;pointer=null;if(stroke)commitStroke();else if(p.kind==='plate'&&mode==='free')toggleUnit(pairs.indexOf(p.pair),p.k);if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);});
 for(const event of ['pointercancel','lostpointercapture'])canvas.addEventListener(event,e=>{if(pointer?.id===e.pointerId)cancelInput();});
-window.addEventListener('blur',cancelInput);document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelInput();if(busy&&mode!=='free'){interrupt();message='Your correct response is saved. Continue when ready.';render();}save();}});
+window.addEventListener('blur',cancelInput);document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelInput();if(busy&&mode!=='free'){interrupt();message='Your correct response is saved. Serving resumes when you return.';render();}save();}else resumeServing();});
 $('orbit-left').onclick=()=>{cancelInput();bakery?.orbit(-.12);};$('orbit-right').onclick=()=>{cancelInput();bakery?.orbit(.12);};
 $('view').onclick=()=>{cancelInput();const top=$('view').getAttribute('aria-pressed')!=='true';$('view').setAttribute('aria-pressed',String(top));$('view').textContent=top?'Angled View':'Top View';bakery?.setTopView(top);};
 $('reset-view').onclick=()=>{cancelInput();bakery?.resetCamera();$('view').textContent='Top View';$('view').setAttribute('aria-pressed','false');};
@@ -164,12 +177,12 @@ function changed(){if(storageReady&&!storageBlocked&&canPersist){clearTimeout(sa
 function save(){clearTimeout(saveTimer);if(!storageReady||storageBlocked||!canPersist)return;try{if(localStorage.getItem(STORAGE_KEY)!==lastStored){storageBlocked=true;$('save-status').textContent='Saved work changed elsewhere — reload to restore';return;}const text=encode(snapshot(),identity);localStorage.setItem(STORAGE_KEY,text);lastStored=text;$('save-status').textContent=legacyText?'Saved Here · Previous Activity Preserved':'Saved Only In This Browser';}catch{$('save-status').textContent='Could Not Save — Keep This Page Open';}}
 if(canPersist){try{
  legacyText=localStorage.getItem('easyaspie.progress.v1');lastStored=localStorage.getItem(STORAGE_KEY);
- if(lastStored){const s=decode(lastStored).state;({mode,free,flavors,learn,challenge,archives,challengeStarted,drawerOpen}=s);message=work().solved?'Restored your committed correct response. Choose Next Order when ready.':'Restored your work and original response history.';}
+ if(lastStored){const s=decode(lastStored).state;({mode,free,flavors,learn,challenge,archives,challengeStarted,drawerOpen}=s);message=work().solved?'Restored your correct response. Preparing the next order.':'Restored your work and original response history.';}
  else if(legacyText){try{const old=decodeProgress(legacyText).state;free=old.free;flavors=old.flavors;}catch{}message='New activity version: previous work is preserved separately. Use Previous Work to download it.';}
  }catch{storageBlocked=true;$('save-status').textContent='Saved Work Could Not Be Restored — Retained Without Overwrite';}}
 $('legacy-report').hidden=!legacyText;$('legacy-report').onclick=()=>{try{const old=decodeProgress(legacyText);download(activityReport(old.state.challenge.session,identity).html,identity.id+'_previous-activity-report.html');}catch{download(legacyText,identity.id+'_preserved-previous-work.json','application/json');}};
 $('clear-saved-work').onclick=()=>{const dialog=document.createElement('dialog');dialog.innerHTML='<div class="reference-head"><h2>Clear This Review’s Saved Work?</h2></div><div class="reference-content"><p>This removes the new activity’s responses and archived rounds from this browser. Previous-version work stays preserved. Download Activity Report first if you need it.</p><button id="confirm-clear">Clear And Restart</button> <button id="cancel-clear">Keep My Work</button></div>';document.body.append(dialog);dialog.showModal();dialog.querySelector('#cancel-clear').focus();dialog.querySelector('#cancel-clear').onclick=()=>dialog.close();dialog.querySelector('#confirm-clear').onclick=()=>{try{storageReady=false;clearTimeout(saveTimer);localStorage.removeItem(STORAGE_KEY);location.reload();}catch{say('Browser storage could not be cleared.');}};dialog.addEventListener('close',()=>{dialog.remove();$('clear-saved-work').focus();});};
-storageReady=true;render();bakery?.setDrawer(drawerOpen);$('drawer-toggle').setAttribute('aria-expanded',String(drawerOpen));if(!canPersist)$('save-status').textContent='Review Fixture — Saving Is Off';
+storageReady=true;render();queueMicrotask(resumeServing);bakery?.setDrawer(drawerOpen);$('drawer-toggle').setAttribute('aria-expanded',String(drawerOpen));if(!canPersist)$('save-status').textContent='Review Fixture — Saving Is Off';
 window.addEventListener('pagehide',()=>{save();interrupt();});window.addEventListener('resize',()=>{cancelInput();fitPanels();});
 // Read-only geometry access for real-input review scripts. It cannot alter answers.
-if(params.has('review'))window.__review={identity,point:(side,k,r)=>{const p=bakery?.projectPiece(side,k,r),rect=canvas.getBoundingClientRect();return p?{x:p.x+rect.left,y:p.y+rect.top}:null;},snapshot:()=>structuredClone(snapshot())};
+if(params.has('review'))window.__review={identity,point:(side,k,r)=>{const p=bakery?.projectPiece(side,k,r),rect=canvas.getBoundingClientRect();return p?{x:p.x+rect.left,y:p.y+rect.top}:null;},snapshot:()=>structuredClone(snapshot()),geometry:()=>bakery?.reviewGeometry(),stroke:()=>stroke?structuredClone(stroke):null,pick:(x,y)=>bakery?.pick(x,y)};

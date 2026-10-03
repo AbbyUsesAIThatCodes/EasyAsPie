@@ -15,7 +15,7 @@ export function makePie(serving, recipeName, side) {
   group.userData.recipe = Object.hasOwn(RECIPES, recipeName) ? recipeName : 'blueberry';
   const china = material('#fff4df', 0.22);
   const profile = [[0, 0.04], [1.48, 0.04], [1.67, 0.065], [1.87, 0.16], [1.93, 0.20], [1.94, 0.24], [1.88, 0.26], [1.7, 0.19], [1.49, 0.14], [0, 0.14]].map(p => new THREE.Vector2(...p));
-  mesh(group, new THREE.LatheGeometry(profile, 96), china);
+  mesh(group, new THREE.LatheGeometry(profile, 96), china).name='plate-body';
   const trim = mesh(group, new THREE.TorusGeometry(1.89, 0.014, 6, 96), material('#c3a16c', 0.35), 0, 0.249); trim.rotation.x = Math.PI / 2;
   const step = TAU / serving.d;
   for (let i = 0; i < serving.d; i++) {
@@ -158,6 +158,20 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       o.material.emissiveIntensity = focus ? .3 : tone && wedge.userData.selected ? .2 : 0;
     }));
   });
+  const syncEmphasis = piece => {
+      if (piece?.pair === 'A' && !exampleVisible) piece = null;
+      if (piece && (!Number.isInteger(piece.k) || piece.k < 1 || piece.k > pies[piece.pair === 'A' ? 0 : 1]?.userData.serving.d || canvas.dataset.slicing === 'true')) piece = null;
+        const side=piece?.pair==='B'?1:0,height=piece?(construction&&!occupied(construction[side],piece.k)?.19:Math.max(.165,HIT_Y*(pies[side].children.find(o=>o.userData.slice===piece.k)?.scale.y||1))+.03):0;
+      if ((!emphasized&&!piece)||(emphasized?.pair===piece?.pair&&emphasized?.k===piece?.k&&emphasized?.outlineHeight===height)) return;
+      pies.forEach(pie => { const outline = pie.getObjectByName('piece-emphasis'); if (outline) { pie.remove(outline); dispose(outline); }
+        pie.traverse(o => { if (o.material?.name === 'serving-fruit') { o.material.emissive.set('#6e37e7'); o.material.emissiveIntensity = 0; } });
+      });
+      emphasized = piece?{...piece,outlineHeight:height}:null;
+      if (piece && !modelReview) { const pie = pies[piece.pair === 'A' ? 0 : 1]; pie.add(pieceOutline(piece.k, pie.userData.serving.d,height));
+        pie.children.find(o => o.userData.slice === piece.k)?.traverse(o => { if (o.material?.name === 'serving-fruit') o.material.emissiveIntensity = 0.3; });
+      }
+      paintFeedback();
+    };
   const project = (x, y, z) => { const p = new THREE.Vector3(x, y, z).project(camera); return { x: (p.x + 1) * width / 2, y: (1 - p.y) * height / 2 }; };
   const setCamera = () => {
     const angle = THREE.MathUtils.clamp(THREE.MathUtils.lerp(modelReview ? 0.50 : 0.68, Math.PI / 2 - 0.001, viewValue) + tilt, 0.42, Math.PI / 2 - 0.001);
@@ -180,7 +194,7 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   };
   const render = (shadows = false) => {
     if (disposed) return; if (shadows) renderer.shadowMap.needsUpdate = true;
-    renderer.render(scene, camera); canvas.dataset.drawCalls = String(renderer.info.render.calls); layout();
+    syncEmphasis(emphasized);renderer.render(scene, camera); canvas.dataset.drawCalls = String(renderer.info.render.calls); layout();
   };
   const tick = time => {
     if (disposed || !animation) return;
@@ -206,6 +220,17 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   canvas.addEventListener('webglcontextlost', contextLost);
   const motionChange = () => { if (reduced.matches) { finishSlices?.(); finishServing?.(); transition(); } }; reduced.addEventListener('change', motionChange);
   return {
+    reviewGeometry(){
+      scene.updateMatrixWorld(true);
+      const bounds=o=>new THREE.Box3().setFromObject(o),counter=bounds(room.counter);
+      const incoming=scene.children.filter(o=>o.name==='arriving-plate'&&o.visible),collisions=[];
+      for(const obstacle of room.obstacles){const b=bounds(obstacle);if(counter.intersectsBox(b))collisions.push('counter:'+obstacle.name);for(let i=0;i<incoming.length;i++)if(bounds(incoming[i].getObjectByName('plate-body')).intersectsBox(b))collisions.push('plate-'+i+':'+obstacle.name);}
+      const knives=scene.getObjectByName('serving-knives');
+      return {hover:emphasized?{...emphasized}:null,serving:room.serving?structuredClone(room.serving):null,collisions,
+        plates:pies.map(p=>({visible:p.visible,position:p.position.toArray(),grid:p.userData.serving.d})),
+        knives:knives?.visible?knives.children.map(k=>({center:k.position.toArray(),handle:k.getObjectByName('handle').getWorldPosition(new THREE.Vector3()).toArray(),blade:k.getObjectByName('blade').getWorldPosition(new THREE.Vector3()).toArray()})):[],
+        camera:{position:camera.position.toArray(),yaw,tilt,viewValue,drawerValue}};
+    },
     refreshLayout(){layout();},
     update(left, right, recipe = recipes) {
       recipes = Array.isArray(recipe) ? recipe : [recipe,recipe];
@@ -259,32 +284,20 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       await animation.promise;finishServing=null;
     },
     cancelServing(){finishServing?.();finishServing=null;},
-    projectPiece(side,k,r=1.1){const pie=pies[side];if(!pie)return null;const a=Math.PI+(k-.5)*TAU/pie.userData.serving.d,y=construction&&!occupied(construction[side],k)?.165:HIT_Y;return project(pie.position.x+Math.sin(a)*r,y,pie.position.z+Math.cos(a)*r);},
+    finishServing(){finishServing?.();},
+    projectPiece(side,k,r=1.1){const pie=pies[side];if(!pie)return null;const d=pie.userData.serving.d,a=Math.PI+(k-.5)*TAU/d,unit=((Math.floor(k-.5)%d)+d)%d+1,w=pie.children.find(o=>o.userData.slice===unit),y=construction&&!occupied(construction[side],unit)?.165:Math.max(.165,HIT_Y*w.scale.y);return project(pie.position.x+Math.sin(a)*r,y,pie.position.z+Math.cos(a)*r);},
     pick(clientX, clientY) {
       if (disposed || modelReview || canvas.dataset.slicing === 'true') return null;
       const rect = canvas.getBoundingClientRect();
       raycaster.setFromCamera(new THREE.Vector2((clientX - rect.left) / rect.width * 2 - 1, -(clientY - rect.top) / rect.height * 2 + 1), camera);
       const targets=[];
-      pies.forEach((p,side)=>{if(!p.visible)return;p.children.filter(o=>o.userData.slice).forEach(w=>{const k=w.userData.slice;targets.push(!construction||occupied(construction[side],k)?w.getObjectByName('occupied-hit'):p.children.find(o=>o.name==='empty-hit'&&o.userData.piece===k));});});
+      pies.forEach((p,side)=>{if(!p.visible)return;p.children.filter(o=>o.userData.slice).forEach(w=>{const k=w.userData.slice;if(!construction||occupied(construction[side],k)){const h=w.getObjectByName('occupied-hit'),sy=Math.max(.001,w.scale.y),top=Math.max(.165,HIT_Y*sy);h.scale.set(1/Math.max(.001,w.scale.x),(top-.15)/(HIT_Y-.15)/sy,1/Math.max(.001,w.scale.z));h.position.y=(top+.15)/2/sy;h.updateWorldMatrix(true,false);targets.push(h);}else targets.push(p.children.find(o=>o.name==='empty-hit'&&o.userData.piece===k));});});
       const hits = raycaster.intersectObjects(targets, false);
       if (!hits.length) return null;
       const hit=hits[0],pie=hit.object.name==='occupied-hit'?hit.object.parent.parent:hit.object.parent,local=pie.worldToLocal(hit.point.clone());
       return { pair:pies.indexOf(pie)===0?'A':'B',k:hit.object.userData.piece,angle:((Math.atan2(local.x,local.z)-Math.PI)%TAU+TAU)%TAU,height:local.y,radius:Math.hypot(local.x,local.z) };
     },
-    emphasize(piece) {
-      if (piece?.pair === 'A' && !exampleVisible) piece = null;
-      if (piece && (!Number.isInteger(piece.k) || piece.k < 1 || piece.k > pies[piece.pair === 'A' ? 0 : 1]?.userData.serving.d || canvas.dataset.slicing === 'true')) piece = null;
-      const side=piece?.pair==='B'?1:0,height=piece?construction&&!occupied(construction[side],piece.k)?.19:HIT_Y*(pies[side].children.find(o=>o.userData.slice===piece.k)?.scale.y||1)+.03:0;
-      if (emphasized?.pair === piece?.pair && emphasized?.k === piece?.k && emphasized?.outlineHeight===height) return;
-      pies.forEach(pie => { const outline = pie.getObjectByName('piece-emphasis'); if (outline) { pie.remove(outline); dispose(outline); }
-        pie.traverse(o => { if (o.material?.name === 'serving-fruit') { o.material.emissive.set('#6e37e7'); o.material.emissiveIntensity = 0; } });
-      });
-      emphasized = piece?{...piece,outlineHeight:height}:null;
-      if (piece && !modelReview) { const pie = pies[piece.pair === 'A' ? 0 : 1]; pie.add(pieceOutline(piece.k, pie.userData.serving.d,height));
-        pie.children.find(o => o.userData.slice === piece.k)?.traverse(o => { if (o.material?.name === 'serving-fruit') o.material.emissiveIntensity = 0.3; });
-      }
-      paintFeedback(); render();
-    },
+    emphasize(piece) {syncEmphasis(piece);render();},
     setFeedback(pair, tone) { feedbackTones[pair === 'A' ? 0 : 1] = tone; paintFeedback(); render(); },
     setMode(mode) { sceneMode=mode;orderKnife.visible=mode!=='free'; bars.forEach(b=>b.position.x=barX());render(); },
     setExampleVisible(visible) { exampleVisible=visible; if(pies[0])pies[0].visible=visible; this.emphasize(null); render(true); },
