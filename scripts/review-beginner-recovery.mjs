@@ -25,7 +25,7 @@ try{
   else if(stage==='cut'){await page.emulateMedia({reducedMotion:'reduce'});await settle();await page.emulateMedia({reducedMotion:'no-preference'});}
   else if(stage==='glow'){await page.locator('#free-play').click();await page.waitForTimeout(500);assert.equal(await page.locator('body').getAttribute('data-mode'),'free');await page.locator('#challenge').click();}
   else {await page.reload();await settle();}
-  assert.equal((await current()).solved,true,stage);assert.equal((await current()).history.filter(e=>e.kind==='answer').length,1);assert.equal((await current()).plates[0].mask,3);await page.locator('#next-order').click();assert.equal((await current()).index,1);
+  await settle();assert.equal((await current()).index,1,stage);assert.equal((await current()).history.filter(e=>e.kind==='answer').length,1);assert.equal((await current()).history.filter(e=>e.kind==='advance').length,1);assert.equal((await current()).history.find(e=>e.kind==='answer').plates[0].mask,3);assert.equal((await current()).plates[0].mask,0);
  }
  checks.push('Success interrupted in every stage by skip, reduced-motion change, mode navigation or reload retains exactly one committed answer; no stale advance or geometry.');
  await fresh();const client=await ctx.newCDPSession(page);let p=await point(1),q=await point(2);
