@@ -1,6 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {plate,full,count,amount,beginStroke,extendStroke,applyStroke,runs,LEARN_TASKS,ORDER_TASKS,expectedUnits,matches,createWork,help,commit,nextWork,validateWork,evidence} from '../src/construction.js';
+import {plate,full,count,amount,beginStroke,extendStroke,pauseStroke,applyStroke,runs,LEARN_TASKS,ORDER_TASKS,expectedUnits,matches,createWork,help,commit,nextWork,validateWork,evidence} from '../src/construction.js';
+
+test('current circular span shrinks, reverses and unwraps without accumulated visits',()=>{
+ for(const mask of [0,255]){
+  const p=plate(8,mask);let s=beginStroke(p,7);
+  for(const k of [8,1,2])s=extendStroke(s,k);assert.equal(s.units,195);
+  for(const k of [1,8])s=extendStroke(s,k);assert.equal(s.units,192);
+  for(const k of [7,6,5])s=extendStroke(s,k);assert.equal(s.units,112);
+  assert.equal(s.operation,mask?'erase':'add');assert.equal(applyStroke(p,s).mask,mask?143:112);
+  s=extendStroke(s,6);assert.equal(s.units,96);s=extendStroke(s,7);assert.equal(s.units,64);
+ }
+ let s=beginStroke(plate(8),1);for(const k of [2,3,4,5,6,7,8,1])s=extendStroke(s,k);assert.equal(s.units,255);
+ for(const k of [8,7,6,5,4,3,2])s=extendStroke(s,k);assert.equal(s.units,3);
+ s=pauseStroke(s);const held=s;s=extendStroke(s,6);assert.equal(s,held);s=extendStroke(s,2);s=extendStroke(s,3);assert.equal(s.units,7);
+ const a=beginStroke(plate(4),1);assert.equal(extendStroke(a,3,{pointer:true}),a,'ambiguous diametric pointer jump ignored');
+ assert.equal(extendStroke(a,3,{direction:-1}).units,13,'explicit keyboard direction is retained');
+});
 test('every grid: latched strokes, overlap, wrap, empty/full and split contiguous runs',()=>{
  for(const d of [2,4,8,16]){
   let p=plate(d,1);let s=beginStroke(p,2);s=extendStroke(s,1);p=applyStroke(p,s);assert.equal(p.mask,3);assert.equal(s.operation,'add');

@@ -8,13 +8,22 @@ export const full=d=>(1<<d)-1;
 export function plate(d,mask=0){check(DENOMINATORS.includes(d)&&Number.isInteger(mask)&&mask>=0&&mask<=full(d),'Invalid equal-unit plate.');return {d,mask};}
 export const occupied=(p,k)=>!!(p.mask&(1<<(k-1)));
 export const amount=p=>count(p.mask)*(16/p.d);
-export function beginStroke(p,k){check(Number.isInteger(k)&&k>=1&&k<=p.d,'Invalid piece.');return {d:p.d,operation:occupied(p,k)?'erase':'add',units:1<<(k-1),last:k};}
-export function extendStroke(s,k){
+const TURN=Math.PI*2;
+export function beginStroke(p,k,angle=(k-.5)*TURN/p.d){
+ check(Number.isInteger(k)&&k>=1&&k<=p.d,'Invalid piece.');
+ return {d:p.d,operation:occupied(p,k)?'erase':'add',units:1<<(k-1),start:k,last:k,origin:angle,angle,travel:0,suspended:false};
+}
+export const pauseStroke=s=>({...s,suspended:true});
+export function extendStroke(s,k,{angle=(k-.5)*TURN/s.d,direction=0,pointer=false}={}){
  check(Number.isInteger(k)&&k>=1&&k<=s.d,'Invalid piece.');
- let delta=k-s.last;if(delta>s.d/2)delta-=s.d;if(delta< -s.d/2)delta+=s.d;
- let units=s.units;const direction=Math.sign(delta);
- for(let i=1;i<=Math.abs(delta);i++){const index=((s.last-1+direction*i)%s.d+s.d)%s.d;units|=1<<index;}
- return {...s,last:k,units};
+ // Returning from outside cannot select an unseen connecting arc. Resume at
+ // the last in-plate unit; elsewhere the current preview remains unchanged.
+ if(s.suspended)return k===s.last?{...s,angle,suspended:false}:s;
+ let delta=angle-s.angle;while(delta>Math.PI)delta-=TURN;while(delta< -Math.PI)delta+=TURN;
+ if(Math.abs(Math.abs(delta)-Math.PI)<1e-8){if(pointer&&!direction)return s;if(direction)delta=Math.PI*direction;}
+ const travel=s.travel+delta,step=TURN/s.d,end=Math.floor((s.origin+travel)/step+1e-9),start=s.start-1;
+ let units=0;for(let i=Math.min(start,end);i<=Math.min(Math.max(start,end),Math.min(start,end)+s.d-1);i++)units|=1<<((i%s.d+s.d)%s.d);
+ return {...s,last:k,angle,travel,units};
 }
 export function applyStroke(p,s){check(p.d===s.d,'Stroke grid changed.');return plate(p.d,s.operation==='add'?p.mask|s.units:p.mask&~s.units);}
 // Runs wrap across the origin; no seam is added inside a contiguous serving.
