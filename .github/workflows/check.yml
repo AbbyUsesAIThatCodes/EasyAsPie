@@ -1,78 +1,58 @@
-name: Check And Deploy
+name: Publish Locally Verified Pages
+
 on:
-  pull_request:
-    branches: [main]
-  push:
-    branches: [main]
   workflow_dispatch:
+    inputs:
+      expected_build_id:
+        description: Exact build ID from deployment/payload.json
+        required: true
+        type: string
+
 permissions:
   contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
 jobs:
-  verify:
-    if: github.event_name != 'workflow_dispatch' || github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    outputs:
-      id: ${{ steps.build.outputs.id }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm test
-      - id: reserve
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const scope = context.eventName === 'pull_request' ? `pr-${context.issue.number}` : 'main';
-            const reserve = require('./scripts/reserve-build.cjs');
-            const result = await reserve(github.rest.git, context.repo, scope, context.sha);
-            for (const [key, value] of Object.entries(result)) core.setOutput(key, value);
-            core.info(`Reserved ${scope} build ${result.ordinal}: ${result.ref}`);
-      - id: build
-        run: npm run build
-        env:
-          EASYASPIE_BUILD_SCOPE: ${{ steps.reserve.outputs.scope }}
-          EASYASPIE_BUILD_ORDINAL: ${{ steps.reserve.outputs.ordinal }}
-          EASYASPIE_BUILD_REF: ${{ steps.reserve.outputs.ref }}
-          EASYASPIE_PR_HEAD: ${{ github.event.pull_request.head.sha }}
-      - run: npm run check:build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.build.outputs.id }}
-          path: ${{ steps.build.outputs.path }}
-          if-no-files-found: error
-      - uses: actions/upload-pages-artifact@v3
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        with:
-          path: ${{ steps.build.outputs.path }}
   deploy:
-    needs: verify
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: github.repository == 'AbbyUsesAIThatCodes/EasyAsPie' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    concurrency:
-      group: github-pages
-      cancel-in-progress: false
+    timeout-minutes: 5
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/configure-pages@v5
-      - id: deployment
-        uses: actions/deploy-pages@v4
-      - name: Record The Deployed Build
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            site
+            deployment
+      - name: Verify The Locally Tested Payload
+        run: node deployment/verify.mjs
         env:
-          BUILD_ID: ${{ needs.verify.outputs.id }}
+          EXPECTED_BUILD_ID: ${{ inputs.expected_build_id }}
+      - name: Read Existing Pages Configuration
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+        with:
+          enablement: false
+      - name: Upload One Small Pages Artifact
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          path: site
+          retention-days: 1
+      - name: Publish The Identified Runtime
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+      - name: Record The Published Identity
+        env:
+          BUILD_ID: ${{ inputs.expected_build_id }}
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
-          echo "DEPLOYED $BUILD_ID"
-          echo "Deployed **$BUILD_ID** to $PAGE_URL" >> "$GITHUB_STEP_SUMMARY"
+          echo "Published $BUILD_ID to $PAGE_URL" >> "$GITHUB_STEP_SUMMARY"

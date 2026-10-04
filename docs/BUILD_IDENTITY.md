@@ -57,3 +57,7 @@ Each invocation creates an immutable manifest in `.build/ID.json`, builds into `
 | IDE/About displays | None exist in this game | IDE terminals use the documented npm commands | N/A |
 
 Adding a build entrypoint or identity display requires updating this inventory. Never edit generated timestamps, reset shared counters, rename an existing build, or claim a review build is deployed.
+
+## October 4 Local Pages Promotion
+
+[Locally Verified Pages Release](LOCAL_PAGES_RELEASE.md) is the current publication path. `site/` contains the unchanged identified runtime; `deployment/payload.json` records the separate deployment inventory. The manual-only workflow validates and publishes these bytes without rebuilding, relabeling or changing build counters. Runtime source and release-orchestration commit remain distinct.

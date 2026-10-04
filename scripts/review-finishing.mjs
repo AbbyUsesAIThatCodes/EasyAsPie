@@ -46,7 +46,12 @@ try{
   await page.locator('#submit-order').click();await page.waitForFunction(()=>window.__review.geometry().serving?.progress>.35);await shot(`${mode}-${mixedNext?'two':'one'}-arriving`);await settle();
   const frames=await page.evaluate(()=>{window.reviewWatching=false;return window.reviewFrames;});assert.ok(frames.every(f=>!f.collisions.length),JSON.stringify(frames.filter(f=>f.collisions.length).slice(0,2)));
   const incoming=frames.filter(f=>f.serving?.plates.length);assert.ok(incoming.length>2);assert.ok(incoming.every(f=>f.serving.nextCount===(mixedNext?2:1)&&f.serving.plates.length===(mixedNext?2:1)));
-  assert.ok(incoming.at(-1).serving.progress>.95);assert.equal((await current()).index,index+1);assert.equal((await current()).history.filter(e=>e.kind==='advance'&&e.id===t.id).length,1);assert.equal((await geometry()).plates.filter(p=>p.visible).length,mixedNext?2:1);
+  // A busy renderer can skip the last five percent between sampled frames.
+  // Verify monotonic travel and the completed landing directly instead.
+  assert.ok(incoming.every((f,i)=>i===0||f.serving.progress>=incoming[i-1].serving.progress));
+  const landed=await geometry();assert.equal(landed.serving,null);assert.deepEqual(landed.collisions,[]);
+  assert.deepEqual(landed.plates.filter(p=>p.visible).map(p=>p.position),mixedNext?[[-3.55,0,-.65],[3.55,0,-.65]]:[[-2.15,0,-.65]]);
+  assert.equal((await current()).index,index+1);assert.equal((await current()).history.filter(e=>e.kind==='advance'&&e.id===t.id).length,1);assert.equal(landed.plates.filter(p=>p.visible).length,mixedNext?2:1);
   for(const f of frames)for(const k of f.knives){const hr=Math.hypot(k.handle[0]-k.center[0],k.handle[2]-k.center[2]),br=Math.hypot(k.blade[0]-k.center[0],k.blade[2]-k.center[2]);assert.ok(hr>1.94&&br>0&&br<1.64);}
   await shot(`${mode}-${mixedNext?'mixed':'single'}-next-prompt`);await page.reload();await settle();assert.equal((await current()).index,index+1);assert.equal((await current()).history.filter(e=>e.kind==='advance'&&e.id===t.id).length,1);await page.emulateMedia({reducedMotion:'reduce'});
  }

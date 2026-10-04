@@ -1,5 +1,9 @@
 # EasyAsPie
 
+## October 4 Pages Release
+
+The owner has approved publishing the tested runtime. [Release Status And Procedure](docs/LOCAL_PAGES_RELEASE.md) supersedes the earlier review-only deployment restrictions below. Local validation and actual deployment remain separate gates.
+
 ## Accepted Mechanics And Worksheet Baseline
 
 On October 3, 2026, the teacher accepted [draft PR #38](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/pull/38) build 006 mechanics and authorized the worksheet. Its instructional interface, lesson sequence and mechanics are frozen for materials at runtime source `b3901d2b07bbc31380b1d1cb027b1aa3d087b6d1`, with evidence `dcc9bb7c762d5bdc557249903b8d6c08e5238ef5`. See [the identified playable build and evidence](docs/review/issue-31-finishing/README.md), [the student workflow](docs/TEACHER.md), and [remaining visual scope](docs/FINISHING_REVIEW.md). The parent worksheet task authors from that baseline. Full room/fan and wallpaper polish stay deferred until materials are complete. Classroom hardware and accessibility acceptance remain open under #13; no main merge or deployment is authorized.

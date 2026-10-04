@@ -1,0 +1,4 @@
+
+# Preserve the exact locally verified Pages bytes on every checkout.
+site/** -text -whitespace
+deployment/** text eol=lf

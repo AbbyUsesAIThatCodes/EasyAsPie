@@ -20,7 +20,7 @@ try{
  await fresh();const id=await page.locator('#build-identity').textContent();
  // Interrupted success keeps the accepted answer but cannot advance twice or touch another mode.
  for(const stage of ['whole','cut','leftovers','glow','serve','cabinet']){
-  await fresh();await click(1);await click(2);await page.locator('#scene-knife').click();await page.waitForFunction(s=>document.querySelector('#scene').dataset.servingStage===s,stage);
+   await fresh();await click(1);await click(2);const stageReached=page.waitForFunction(s=>document.querySelector('#scene').dataset.servingStage===s,stage);await page.locator('#scene-knife').click();await stageReached;
   if(stage==='whole'){await page.locator('#reset').click();await settle();}
   else if(stage==='cut'){await page.emulateMedia({reducedMotion:'reduce'});await settle();await page.emulateMedia({reducedMotion:'no-preference'});}
   else if(stage==='glow'){await page.locator('#free-play').click();await page.waitForTimeout(500);assert.equal(await page.locator('body').getAttribute('data-mode'),'free');await page.locator('#challenge').click();}
@@ -37,7 +37,7 @@ try{
  for(const bad of ['{','{"schema":999}','{"schema":2,"taskset":"future"}']){
   await page.evaluate(bad=>localStorage.setItem('easyaspie.construction.v2',bad),bad);await page.reload();await settle();assert.match(await page.locator('#save-status').textContent(),/Could Not Be Restored/);await click(1);await page.waitForTimeout(150);assert.equal(await page.evaluate(()=>localStorage.getItem('easyaspie.construction.v2')),bad);
  }
- await fresh();await page.evaluate(()=>localStorage.setItem('easyaspie.construction.v2','external-change'));await click(1);await page.waitForTimeout(180);assert.match(await page.locator('#save-status').textContent(),/changed elsewhere/);assert.equal(await page.evaluate(()=>localStorage.getItem('easyaspie.construction.v2')),'external-change');
+ await fresh();await page.evaluate(()=>localStorage.setItem('easyaspie.construction.v2','external-change'));await click(1);await page.waitForFunction(()=>document.querySelector('#save-status')?.textContent.includes('changed elsewhere'),null,{timeout:5000});assert.match(await page.locator('#save-status').textContent(),/changed elsewhere/);assert.equal(await page.evaluate(()=>localStorage.getItem('easyaspie.construction.v2')),'external-change');
  checks.push('Corrupt, unsupported and externally changed current saves are retained without overwrite.');
  const oldIdentity={id:'0.4.1_legacy_review',sha:'a'.repeat(40),builtAt:'2026-10-01T00:00:00Z',version:'0.4.1',codename:null,dirty:false};let session=submit(createSession(oldIdentity.id));session=useHint(session);session=submit(selectSlices(session,2));
  const legacy=encodeProgress({mode:'free',free:createFreePlay({A:{n:3,d:8},B:{n:1,d:4}}),scene:createFreePlay({A:{n:3,d:8},B:{n:1,d:4}}),flavors:{A:'strawberry',B:'apple'},learn:{index:0,phase:'predict',prediction:'',committed:null,assisted:false,completed:[]},challenge:{started:true,session},drawer:{open:false,opened:false,quietUntil:0}},oldIdentity);
