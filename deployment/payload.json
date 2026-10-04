@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "repo": "EasyAsPie",
+  "buildId": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web",
+  "manifest": "build.json",
+  "runtimeRevision": "b3901d2b07bbc31380b1d1cb027b1aa3d087b6d1",
+  "runtimeBuiltAt": "2026-10-03T22:17:30.290Z",
+  "reviewPR": 38,
+  "preparedAt": "2026-10-04T14:25:51.834Z",
+  "status": "Prepared Locally; Publication Requires A Successful Explicit Dispatch",
+  "rollbackRevision": "6bd108c35f6591efbe51334fb42b64fcd3cb107f",
+  "policy": "Promote existing runtime bytes without compilation or relabeling. Public reference is separately inventoried. No review archives, teacher keys, student records or private course material.",
+  "files": [
+    {
+      "path": "assets/index-BvktsVUl.css",
+      "bytes": 25033,
+      "sha256": "2d646f1f5a2ed3d6cb42f2d9077bc19f7cc0c91267d068533f19a2e2eea3c878",
+      "origin": "unchanged reviewed runtime"
+    },
+    {
+      "path": "assets/index-MfzwydQd.js",
+      "bytes": 659740,
+      "sha256": "e0ddc74bd85959ba7501ac84b9b8905a18a578dcc7f65c82833f808034bfa0ae",
+      "origin": "unchanged reviewed runtime"
+    },
+    {
+      "path": "build.json",
+      "bytes": 542,
+      "sha256": "9f4bd4c9349b7dc57416c4f869f627e35e37ab8f1a9b6fab3df50b71d7d70bc4",
+      "origin": "unchanged reviewed runtime"
+    },
+    {
+      "path": "BUILD.md",
+      "bytes": 565,
+      "sha256": "60c01508b9aca50f3114619cce1836c816e8dd02af8330541a544df6545480eb",
+      "origin": "unchanged reviewed runtime"
+    },
+    {
+      "path": "index.html",
+      "bytes": 692,
+      "sha256": "33648148a4bdf721609454f9eba51383a0f8a0d6b326e6f5e714b67f26284f99",
+      "origin": "unchanged reviewed runtime"
+    }
+  ]
+}

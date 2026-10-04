@@ -1,6 +1,26 @@
 # EasyAsPie Roadmap
 
-## Current Free Play Rebuild
+## Accepted Mechanics And Materials Priority
+
+On October 3, 2026, the teacher accepted PR #38 build 006 mechanics and authorized the worksheet. Freeze the instructional interface, mechanics, lesson labels and sequence at runtime `b3901d2b07bbc31380b1d1cb027b1aa3d087b6d1`, with evidence `dcc9bb7c762d5bdc557249903b8d6c08e5238ef5`. The parent materials task authors from that baseline. See [the accepted handoff](docs/review/issue-31-finishing/README.md) and [student workflow](docs/TEACHER.md).
+
+Next game work is visual only and waits for materials: complete room enclosure, higher ceiling/fan, illustrated lemon-vine/bee wallpaper and all-camera scenery acceptance remain backlog. #13 remains open for real classroom hardware, touch-device, projector and screen-reader review. Keep PR #38 draft and preserve main/live; no merge or deployment is authorized.
+
+## Authorized October 3 Review
+
+#31–#36 now have an isolated local implementation on the corrected PR30 baseline. See [the bounded contract](docs/BEGINNER_REVIEW_CONTRACT.md), [current implementation](docs/IMPLEMENTATION_STATUS.md), and [identified review evidence](docs/review/issue-31/README.md). The first checkpoint established exact construction and activity state; follow-up checkpoints cover recovery, input and physical layout. Existing draft PRs are preserved, with no main merge or deployment.
+
+#13 is explicitly reconciled as the teacher/device/accessibility review gate for **all three current modes**, including the new beginner and mixed-number sequence. Its historical Free Play-only exclusion does not describe this newly approved scope. Do not close it or claim classroom readiness from browser automation. The current teacher mechanics acceptance and worksheet authorization are recorded above; kitchen/camera visual acceptance and actual hardware review remain open. Shared glimmer/archive work remains a local handoff; no global retrofit. The separate fraction-name game is parked.
+
+All following roadmap sequences are historical; their earlier one-issue scope and deferred modes do not override the October 3 authorization.
+
+## Preserved Review History
+
+## Current Follow-Up Review
+
+The user authorized three bounded successive drafts: [PR28 / #25](docs/review/issue-25/README.md), [PR29 / #26](docs/review/issue-26/README.md), then [PR30 / #27](docs/review/issue-27/README.md). The final PR30 artifact contains all three. Manual merge order is 28 → 29 → 30; explicitly retarget each successor to main after accepting/merging its predecessor. No task merged or deployed these changes. The teacher previously integrated the older stack through PR24; the following plan is preserved history, with #13 classroom signoff still pending.
+
+## Preserved Free Play Rebuild
 
 [Issue #7](https://github.com/AbbyUsesAIThatCodes/EasyAsPie/issues/7) is the tracking checklist for the paired pie/bar rebuild. Follow the [implementation plan and preserved mockup](docs/FREE_PLAY_IMPLEMENTATION_PLAN.md). Merge its planning/reference PR first, then complete these issues **one conversation and one PR at a time**, normally branching from current `main` after the preceding PR is merged. **Tonight's explicit exception:** [PR19 → PR20 → PR22](docs/OVERNIGHT_REVIEW.md) is a provisional review stack with no merges. Teacher Step03A acceptance remains pending; retarget each successor to main after its predecessor is accepted and merged.
 
@@ -42,3 +62,8 @@ The following notes preserve the first-playable roadmap. For current work, use t
 ## Definition Of Done For A Small PR
 
 Explain the learning or technical change, identify its prerequisite, include the checks actually run, and record limitations. Keep mathematics independent of artwork. Inspect the playable screen at laptop sizes. Do not merge on the teacher's behalf.
+# Build 007 Finishing Review
+
+The [mechanics and lesson checkpoint](docs/review/issue-31-finishing/README.md) is now verified in draft PR #38: reversible spans, surface hover, outward knives, cabinet/plate clearance, task-matched plate count, automatic advancement, and preserved saves/reports. Full kitchen enclosure, higher ceiling/fan, lemon-vine/bee wallpaper and all-camera scenery acceptance remain deferred under the teacher's mechanics-first priority. Teacher game/lesson acceptance still precedes worksheets.
+
+The teacher authorized eight focused corrections after reviewing build 007: cabinet clearance, enclosed kitchen/ceiling fan, surface-correct hover, outward knife handles, automatic arrival advance, task-matched plate count, reversible circular drag spans, and illustrated lemon-vine/bee borders. See [Finishing Review](docs/FINISHING_REVIEW.md) for the contract and verification record. Build 007 remains preserved; this work uses a separate review branch/worktree. No deployment or worksheet is authorized.

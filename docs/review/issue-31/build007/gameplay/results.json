@@ -1,0 +1,12 @@
+{
+  "build": "0.4.1_Unassigned_local-5bcdfdbd84_build-007_20261003T181423Z_g36e3b7cdea4e_web",
+  "checks": [
+    "Real pointer add/erase, latched overlap, wrap, undo, preview/commit separation, Escape/pointer cancellation, camera ownership, keyboard ranges, exact choreography stages, solved reload and original retry/help retention.",
+    "All twenty preserved conversions and four mixed extensions solved with real pointer input; reduced motion, help detour, completion reload, downloaded report parity and archived round.",
+    "All eight Learn tasks, visual-to-written wrong/correct responses and mixed progression without numerator entry quiz.",
+    "Both Free Play pies, every 0..d amount at 2/4/8/16 through native keyboard controls, exact Cut/Regroup paths, flavors and open drawer survive reload.",
+    "Open drawer handle remains physically clickable after orbit, Top View and Reset View; repeated open/close does not move or hide counter bars."
+  ],
+  "errors": [],
+  "browser": "153.0.8010.12"
+}

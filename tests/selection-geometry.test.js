@@ -26,7 +26,7 @@ test('serving updates retain solid wedges and independently update all 34 visual
     const pie = makePie({ n: 0, d }, 'blueberry', 0);
     const other = makePie({ n: 1, d }, 'blueberry', 1);
     const wedges = pie.children.filter(o => o.userData.slice);
-    const geometry = wedges.map(w => w.children[0].geometry);
+    const geometry = wedges.map(w => w.getObjectByName('pastry-solid').geometry);
     // Reverse and repeat the order to expose stale highlights as well as growth.
     for (const n of [...Array(d + 1).keys(), ...Array(d + 1).keys()].reverse()) {
       setPieServing(pie, { n, d });
@@ -34,9 +34,9 @@ test('serving updates retain solid wedges and independently update all 34 visual
       assert.equal(wedges.filter(w => w.userData.selected).length, n);
       assert.equal(Boolean(pie.getObjectByName('selected-serving')), n > 0);
       wedges.forEach((wedge, i) => {
-        assert.equal(wedge.children[0].geometry, geometry[i]);
+        assert.equal(wedge.getObjectByName('pastry-solid').geometry, geometry[i]);
         assert.equal(wedge.userData.selected, i < n);
-        assert.equal(wedge.children[1].material.color.getHexString(), i < n ? '3b185f' : '43334e');
+        assert.equal(wedge.getObjectByName('filling-solid').material.color.getHexString(), i < n ? '3b185f' : '43334e');
       });
       assert.deepEqual(other.userData.serving, { n: 1, d });
     }

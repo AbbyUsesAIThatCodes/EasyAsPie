@@ -1,0 +1,11 @@
+{
+  "build": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web",
+  "checks": [
+    "Actual Learn and Challenge pointer ADD/ERASE spans shrink on backtracking, wrap in either direction, reverse across start, shrink after a full circle, cancel, and do not bridge outside re-entry.",
+    "Actual empty and occupied hover hit the requested unit, with outlines at plate height 0.19 and occupied pie height 1.02.",
+    "Twenty immediate repeated pointer clicks remain exact during grow/shrink animations.",
+    "Frame-sampled one/two-plate cabinet arrivals have no cabinet/counter/door collisions; next task activates once at landing, survives reload, and shows its correct plate count. Serving handles remain outward."
+  ],
+  "errors": [],
+  "browser": "153.0.8010.12"
+}

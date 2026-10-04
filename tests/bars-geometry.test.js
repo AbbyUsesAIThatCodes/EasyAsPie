@@ -2,14 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { makeBar, setBarServing } from '../src/bakery-room.js';
-import { BAR_LENGTH, PIE_X, dispose } from '../src/bakery-geometry.js';
+import { BAR_LENGTH, barPosition, dispose } from '../src/bakery-geometry.js';
 
 test('physical bars keep equal wholes and exact selected counts in all 34 states', () => {
   for (const d of [2, 4, 8, 16]) {
     const a = makeBar({ n: 0, d }, 0), b = makeBar({ n: 1, d }, 1);
     const pieces = a.children.filter(o => o.userData.piece), solids = pieces.map(o => o.geometry);
     assert.equal(pieces.length, d);
-    assert.equal(a.position.x, -PIE_X); assert.equal(b.position.x, PIE_X);
+    assert.equal(a.position.x, b.position.x); assert.equal(a.position.y,b.position.y);
+    assert.equal(a.position.z,barPosition(0).z);assert.equal(b.position.z,barPosition(1).z);assert.ok(a.position.z<b.position.z);
     const size = new THREE.Box3().setFromObject(a).getSize(new THREE.Vector3());
     const partnerSize = new THREE.Box3().setFromObject(b).getSize(new THREE.Vector3());
     assert.ok(size.distanceTo(partnerSize) < 1e-5, 'Partner wholes have the same dimensions.');

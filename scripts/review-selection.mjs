@@ -29,7 +29,7 @@ page.on('pageerror', e => messages.push({ type: 'pageerror', message: e.message 
 page.on('console', m => { if (['error', 'warning'].includes(m.type())) messages.push({ type: m.type(), message: m.text() }); });
 page.setDefaultNavigationTimeout(180000);
 const values = () => page.locator('.fraction').allTextContents();
-const settle = () => page.waitForFunction(() => document.getAnimations().length === 0 && document.getElementById('scene').dataset.moving === 'false');
+const settle = () => page.waitForFunction(() => document.getElementById('scene').dataset.moving === 'false');
 const shot = name => page.screenshot({ path: `${output}/${name}.png` });
 const layout = async () => {
   const result = await page.evaluate(() => {
@@ -74,7 +74,7 @@ async function verify() {
     assert.equal(a.barFraction, `${n}/${d}`);
     assert.equal(a.barSelected, n);
     assert.equal(a.pieSelected, n);
-    assert.ok(a.scene.includes(`Pie ${pair}: ${n} of ${d} equal pieces selected`));
+    assert.ok(a.scene.includes(`Test Pie ${pair==='A'?1:2}: ${n} of ${d} equal pieces selected`));
     for (const action of ['clear', 'decrease', 'increase']) assert.equal(a.disabled[action], String(action === 'increase' ? n === d : n === 0));
   }
 }
@@ -106,7 +106,7 @@ async function action(pair, type) {
 async function piePoint(pair, piece, portion = 0.5, top = true) {
   const r = await page.locator('#scene').boundingBox();
   const angle = Math.PI + (piece - 1 + portion) * 2 * Math.PI / pairValues[pair].d;
-  const span = Math.max(12, r.width / r.height * (top ? 7.4 : 6.1));
+  const span = Math.max(12, r.width / r.height * (top ? 8.5 : 6.1));
   const scale = r.width / span, radius = 1.14;
   const elevation = top ? Math.PI / 2 - 0.001 : 0.68;
   const targetZ = top ? 0.40 : 0.25;
@@ -124,7 +124,7 @@ async function pointSelect(pair, k, portion = 0.5, top = true) {
   await page.mouse.click(x, y);
   pairValues[pair].n = k; activations++;
   await verify();
-  assert.ok((await page.locator('#announcement').textContent()).startsWith(`Pie ${pair}: ${k} of`));
+  assert.ok((await page.locator('#announcement').textContent()).startsWith(`Test Pie ${pair==='A'?1:2}: ${k} of`));
 }
 async function keyboardSelect(pair, k, kind) {
   const group = page.locator(`#${kind}-${pair}`);
@@ -141,6 +141,7 @@ async function keyboardSelect(pair, k, kind) {
   pairValues[pair].n = k; activations++;
   await verify();
 }
+await page.addInitScript(()=>localStorage.removeItem('easyaspie.progress.v1'));
 try {
   // Real Tab order: header -> both pies -> serving controls -> toggle -> open bars.
   await start();

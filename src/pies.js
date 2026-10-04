@@ -1,31 +1,38 @@
+import { barPosition } from './bakery-geometry.js';
 import * as THREE from 'three';
 import {sliceMotion} from './slice-motion.js';
 import { TAU, RADIUS, PIE_X, PIE_Z, HIT_Y, BAR_LENGTH, BAR_DEPTH, BAR_Y, BAR_Z, DRAWER_TRAVEL, material, mesh, instances, point, noise, solidSector, pastryRim, pastryWall, berryGeometry, calyxGeometry, dispose } from './bakery-geometry.js';
 import { makeRoom, makeBar, setBarServing } from './bakery-room.js';
+import {paintConstruction,paintPreview,animateUnits,serveAnimation,makeKnife} from './construction-art.js';
+import {occupied} from './construction.js';
 
 // Retained for the historical first-playable modules. Current Free Play is blueberry.
-export const RECIPES = Object.freeze({ blueberry: { name: 'Blueberry', filling: '#44366c', fruit: '#474677', accent: '#9695c3' }, cherry: { name: 'Cherry', filling: '#8f233c', fruit: '#b63549', accent: '#f2918d' }, apple: { name: 'Apple', filling: '#b76928', fruit: '#ecc16b', accent: '#ffdda0' } });
+export const RECIPES = Object.freeze({ blueberry: { name: 'Blueberry', filling: '#3b185f', fruit: '#312078', accent: '#9695c3' }, cherry: { name: 'Cherry', filling: '#8f233c', fruit: '#b63549', accent: '#f2918d' }, strawberry: { name: 'Strawberry', filling: '#a82639', fruit: '#d82c43', accent: '#ffe0bd' }, apple: { name: 'Apple', filling: '#b76928', fruit: '#ecc16b', accent: '#ffdda0' } });
 
 export function makePie(serving, recipeName, side) {
   const group = new THREE.Group(); group.position.set(side ? PIE_X : -PIE_X, 0, PIE_Z);
+  const recipe = RECIPES[recipeName] || RECIPES.blueberry, strawberry = recipeName === 'strawberry';
+  group.userData.recipe = Object.hasOwn(RECIPES, recipeName) ? recipeName : 'blueberry';
   const china = material('#fff4df', 0.22);
   const profile = [[0, 0.04], [1.48, 0.04], [1.67, 0.065], [1.87, 0.16], [1.93, 0.20], [1.94, 0.24], [1.88, 0.26], [1.7, 0.19], [1.49, 0.14], [0, 0.14]].map(p => new THREE.Vector2(...p));
-  mesh(group, new THREE.LatheGeometry(profile, 96), china);
+  mesh(group, new THREE.LatheGeometry(profile, 96), china).name='plate-body';
   const trim = mesh(group, new THREE.TorusGeometry(1.89, 0.014, 6, 96), material('#c3a16c', 0.35), 0, 0.249); trim.rotation.x = Math.PI / 2;
   const step = TAU / serving.d;
   for (let i = 0; i < serving.d; i++) {
     const start = Math.PI + i * step, wedge = new THREE.Group(); group.add(wedge);
     wedge.userData = { slice: i + 1, selected: i < serving.n, start, angle: step, side };
+    const target=mesh(wedge,solidSector(RADIUS,RADIUS,HIT_Y-.15,start,step),new THREE.MeshBasicMaterial(),0,(HIT_Y+.15)/2);target.name='occupied-hit';target.visible=false;target.userData.piece=i+1;
+    const empty=mesh(group,solidSector(RADIUS,RADIUS,.025,start,step),new THREE.MeshBasicMaterial(),0,.1525);empty.name='empty-hit';empty.visible=false;empty.userData.piece=i+1;
     // Equal core solids define the mathematics; surface decoration never changes it.
     const base = mesh(wedge, solidSector(1.52, RADIUS, 0.31, start, step), material('#cf8c40', 0.6), 0, 0.305);
     base.name = 'pastry-solid';
-    const filling = new THREE.MeshPhysicalMaterial({ color: '#3b185f', roughness: 0.27, clearcoat: 0.65, clearcoatRoughness: 0.25 }); filling.name = 'serving-filling';
+    const filling = new THREE.MeshPhysicalMaterial({ color: recipe.filling, roughness: 0.27, clearcoat: 0.65, clearcoatRoughness: 0.25 }); filling.name = 'serving-filling';
     const jelly = mesh(wedge, solidSector(1.49, 1.49, 0.27, start, step), filling, 0, 0.595); jelly.name = 'filling-solid';
     const rimMat = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.29, clearcoat: 0.38, clearcoatRoughness: 0.24, vertexColors: true });
     mesh(wedge, pastryRim(start, step), rimMat);
     mesh(wedge, pastryWall(start, step), material('#ffffff', 0.55, { vertexColors: true }));
-    const fruit = new THREE.MeshPhysicalMaterial({ color: '#312078', roughness: 0.23, clearcoat: 1, clearcoatRoughness: 0.14 }); fruit.name = 'serving-fruit';
-    const berries = [], crowns = [], crumbs = [], fillingFruit = [];
+    const fruit = new THREE.MeshPhysicalMaterial({ color: recipe.fruit, roughness: 0.23, clearcoat: 1, clearcoatRoughness: 0.14 }); fruit.name = 'serving-fruit';
+    const berries = [], crowns = [], crumbs = [], fillingFruit = [], seeds = [];
     // Fixed seeded positions/sizes. Vary shape, orientation, bloom and ripeness,
     // and leave a small lane at each cut so sixteenths remain countable.
     for (let k = 0; k < 104; k++) {
@@ -38,17 +45,21 @@ export function makePie(serving, recipeName, side) {
       // overlaid radial cuts readable without changing any core wedge solid.
       if (edgeDistance < s * 0.20 + 0.008) continue;
       const p = point(r, a, 0.716 + s * 0.49), sy = s * (0.72 + noise(k + 7) * 0.32);
-      const tint = new THREE.Color('#d4caed').lerp(new THREE.Color('#7b86bf'), noise(k) * 0.65);
-      berries.push({ p, sx: s, sy, sz: s * (0.88 + noise(k + 14) * 0.25), ry: a, rz: (noise(k + 9) - 0.5) * 0.22, color: tint });
-      crowns.push({ p: p.clone().add(new THREE.Vector3(0, sy * 0.845, 0)), s: s * 0.51, ry: a });
+      const tint = new THREE.Color(strawberry ? '#fff3df' : recipe.accent).lerp(new THREE.Color(strawberry ? '#ffaba3' : '#a9a2bf'), noise(k) * 0.45);
+      berries.push({ p, sx: s, sy: strawberry ? sy * 1.15 : sy, sz: s * (0.88 + noise(k + 14) * 0.25), ry: a, rz: (noise(k + 9) - 0.5) * 0.22, color: tint });
+      crowns.push({ p: p.clone().add(new THREE.Vector3(0, sy * (strawberry ? 1.04 : 0.845), 0)), s: s * (strawberry ? .85 : .51), ry: a });
+      if (strawberry) for (let j=0;j<8;j++) { const t=j*2.39996, y=.12+(j%3)*.22, rr=Math.sqrt(1-y*y)*(.76+.24*y); seeds.push({p:p.clone().add(new THREE.Vector3(Math.sin(t)*s*rr,y*sy*1.15,Math.cos(t)*s*rr)),sx:s*.065,sy:s*.10,sz:s*.065}); }
     }
-    instances(wedge, berryGeometry(), fruit, berries);
-    instances(wedge, calyxGeometry(), material('#293044', 0.65, { side: THREE.DoubleSide }), crowns);
+    const fruitGeometry = berryGeometry();
+    if (strawberry) { const p=fruitGeometry.attributes.position; for(let i=0;i<p.count;i++){const y=p.getY(i),t=.76+.24*y;p.setXYZ(i,p.getX(i)*t,y,p.getZ(i)*t);} fruitGeometry.computeVertexNormals(); }
+    instances(wedge, fruitGeometry, fruit, berries);
+    if(strawberry) instances(wedge,new THREE.SphereGeometry(1,5,4),material('#ffe3a0'),seeds);
+    instances(wedge, calyxGeometry(), material(strawberry ? '#39783f' : '#293044', 0.65, { side: THREE.DoubleSide }), crowns);
     // Visible fruit fragments in BOTH radial faces, not painted-on cut lines.
     for (const a of [start, start + step]) for (let k = 1; k <= 9; k++) {
       fillingFruit.push({ p: point(k * 0.145, a, 0.50 + noise(k) * 0.14), sx: 0.048, sy: 0.058, sz: 0.048 });
     }
-    instances(wedge, new THREE.SphereGeometry(1, 8, 6), material('#53428c', 0.35), fillingFruit);
+    instances(wedge, new THREE.SphereGeometry(1, 8, 6), material(recipe.fruit, 0.35), fillingFruit);
     for (let k = 0; k < 120; k++) {
       const a = Math.PI + (k + 0.5) / 120 * TAU;
       if (a < start || a >= start + step) continue;
@@ -58,6 +69,7 @@ export function makePie(serving, recipeName, side) {
     // Thin cuts, distinct from the thicker solid serving border.
     const path = new THREE.LineCurve3(point(0, start, HIT_Y), point(RADIUS, start, HIT_Y));
     const cut = mesh(wedge, new THREE.TubeGeometry(path, 1, 0.009, 5, false), material('#f1cf9d'));
+    cut.name = 'unit-cut';
     cut.castShadow = false;
   }
   const hit = new THREE.Mesh(new THREE.CylinderGeometry(RADIUS, RADIUS, HIT_Y - 0.15, 128), new THREE.MeshBasicMaterial());
@@ -71,7 +83,9 @@ function perimeter(start, angle, radius, height) {
 }
 export function setPieServing(pie, serving) {
   const previous = pie.getObjectByName('selected-serving'); if (previous) { pie.remove(previous); dispose(previous); }
-  const colors = { 'serving-filling': ['#43334e', '#3b185f'], 'serving-fruit': ['#43405f', '#312078'] };
+  const recipe = RECIPES[pie.userData.recipe] || RECIPES.blueberry;
+  const muted = c => new THREE.Color(c).lerp(new THREE.Color('#70646c'), .32);
+  const colors = { 'serving-filling': [pie.userData.recipe==='blueberry'?'#43334e':muted(recipe.filling), recipe.filling], 'serving-fruit': [pie.userData.recipe==='blueberry'?'#43405f':muted(recipe.fruit), recipe.fruit] };
   pie.children.filter(o => o.userData.slice).forEach(wedge => {
     wedge.userData.selected = wedge.userData.slice <= serving.n;
     wedge.traverse(o => { if (colors[o.material?.name]) o.material.color.set(colors[o.material.name][Number(wedge.userData.selected)]); });
@@ -89,13 +103,14 @@ export function pieceAtPoint(x, z, denominator) {
   const angle = ((Math.atan2(x, z) - Math.PI) % TAU + TAU) % TAU;
   return (Math.floor(angle / (TAU / denominator) + 1e-10) % denominator) + 1;
 }
-function pieceOutline(k, d) {
-  const group = new THREE.Group(), path = perimeter(Math.PI + (k - 1) * TAU / d, TAU / d, 1.60, HIT_Y + 0.03);
-  mesh(group, new THREE.TubeGeometry(path, 96, 0.031, 5, false), new THREE.MeshBasicMaterial({ color: '#24182c' }));
+function pieceOutline(k, d, height=HIT_Y+.03) {
+  const group = new THREE.Group(), path = perimeter(Math.PI + (k - 1) * TAU / d, TAU / d, 1.60, height);
+  group.userData.height=height;
+  mesh(group, new THREE.TubeGeometry(path, 96, 0.031, 5, false), new THREE.MeshBasicMaterial({ color: '#111111' }));
   const count = Math.ceil(path.getLength() / 0.16);
   for (let i = 0; i < count; i++) {
     const dash = new THREE.LineCurve3(path.getPointAt(i / count), path.getPointAt((i + 0.52) / count));
-    const mark = mesh(group, new THREE.TubeGeometry(dash, 1, 0.017, 5, false), new THREE.MeshBasicMaterial({ color: '#fff7dc', depthTest: false, depthWrite: false })); mark.renderOrder = 2;
+    const mark = mesh(group, new THREE.TubeGeometry(dash, 1, 0.0315, 5, false), new THREE.MeshBasicMaterial({ color: '#ffffff', depthTest: true })); mark.renderOrder = 2;
   }
   group.traverse(o => { o.castShadow = false; }); group.name = 'piece-emphasis'; return group;
 }
@@ -121,8 +136,14 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -9, right: 9, top: 7, bottom: -7, near: 0.5, far: 25 });
   sun.shadow.bias = -0.00012; sun.shadow.normalBias = 0.018; sun.shadow.radius = 3; scene.add(sun);
   const fill = new THREE.DirectionalLight('#d4e7ff', 1.2); fill.position.set(5, 4, -1); scene.add(fill);
-  const { drawer } = makeRoom(scene);
+  const room = makeRoom(scene), { drawer } = room;
+  room.scene=scene;
+  const orderKnife=makeKnife();orderKnife.position.set(0,.25,1.8);orderKnife.rotation.set(0,Math.PI/2,Math.PI/2);scene.add(orderKnife);
   const raycaster = new THREE.Raycaster(), reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let sceneMode='free';
+  let construction=null, activePlates=2, finishServing=null, unitFinishes=[],previewPlane=null;
+  const barX = () => activePlates===1 ? 1.8 : 0;
+  let exampleVisible = true, recipes = ['blueberry','blueberry'];
   let pies = [], bars = [], disposed = false, emphasized = null, topView = false;
   let drawerOpen = false, drawerValue = 0, viewValue = 0, animation = null, frame = 0;
   let width = 1, height = 1, yaw = 0, tilt = 0, finishSlices = null;
@@ -137,28 +158,43 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       o.material.emissiveIntensity = focus ? .3 : tone && wedge.userData.selected ? .2 : 0;
     }));
   });
+  const syncEmphasis = piece => {
+      if (piece?.pair === 'A' && !exampleVisible) piece = null;
+      if (piece && (!Number.isInteger(piece.k) || piece.k < 1 || piece.k > pies[piece.pair === 'A' ? 0 : 1]?.userData.serving.d || canvas.dataset.slicing === 'true')) piece = null;
+        const side=piece?.pair==='B'?1:0,height=piece?(construction&&!occupied(construction[side],piece.k)?.19:Math.max(.165,HIT_Y*(pies[side].children.find(o=>o.userData.slice===piece.k)?.scale.y||1))+.03):0;
+      if ((!emphasized&&!piece)||(emphasized?.pair===piece?.pair&&emphasized?.k===piece?.k&&emphasized?.outlineHeight===height)) return;
+      pies.forEach(pie => { const outline = pie.getObjectByName('piece-emphasis'); if (outline) { pie.remove(outline); dispose(outline); }
+        pie.traverse(o => { if (o.material?.name === 'serving-fruit') { o.material.emissive.set('#6e37e7'); o.material.emissiveIntensity = 0; } });
+      });
+      emphasized = piece?{...piece,outlineHeight:height}:null;
+      if (piece && !modelReview) { const pie = pies[piece.pair === 'A' ? 0 : 1]; pie.add(pieceOutline(piece.k, pie.userData.serving.d,height));
+        pie.children.find(o => o.userData.slice === piece.k)?.traverse(o => { if (o.material?.name === 'serving-fruit') o.material.emissiveIntensity = 0.3; });
+      }
+      paintFeedback();
+    };
   const project = (x, y, z) => { const p = new THREE.Vector3(x, y, z).project(camera); return { x: (p.x + 1) * width / 2, y: (1 - p.y) * height / 2 }; };
   const setCamera = () => {
     const angle = THREE.MathUtils.clamp(THREE.MathUtils.lerp(modelReview ? 0.50 : 0.68, Math.PI / 2 - 0.001, viewValue) + tilt, 0.42, Math.PI / 2 - 0.001);
-    const targetZ = THREE.MathUtils.lerp(0.25, 0.40, viewValue), targetY = 0.10;
+    const targetZ = THREE.MathUtils.lerp(-1.4, -0.6, viewValue) + drawerValue * .9, targetY = 0.60;
     camera.position.set(16 * Math.cos(angle) * Math.sin(yaw), targetY + 16 * Math.sin(angle), targetZ + 16 * Math.cos(angle) * Math.cos(yaw)); camera.lookAt(0, targetY, targetZ);
-    const span = Math.max(12, width / height * THREE.MathUtils.lerp(6.1, 7.4, viewValue));
+    const span = Math.max(13.2, width / height * (THREE.MathUtils.lerp(7.8, 9.5, viewValue) + drawerValue * 1.5));
     const halfHeight = span / (width / height) / 2;
     Object.assign(camera, { left: -span / 2, right: span / 2, top: halfHeight, bottom: -halfHeight }); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
   };
   const layout = () => {
-    const labels = ['A', 'B'].map((pair, side) => ({ pair, ...project(side ? PIE_X : -PIE_X, 0.02, 1.20) }));
+    const labels = ['A', 'B'].map((pair, side) => ({ pair, ...project(pies[side]?.position.x??(side ? PIE_X : -PIE_X), 1.8, PIE_Z-1.4) }));
     const barRects = ['A', 'B'].map((pair, side) => {
-      const x = side ? PIE_X : -PIE_X, z = BAR_Z + drawer.position.z;
+      const x = barPosition(side).x + barX(), z = barPosition(side).z;
       const a = project(x - BAR_LENGTH / 2, BAR_Y + 0.047, z - BAR_DEPTH / 2), b = project(x + BAR_LENGTH / 2, BAR_Y + 0.047, z - BAR_DEPTH / 2), c = project(x - BAR_LENGTH / 2, BAR_Y + 0.047, z + BAR_DEPTH / 2);
       const w = b.x - a.x, h = c.y - a.y;
       return { pair, x: a.x, y: a.y, width: w, height: h, shearX: (c.x-a.x)/h, shearY: (b.y-a.y)/w };
     });
-    onLayout({ labels, bars: barRects, drawer: project(0, -0.69, 1.96 + drawer.position.z), moving: Boolean(animation), drawerValue, viewValue });
+    const hp=project(0,-.77,2.17+drawer.position.z),hl=project(-.9,-.77,2.17+drawer.position.z),hr=project(.9,-.77,2.17+drawer.position.z);
+    onLayout({ knife:project(0,.25,1.8), handle:{...hp,width:Math.abs(hr.x-hl.x)}, labels, bars: barRects, drawer: project(0, -0.69, 1.96 + drawer.position.z), moving: Boolean(animation), drawerValue, viewValue });
   };
   const render = (shadows = false) => {
     if (disposed) return; if (shadows) renderer.shadowMap.needsUpdate = true;
-    renderer.render(scene, camera); canvas.dataset.drawCalls = String(renderer.info.render.calls); layout();
+    syncEmphasis(emphasized);renderer.render(scene, camera); canvas.dataset.drawCalls = String(renderer.info.render.calls); layout();
   };
   const tick = time => {
     if (disposed || !animation) return;
@@ -177,19 +213,32 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
   };
   const resize = () => {
     const rect = canvas.getBoundingClientRect(); if (!rect.width || !rect.height) return;
-    width = rect.width; height = rect.height; renderer.setSize(width, height, false); setCamera(); render(true);
+    width = rect.width; height = rect.height; bars.forEach(b=>b.position.x=barX()); renderer.setSize(width, height, false); setCamera(); render(true);
   };
   const observer = new ResizeObserver(resize); observer.observe(canvas);
   const contextLost = event => { event.preventDefault(); canvas.dispatchEvent(new CustomEvent('scene-error')); };
   canvas.addEventListener('webglcontextlost', contextLost);
-  const motionChange = () => { if (reduced.matches) { finishSlices?.(); transition(); } }; reduced.addEventListener('change', motionChange);
+  const motionChange = () => { if (reduced.matches) { finishSlices?.(); finishServing?.(); transition(); } }; reduced.addEventListener('change', motionChange);
   return {
-    update(left, right, recipe = 'blueberry') {
+    reviewGeometry(){
+      scene.updateMatrixWorld(true);
+      const bounds=o=>new THREE.Box3().setFromObject(o),counter=bounds(room.counter);
+      const incoming=scene.children.filter(o=>o.name==='arriving-plate'&&o.visible),collisions=[];
+      for(const obstacle of room.obstacles){const b=bounds(obstacle);if(counter.intersectsBox(b))collisions.push('counter:'+obstacle.name);for(let i=0;i<incoming.length;i++)if(bounds(incoming[i].getObjectByName('plate-body')).intersectsBox(b))collisions.push('plate-'+i+':'+obstacle.name);}
+      const knives=scene.getObjectByName('serving-knives');
+      return {hover:emphasized?{...emphasized}:null,serving:room.serving?structuredClone(room.serving):null,collisions,
+        plates:pies.map(p=>({visible:p.visible,position:p.position.toArray(),grid:p.userData.serving.d})),
+        knives:knives?.visible?knives.children.map(k=>({center:k.position.toArray(),handle:k.getObjectByName('handle').getWorldPosition(new THREE.Vector3()).toArray(),blade:k.getObjectByName('blade').getWorldPosition(new THREE.Vector3()).toArray()})):[],
+        camera:{position:camera.position.toArray(),yaw,tilt,viewValue,drawerValue}};
+    },
+    refreshLayout(){layout();},
+    update(left, right, recipe = recipes) {
+      recipes = Array.isArray(recipe) ? recipe : [recipe,recipe];
       let rebuild = false;
       [left, right].forEach((serving, side) => {
-        if (pies[side]?.userData.serving.d !== serving.d) {
-          if (pies[side]) { scene.remove(pies[side]); dispose(pies[side]); drawer.remove(bars[side]); dispose(bars[side]); }
-          pies[side] = makePie(serving, recipe, side); bars[side] = makeBar(serving, side); scene.add(pies[side]); drawer.add(bars[side]); rebuild = true;
+        if (pies[side]?.userData.serving.d !== serving.d || pies[side]?.userData.recipe !== recipes[side]) {
+          if (pies[side]) { scene.remove(pies[side]); dispose(pies[side]); scene.remove(bars[side]); dispose(bars[side]); }
+          pies[side] = makePie(serving, recipes[side], side); bars[side] = makeBar(serving, side); pies[side].visible = side === 1 || exampleVisible; scene.add(pies[side]); scene.add(bars[side]); rebuild = true;
           if (modelReview) {
             const wedge = pies[side].children.find(o => o.userData.slice === Math.ceil(serving.d * 0.7));
             const a = wedge.userData.start + wedge.userData.angle / 2;
@@ -218,32 +267,51 @@ export function createBakery(canvas, { onLayout = () => {}, modelReview = false 
       });
     },
     cancelTransformation() { finishSlices?.(); },
+    construction(plates,active=2,{animate=false}={}) {
+      unitFinishes.forEach(f=>f());unitFinishes=[];
+      const previous=construction;construction=plates?.map(p=>({...p}))||null;activePlates=active;
+      pies.forEach((pie,i)=>{
+        pie.visible=i<active;bars[i].visible=i<active;
+        pie.position.x=active===1?-2.15:(i?PIE_X:-PIE_X);bars[i].position.x=barX();
+        if(construction){paintConstruction(pie,construction[i]);setBarServing(bars[i],{...pie.userData.serving,mask:construction[i].mask});if(animate&&previous?.[i]?.d===construction[i].d)unitFinishes.push(animateUnits(pie,previous[i],construction[i],{reduced,onFrame:()=>render(true)}));}
+        else {for(const name of ['unit-guides','stroke-preview']){const old=pie.getObjectByName(name);if(old){pie.remove(old);dispose(old);}}pie.children.filter(o=>o.userData.slice).forEach(w=>{w.visible=true;w.getObjectByName('unit-cut').visible=true;});setPieServing(pie,pie.userData.serving);setBarServing(bars[i],pie.userData.serving);}
+      });render(true);
+    },
+    previewStroke(side,stroke){previewPlane=stroke?{side,height:stroke.height}:null;pies.forEach((pie,i)=>paintPreview(pie,i===side?stroke:null));render();},
+    async serve(plates,onStage,next={count:1,grid:2}){
+      this.cancelServing();this.emphasize(null);unitFinishes.forEach(f=>f());unitFinishes=[];
+      const animation=serveAnimation(pies,plates,room,{reduced,onFrame:()=>render(true),onStage,next,makeFresh:(side)=>makePie({n:0,d:next.grid},recipes[side],side)});finishServing=animation.finish;
+      await animation.promise;finishServing=null;
+    },
+    cancelServing(){finishServing?.();finishServing=null;},
+    finishServing(){finishServing?.();},
+    projectPiece(side,k,r=1.1){const pie=pies[side];if(!pie)return null;const d=pie.userData.serving.d,a=Math.PI+(k-.5)*TAU/d,unit=((Math.floor(k-.5)%d)+d)%d+1,w=pie.children.find(o=>o.userData.slice===unit),y=previewPlane?.side===side?previewPlane.height:construction&&!occupied(construction[side],unit)?.165:Math.max(.165,HIT_Y*w.scale.y);return project(pie.position.x+Math.sin(a)*r,y,pie.position.z+Math.cos(a)*r);},
+    pickStroke(clientX,clientY,side,height){
+      const pie=pies[side],rect=canvas.getBoundingClientRect();if(!pie?.visible)return null;
+      raycaster.setFromCamera(new THREE.Vector2((clientX-rect.left)/rect.width*2-1,-(clientY-rect.top)/rect.height*2+1),camera);
+      const hit=raycaster.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,1,0),-(pie.position.y+height)),new THREE.Vector3());if(!hit)return null;
+      const local=pie.worldToLocal(hit),radius=Math.hypot(local.x,local.z);if(radius>RADIUS)return null;
+      return {pair:side?'B':'A',k:pieceAtPoint(local.x,local.z,pie.userData.serving.d),angle:((Math.atan2(local.x,local.z)-Math.PI)%TAU+TAU)%TAU,height,radius};
+    },
     pick(clientX, clientY) {
       if (disposed || modelReview || canvas.dataset.slicing === 'true') return null;
       const rect = canvas.getBoundingClientRect();
       raycaster.setFromCamera(new THREE.Vector2((clientX - rect.left) / rect.width * 2 - 1, -(clientY - rect.top) / rect.height * 2 + 1), camera);
-      const hits = raycaster.intersectObjects(pies.map(p => p.getObjectByName('serving-hit-target')), false);
+      const targets=[];
+      pies.forEach((p,side)=>{if(!p.visible)return;p.children.filter(o=>o.userData.slice).forEach(w=>{const k=w.userData.slice;if(!construction||occupied(construction[side],k)){const h=w.getObjectByName('occupied-hit'),sy=Math.max(.001,w.scale.y),top=Math.max(.165,HIT_Y*sy);h.scale.set(1/Math.max(.001,w.scale.x),(top-.15)/(HIT_Y-.15)/sy,1/Math.max(.001,w.scale.z));h.position.y=(top+.15)/2/sy;h.updateWorldMatrix(true,false);targets.push(h);}else targets.push(p.children.find(o=>o.name==='empty-hit'&&o.userData.piece===k));});});
+      const hits = raycaster.intersectObjects(targets, false);
       if (!hits.length) return null;
-      const pie = hits[0].object.parent, local = pie.worldToLocal(hits[0].point.clone());
-      return { pair: pies.indexOf(pie) === 0 ? 'A' : 'B', k: pieceAtPoint(local.x, local.z, pie.userData.serving.d) };
+      const hit=hits[0],pie=hit.object.name==='occupied-hit'?hit.object.parent.parent:hit.object.parent,local=pie.worldToLocal(hit.point.clone());
+      return { pair:pies.indexOf(pie)===0?'A':'B',k:hit.object.userData.piece,angle:((Math.atan2(local.x,local.z)-Math.PI)%TAU+TAU)%TAU,height:local.y,radius:Math.hypot(local.x,local.z) };
     },
-    emphasize(piece) {
-      if (piece && (!Number.isInteger(piece.k) || piece.k < 1 || piece.k > pies[piece.pair === 'A' ? 0 : 1]?.userData.serving.d || canvas.dataset.slicing === 'true')) piece = null;
-      if (emphasized?.pair === piece?.pair && emphasized?.k === piece?.k) return;
-      pies.forEach(pie => { const outline = pie.getObjectByName('piece-emphasis'); if (outline) { pie.remove(outline); dispose(outline); }
-        pie.traverse(o => { if (o.material?.name === 'serving-fruit') { o.material.emissive.set('#6e37e7'); o.material.emissiveIntensity = 0; } });
-      });
-      emphasized = piece;
-      if (piece && !modelReview) { const pie = pies[piece.pair === 'A' ? 0 : 1]; pie.add(pieceOutline(piece.k, pie.userData.serving.d));
-        pie.children.find(o => o.userData.slice === piece.k)?.traverse(o => { if (o.material?.name === 'serving-fruit') o.material.emissiveIntensity = 0.3; });
-      }
-      paintFeedback(); render();
-    },
+    emphasize(piece) {syncEmphasis(piece);render();},
     setFeedback(pair, tone) { feedbackTones[pair === 'A' ? 0 : 1] = tone; paintFeedback(); render(); },
+    setMode(mode) { sceneMode=mode;orderKnife.visible=mode!=='free'; bars.forEach(b=>b.position.x=barX());render(); },
+    setExampleVisible(visible) { exampleVisible=visible; if(pies[0])pies[0].visible=visible; this.emphasize(null); render(true); },
     setDrawer(open) { drawerOpen = open; transition(); },
     setTopView(top) { topView = top; yaw = 0; tilt = 0; transition(); },
-    orbit(dx, dy = 0) { yaw = THREE.MathUtils.clamp(yaw + dx, -0.22, 0.22); tilt = THREE.MathUtils.clamp(tilt + dy, -0.16, 0.18); setCamera(); render(); },
+    orbit(dx, dy = 0) { yaw = THREE.MathUtils.clamp(yaw + dx, -0.48, 0.48); tilt = THREE.MathUtils.clamp(tilt + dy, -0.12, 0.26); setCamera(); render(); },
     resetCamera() { yaw = 0; tilt = 0; topView = false; transition(); },
-    dispose() { finishSlices?.(); disposed = true; cancelAnimationFrame(frame); observer.disconnect(); reduced.removeEventListener('change', motionChange); canvas.removeEventListener('webglcontextlost', contextLost); dispose(scene); env.dispose(); renderer.dispose(); },
+    dispose() { this.cancelServing();unitFinishes.forEach(f=>f());finishSlices?.(); disposed = true; cancelAnimationFrame(frame); observer.disconnect(); reduced.removeEventListener('change', motionChange); canvas.removeEventListener('webglcontextlost', contextLost); dispose(scene); env.dispose(); renderer.dispose(); },
   };
 }

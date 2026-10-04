@@ -3,14 +3,15 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 
 export const TAU = Math.PI * 2;
 export const RADIUS = 1.64;
-export const PIE_X = 2.55;
+export const PIE_X = 3.55;
 export const PIE_Z = -0.65;
 export const HIT_Y = 0.99;
-export const BAR_LENGTH = 4.4;
-export const BAR_DEPTH = 0.48;
-export const BAR_Y = -0.50;
+export const BAR_LENGTH = 2.6;
+export const BAR_DEPTH = 0.40;
+export const BAR_Y = 0.12;
 export const DRAWER_TRAVEL = 1.85;
-export const BAR_Z = 0.93;
+export const BAR_Z = -0.15;
+export const barPosition = side => ({ x: 0, z: BAR_Z + (side ? 0.65 : -0.65) });
 export const point = (r, a, y) => new THREE.Vector3(Math.sin(a) * r, y, Math.cos(a) * r);
 export const noise = n => { const v = Math.sin(n * 127.1 + 31.7) * 43758.5453; return v - Math.floor(v); };
 export const material = (color, roughness = 0.6, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness, ...extra });

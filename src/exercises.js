@@ -12,8 +12,11 @@ export const EXAMPLES = Object.freeze([
   { title: 'An Empty Serving', from: fraction(0, 4), to: 16, note: 'No selected slices means zero pie, whatever the slice size.' },
 ]);
 
+export const TASKSET_VERSION='equivalence-20-v1';
 export const CHALLENGES = Object.freeze([
   [1, 2, 4], [1, 4, 8], [3, 4, 8], [3, 8, 16],
   [7, 8, 16], [12, 16, 4], [2, 16, 8], [6, 8, 4],
   [2, 2, 16], [0, 8, 16],
-].map(([n, d, to], i) => Object.freeze({ id: `equivalence-${i + 1}`, from: fraction(n, d), to })));
+  [1, 2, 8], [1, 4, 16], [3, 4, 16], [1, 8, 16], [5, 8, 16],
+  [8, 16, 2], [4, 16, 4], [10, 16, 8], [14, 16, 8], [4, 8, 2],
+].map(([n, d, to], i) => Object.freeze({ id: `equivalence-${i + 1}`, from: fraction(n, d), to, family:n===0?'Zero Under A New Partition':n===d?'One Whole Under A New Partition':`${to>d?'Expand':'Regroup'} By ${Math.max(d,to)/Math.min(d,to)}` })));

@@ -1,0 +1,12 @@
+Package: 0.4.1_Unassigned_local-5bcdfdbd84_build-007_20261003T181423Z_g36e3b7cdea4e_web.zip
+SHA-256: 70de3fc2891762195315fc71a687330532414867d9e181523578ff94e9f93a72
+Bytes: 10241278
+
+PASS: ZIP CRC check for every entry.
+PASS: Packaged build.json and index.html match the final production files byte for byte.
+PASS: Extracted package launched using its included serve-review.mjs on localhost port 4210.
+PASS: Extracted package returned HTTP 200 game HTML and the expected manifest.
+PASS: Persistent review at http://127.0.0.1:4201/ returned the identical manifest.
+PASS: All 22 relative links in the original review handoff resolve.
+
+The temporary package-check server was stopped after validation. The final review server remains available on Abigail. No external deployment or upload was performed.

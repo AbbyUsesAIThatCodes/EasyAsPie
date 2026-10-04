@@ -1,5 +1,39 @@
 # EasyAsPie Teacher Notes
 
+## Accepted Worksheet Baseline
+
+The teacher accepted PR #38 build 006 mechanics on October 3, 2026 and authorized the worksheet. Materials use the frozen runtime `b3901d2b07bbc31380b1d1cb027b1aa3d087b6d1` and evidence checkpoint `dcc9bb7c762d5bdc557249903b8d6c08e5238ef5`. The interface, task sequence and mechanics stay fixed while the parent task authors materials; visual polishing waits. This does not authorize merging/deployment or close #13's real-device and accessibility gate.
+
+## Student Workflow For Materials
+
+1. Open **Learn**. For construction tasks, click or drag on the blank beige-guided plate to add pieces; start on a filled piece to erase. Backtracking shrinks the current drag. **Undo**, **Clear Plates**, **Hint**, **Top View** and **Piece Controls** remain available.
+2. In **Read The Pie** and **Read Smaller Pieces**, inspect the visible pie and choose its **Written Fraction** instead of building a new serving.
+3. Use **CUT PIES** to check the answer. Incorrect work stays for revision. After success, the next question opens automatically when its fresh plates land; there is no manual Next Order step. **Skip Serving** can finish that transition immediately.
+4. Continue to **Challenge** for **Build The Order**, with 24 orders. Mixed tasks require one whole plate plus the proper fraction on the other; either plate can hold the whole.
+5. **Activity Report** downloads anonymous browser-local responses, help and retries. Treat this as fraction practice evidence; ask the learner to explain equal amounts. It does not independently assess ruler use or measurement mastery.
+
+The eight Learn labels, in order, are **One Whole**, **Build Half A Pie**, **Build Three Quarters**, **Read The Pie**, **Read Smaller Pieces**, **Same Amount, Smaller Pieces**, **Same Amount, Larger Pieces**, and **One Whole And A Little More**. Use the [exact answer key](BEGINNER_ANSWER_KEY.md) for the grids and all 24 Challenge orders. Equal wholes and exact halves, quarters, eighths and sixteenths are the model throughout. Offered equivalent written answers are accepted in reading tasks.
+
+**Free Play** retains separate prefix-serving selection and amount-preserving **Cut**/**Regroup**; those controls are not the Learn/Challenge construction-and-**CUT PIES** workflow. For pieces hidden by an angled view, use **Top View** or native **Piece Controls**. Avoid importing the superseded prediction quiz or old manual advancement directions from the historical notes below.
+
+## Beginner Review Teaching Path
+
+[Exact Learn And Challenge Answer Key](BEGINNER_ANSWER_KEY.md) · [Implementation Contract And Curriculum Limits](BEGINNER_REVIEW_CONTRACT.md) · [Current Finishing Review](FINISHING_REVIEW.md).
+
+Begin with Learn's eight steps: one whole, half, three quarters, two visible-to-written questions, equivalent amounts under finer/coarser partitions, and one whole plus a proper fraction. Ask what stays the same when the parts change size. Technical vocabulary is available in the reference after the plain-language introduction; no numerator naming quiz is required.
+
+Challenge has the twenty preserved exact conversion tasks followed by four mixed-number orders. A mixed answer must show one completely filled plate and the extra proper fraction on the other, in either order. Bars mirror the learner's own work and may edit its units; they reveal no target answer. Hints, vocabulary/reference exposure and Learn/Free Play detours while an order is unfinished are recorded as help. A correct answer after a wrong attempt is retained as a retry, not first-try success. Resetting construction never erases previous submitted responses.
+
+Start on empty space to add, or a filled slice to erase. The operation stays latched through the drag. Retrace toward the starting piece to shrink the selected arc. Crossing the origin is continuous; crossing back past the start reverses the span. Leaving the plate pauses it; return to the last end piece to resume without selecting an unseen connecting path. Purple and red previews include textual ADD/ERASE descriptions. CUT PIES explicitly commits the complete order. Incorrect work stays available to revise. Correct work gets a serving-only whole-pie reveal and bounded choreography, then the next question activates automatically when its one or two empty plates settle on the counter. The committed response stays exact and saved throughout. Skip Serving, navigation and reload are safe interruption paths; reduced motion settles immediately.
+
+All modes save only in this browser, without expiry. Activity Report downloads the current and archived new sessions. Previous Work downloads the preserved legacy challenge report; old raw save bytes remain under their original key. Valid legacy Free Play and flavors copy forward, but old completion is not awarded as new completion. Unsupported/corrupt saves are retained without overwrite. Clear Saved Work explicitly clears this review's new save only.
+
+Direct bar editing, the brief serving-only whole-pie reveal and the gold highlight remain as implemented in the accepted worksheet baseline. The reveal does not change the learner's selected answer. Future visual refinement remains separate from the frozen instructional workflow. Classroom hardware, projector and screen-reader checks remain open under #13. This is anonymous fraction-practice evidence, not proof of measurement mastery. Worksheet creation is now authorized in the parent materials task.
+
+## Historical Teacher Notes
+
+The following notes describe older artifacts and their superseded assessment semantics; use the current path above for this review.
+
 ## Integrated Overnight Review
 
 The current provisional build combines PR19's 3D bakery, PR20's physical slicing and PR22's three modes. [Playable build and exact evidence](review/issue-21/README.md). Manual merge order is PR19 → PR20 → PR22; teacher visual acceptance and #13 classroom review remain pending.
@@ -78,3 +112,30 @@ There is no timer, penalty, or speed score. A round has ten fixed prompts. The s
 - “Point to 1/4 inch, 2/8 inch, and 4/16 inch on your ruler.” This physical follow-up checks transfer to the source's measurement target; it is not part of the game score.
 
 Ask for an explanation alongside the correct serving. Students can match areas visually without yet understanding the multiplicative relationship. A completed round is practice evidence, not a mastery claim. Actual classroom laptop, projector, and assistive-technology review remain necessary before classroom adoption.
+
+## Current Twenty-Order Answer Key
+
+These are distinct conversion tuples; directions and scaling factors are varied deliberately. All use equal wholes and exact supported partitions. The report lists every submitted response and recorded help; a first correct answer with no recorded help is not a claim of independently verified mastery. No student name is collected.
+
+| Order | Target | Requested Pieces | Exact Answer | Purpose |
+| --- | --- | --- | --- | --- |
+| 1 | 1/2 | 4 | 2/4 | Expand By 2 |
+| 2 | 1/4 | 8 | 2/8 | Expand By 2 |
+| 3 | 3/4 | 8 | 6/8 | Expand By 2 |
+| 4 | 3/8 | 16 | 6/16 | Expand By 2 |
+| 5 | 7/8 | 16 | 14/16 | Expand By 2 |
+| 6 | 12/16 | 4 | 3/4 | Regroup By 4 |
+| 7 | 2/16 | 8 | 1/8 | Regroup By 2 |
+| 8 | 6/8 | 4 | 3/4 | Regroup By 2 |
+| 9 | 2/2 | 16 | 16/16 | One Whole Under A New Partition |
+| 10 | 0/8 | 16 | 0/16 | Zero Under A New Partition |
+| 11 | 1/2 | 8 | 4/8 | Expand By 4 |
+| 12 | 1/4 | 16 | 4/16 | Expand By 4 |
+| 13 | 3/4 | 16 | 12/16 | Expand By 4 |
+| 14 | 1/8 | 16 | 2/16 | Expand By 2 |
+| 15 | 5/8 | 16 | 10/16 | Expand By 2 |
+| 16 | 8/16 | 2 | 1/2 | Regroup By 8 |
+| 17 | 4/16 | 4 | 1/4 | Regroup By 4 |
+| 18 | 10/16 | 8 | 5/8 | Regroup By 2 |
+| 19 | 14/16 | 8 | 7/8 | Regroup By 2 |
+| 20 | 4/8 | 2 | 1/2 | Regroup By 4 |

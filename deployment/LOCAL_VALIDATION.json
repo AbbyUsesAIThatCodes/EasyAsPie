@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "validatedAt": "2026-10-04T14:54:43.399Z",
+  "buildId": "0.4.1_Unassigned_pr-38_build-006_20261003T221730Z_gb3901d2b07bb_web",
+  "runtimeRevision": "b3901d2b07bbc31380b1d1cb027b1aa3d087b6d1",
+  "status": "passed",
+  "unitTests": {
+    "passed": 43,
+    "failed": 0
+  },
+  "browserSuites": [
+    {
+      "suite": "review-beginner.mjs",
+      "status": "passed",
+      "reportSha256": "1dd173d18b3fc536d886dd27a786eba5dc30d4b2f9fc7af5370569fcc5cb296a"
+    },
+    {
+      "suite": "recovery-serial",
+      "status": "passed",
+      "reportSha256": "b2a590bd26295bfc101e4e11bd758aeccd6279f793b74f3eda5f75f105530b06"
+    },
+    {
+      "suite": "finishing-serial",
+      "status": "passed",
+      "reportSha256": "0489b911203f4d3e1fbb21e1a86fc59bb2cd4e9e855277ae25f03d868221ce48"
+    }
+  ],
+  "statistics": {
+    "learnSteps": 8,
+    "challengeOrders": 24
+  },
+  "publicPayloadFiles": 5,
+  "preflight": "Project-path loading, all served byte hashes, manifest/visible identity, forbidden-file 404s, wrong-build/extra-file guards, and rollback loading passed.",
+  "limits": "Chromium on Abigail; fresh synthetic browser state. No physical school laptop, projector or screen-reader pilot claimed. Hosted CI was not run."
+}
