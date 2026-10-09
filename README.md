@@ -1,5 +1,7 @@
 # EasyAsPie
 
+**[Play EasyAsPie Online](https://abbyusesaithatcodes.github.io/EasyAsPie/)**
+
 ## October 4 Pages Release
 
 The owner has approved publishing the tested runtime. [Release Status And Procedure](docs/LOCAL_PAGES_RELEASE.md) supersedes the earlier review-only deployment restrictions below. Local validation and actual deployment remain separate gates.
